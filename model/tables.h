@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdbool.h>
-
 struct Hotel {
     unsigned int id; // 0 a 4294967295
     char nome_fantasia[64];
@@ -87,8 +85,17 @@ struct Reserva {
     char data_inicial[16]; // 01/01/1970
     char data_final[16]; // 01/01/1970
     unsigned int periodo; // 0 a 4294967295
-    bool check_in; // true ou false
-    bool check_out; // true ou false
+    unsigned int check_in; // 1 (true) ou 0 (false)
+    unsigned int check_out; // 1 (true) ou 0 (false)
     unsigned int acomodacao_id; // 0 a 4294967295
     unsigned int hospede_id; // 0 a 4294967295
 };
+
+extern const Table Hotel;
+extern const Table Hospede;
+extern const Table Acomodacao;
+extern const Table Categoria;
+extern const Table Produto;
+extern const Table Fornecedor;
+extern const Table Funcionario;
+extern const Table Reserva;

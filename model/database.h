@@ -2,73 +2,118 @@
 
 #include <stdio.h>
 
-typedef struct Table {
-    /** O arquivo que armazena os registros */
-    FILE *stream;
-    /** Tamanho em bytes de cada registro */
-    size_t regSize;
-    /** Última posição válida do cursor */
-    fpos_t cursorPos;
-} Table;
+/**
+ * Uma array de endereços para structs que guardam informações que designam a tabela.
+ * O primeiro endereço deve ser para uma TableState (inicialmente vazia);
+ * O segundo endereço deve ser para uma TableInfo;
+ * Os demais endereços deve ser para uma ou mais ColumnMetas;
+ * O último endereço deve ser NULL, para denotar o final da array.
+ */
+typedef void *Table[];
 
 /**
- * Uma espécie de interface para os diferentes tipos de armazenamento (binário, texto, etc).
+ * Guarda o estado da tabela.
+ * São variáveis usadas por cada implementação de banco de dados para ler e escrever nos arquivos de tabela.
  */
-typedef struct Database {
+typedef struct {
+    /** O arquivo que armazena os registros. */
+    FILE *stream;
+    /** Tamanho em bytes de cada registro, calculado a partir dos metadados das colunas. */
+    size_t regSize;
+    /** Última posição válida do cursor. */
+    fpos_t cursorPos;
+} TableState;
+
+/**
+ * Guarda informações sobre a tabela.
+ */
+typedef struct {
+    /** Caminho para o arquivo que armazena a tabela. */
+    const char *filename;
+} TableInfo;
+
+/**
+ * Metadados da coluna, especificam com devem ser tratados os dados que nela forem armazenados.
+ */
+typedef struct {
+    /** Nome mostrado para o usuário, quando necessário. */
+    const char *displayName;
+    /** Nome da tag que representa essa coluna em arquivos XML. */
+    const char *tagName;
+    /** Formato como o valor é lido e escrito. */
+    const char *format;
+    /** Tamanho em bytes do espaço de memória em que o valor será guardado. */
+    size_t size;
+    /** TODO: descrever as flags, quando adicionar alguma. */
+    char flags;
+} ColumnMeta;
+
+/**
+ * Uma espécie de interface para os diferentes tipos de armazenamento (binário, XML, etc).
+ */
+typedef struct {
     /**
-     * Abre uma tabela e posiciona o cursor no início. Se ela não existir, ela é criada.
-     * É necessário fecha-la usando close().
-     * @param filename Caminho para o arquivo que armazena a tabela.
-     * @param regSize Tamanho em bytes de cada registro da tabela.
-     * @return um ponteiro para a tabela se tiver sucesso, NULL caso contrário.
+     * Abre uma tabela com o cursor no início. Se o arquivo não existir, ele é criado. É necessário fecha-la usando close().
+     * @param table A tabela a ser aberta.
+     * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    Table *(*open)(const char *filename, size_t regSize);
+    int (*open)(const Table table);
 
     /**
      * Fecha uma tabela que foi aberta por open().
-     * @param table Ponteiro para a tabela, retornado por open().
+     * @param table A tabela a ser fechada.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    int (*close)(Table *table);
+    int (*close)(const Table table);
 
     /**
      * Volta o cursor ao início da tabela.
-     * @param table Ponteiro para a tabela, retornado por open().
+     * @param table A tabela a ser rebobinada.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    int (*rewind)(Table *table);
+    int (*rewind)(const Table table);
 
     /**
      * Copia o próximo registro, se ele existir, para uma posição de memória e avança o cursor.
-     * @param table Ponteiro para a tabela, retornado por open().
-     * @param ptr Ponteiro para onde o registro será copiado.
+     * @param table A tabela a ser lida.
+     * @param ptr Ponteiro para a posição de memória para onde o registro será copiado.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    int (*next)(Table *table, void *ptr);
+    int (*next)(const Table table, void *ptr);
 
     /**
      * Deleta o último registro retornado por next().
-     * @param table Ponteiro para a tabela, retornado por open().
+     * @param table A tabela a ser modificada.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    int (*delete)(Table *table);
+    int (*delete)(const Table table);
 
     /**
      * Copia um registro de uma posição de memória sobrescrevendo o último registro retornado por next().
-     * @param table Ponteiro para a tabela, retornado por open().
-     * @param ptr Ponteiro para donde o registro será copiado.
+     * @param table A tabela a ser modificada.
+     * @param ptr Ponteiro para a posição de memória de onde o registro será copiado.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    int (*update)(Table *table, const void *ptr);
+    int (*update)(const Table table, const void *ptr);
 
     /**
      * Copia um registro de uma posição de memória para um espaço livre na tabela e coloca o cursor à frente dele.
-     * @param table Ponteiro para a tabela, retornado por open().
-     * @param ptr Ponteiro para donde o registro será copiado.
+     * @param table A tabela a ser modificada.
+     * @param ptr Ponteiro para a posição de memória de onde o registro será copiado.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    int (*insert)(Table *table, const void *ptr);
+    int (*insert)(const Table table, const void *ptr);
 } Database;
+
+/** Itera por todos os registros de uma tabela. */
+#define DATABASE_forEach(elementType, elementName, table) \
+DATABASE->rewind((table));                                \
+for (elementType (elementName); DATABASE->next((table), &(elementName));)
+
+/** Itera por todos os registros de uma tabela e atualiza o registro ao final de cada iteração. */
+#define DATABASE_map(elementType, elementName, table) \
+DATABASE->rewind((table));                            \
+for (elementType (elementName); DATABASE->next((table), &(elementName)); DATABASE->update((table), &(elementName)))
 
 extern const Database *DATABASE;
 

@@ -4,95 +4,101 @@
  */
 
 #include "database_bin.h"
-#include <stdlib.h>
 
-static Table *bin_open(const char *filename, size_t regSize) {
-    register Table *table;
-    if ((table = malloc(sizeof(Table)))) {
-        if ((table->stream = fopen(filename, "a+"))) {
-            if ((freopen(NULL, "r+", table->stream))) {
-                table->regSize = regSize;
-                if (fgetpos(table->stream, &table->cursorPos) == 0) {
-                    return table;
+static int bin_open(const Table table) {
+    TableState *tableState = *table++;
+    const TableInfo *tableInfo = *table++;
+    if ((tableState->stream = fopen(tableInfo->filename, "a+"))) {
+        if ((freopen(NULL, "r+", tableState->stream))) {
+            if (fgetpos(tableState->stream, &tableState->cursorPos) == 0) {
+                tableState->regSize = 0;
+                for (ColumnMeta *colMeta; (colMeta = *table) != NULL; ++table) {
+                    tableState->regSize += colMeta->size;
                 }
+                return 1;
             }
-            fclose(table->stream);
         }
-        free(table);
+        fclose(tableState->stream);
     }
-    return NULL;
+    return 0;
 }
 
-static int bin_close(Table *table) {
-    register FILE *stream = table->stream;
-    free(table);
-    return fclose(stream) == 0;
+static int bin_close(const Table table) {
+    const TableState *tableState = *table;
+    return fclose(tableState->stream) == 0;
 }
 
-static int bin_rewind(Table *table) {
-    return fseek(table->stream, 0, SEEK_SET) == 0
-           && fgetpos(table->stream, &table->cursorPos) == 0;
+static int bin_rewind(const Table table) {
+    TableState *tableState = *table;
+    return fseek(tableState->stream, 0, SEEK_SET) == 0
+           && fgetpos(tableState->stream, &tableState->cursorPos) == 0;
 }
 
-static int bin_next(Table *table, void *ptr) {
-    if (fsetpos(table->stream, &table->cursorPos) != 0) {
+static int bin_next(const Table table, void *ptr) {
+    TableState *tableState = *table;
+    if (fsetpos(tableState->stream, &tableState->cursorPos) != 0) {
         return 0;
     }
-    while (1)
-        switch (fgetc(table->stream)) {
+    while (1) {
+        switch (fgetc(tableState->stream)) {
             case 0:
-                if (fseek(table->stream, table->regSize, SEEK_CUR) == 0) {
+                if (fseek(tableState->stream, tableState->regSize, SEEK_CUR) == 0) {
                     break;
                 }
             case EOF:
                 return 0;
             default:
-                return fread(ptr, table->regSize, 1, table->stream) == 1
-                       && fgetpos(table->stream, &table->cursorPos) == 0;
+                return fread(ptr, tableState->regSize, 1, tableState->stream) == 1
+                       && fgetpos(tableState->stream, &tableState->cursorPos) == 0;
         }
+    }
 }
 
-static int bin_delete(Table *table) {
-    if (fsetpos(table->stream, &table->cursorPos) != 0) {
+static int bin_delete(const Table table) {
+    const TableState *tableState = *table;
+    if (fsetpos(tableState->stream, &tableState->cursorPos) != 0) {
         return 0;
     }
-    return fseek(table->stream, -1 * (table->regSize + 1), SEEK_CUR) == 0
-           && fgetc(table->stream) > 0
-           && fseek(table->stream, -1, SEEK_CUR) == 0
-           && fputc(0, table->stream) == 0
-           && fseek(table->stream, table->regSize, SEEK_CUR) == 0;
+    return fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
+           && fgetc(tableState->stream) > 0
+           && fseek(tableState->stream, -1, SEEK_CUR) == 0
+           && fputc(0, tableState->stream) == 0
+           && fseek(tableState->stream, tableState->regSize, SEEK_CUR) == 0;
 }
 
-static int bin_update(Table *table, const void *ptr) {
-    if (fsetpos(table->stream, &table->cursorPos) != 0) {
+static int bin_update(const Table table, const void *ptr) {
+    const TableState *tableState = *table;
+    if (fsetpos(tableState->stream, &tableState->cursorPos) != 0) {
         return 0;
     }
-    return fseek(table->stream, -1 * (table->regSize + 1), SEEK_CUR) == 0
-           && fgetc(table->stream) > 0
-           && fwrite(ptr, table->regSize, 1, table->stream) == 1;
+    return fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
+           && fgetc(tableState->stream) > 0
+           && fwrite(ptr, tableState->regSize, 1, tableState->stream) == 1;
 }
 
-static int bin_insert(Table *table, const void *ptr) {
-    if (fseek(table->stream, 0, SEEK_SET) != 0) {
+static int bin_insert(const Table table, const void *ptr) {
+    TableState *tableState = *table;
+    if (fseek(tableState->stream, 0, SEEK_SET) != 0) {
         return 0;
     }
-    while (1)
-        switch (fgetc(table->stream)) {
+    while (1) {
+        switch (fgetc(tableState->stream)) {
             case EOF:
-                if (fputc(0, table->stream) != 0) {
+                if (fputc(0, tableState->stream) != 0) {
                     return 0;
                 }
             case 0:
-                return fwrite(ptr, table->regSize, 1, table->stream) == 1
-                       && fseek(table->stream, -1 * (table->regSize + 1), SEEK_CUR) == 0
-                       && fputc(1, table->stream) > 0
-                       && fseek(table->stream, table->regSize, SEEK_CUR) == 0
-                       && fgetpos(table->stream, &table->cursorPos) == 0;
+                return fwrite(ptr, tableState->regSize, 1, tableState->stream) == 1
+                       && fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
+                       && fputc(1, tableState->stream) > 0
+                       && fseek(tableState->stream, tableState->regSize, SEEK_CUR) == 0
+                       && fgetpos(tableState->stream, &tableState->cursorPos) == 0;
             default:
-                if (fseek(table->stream, table->regSize, SEEK_CUR) != 0) {
+                if (fseek(tableState->stream, tableState->regSize, SEEK_CUR) != 0) {
                     return 0;
                 }
         }
+    }
 }
 
 const Database *BINARY_DATABASE = &(Database) {

@@ -4,31 +4,31 @@
 
 #include "database_xml.h"
 
-static Table *xml_open(const char *filename, size_t regSize) {
-    return NULL;
-}
-
-static int xml_close(Table *table) {
+static int xml_open(const Table table) {
     return 0;
 }
 
-static int xml_rewind(Table *table) {
+static int xml_close(const Table table) {
     return 0;
 }
 
-static int xml_next(Table *table, void *ptr) {
+static int xml_rewind(const Table table) {
     return 0;
 }
 
-static int xml_delete(Table *table) {
+static int xml_next(const Table table, void *ptr) {
     return 0;
 }
 
-static int xml_update(Table *table, const void *ptr) {
+static int xml_delete(const Table table) {
     return 0;
 }
 
-static int xml_insert(Table *table, const void *ptr) {
+static int xml_update(const Table table, const void *ptr) {
+    return 0;
+}
+
+static int xml_insert(const Table table, const void *ptr) {
     return 0;
 }
 
