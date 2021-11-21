@@ -4,11 +4,12 @@
  */
 
 #include "database_bin.h"
+#include "database_local.h"
 
 static int bin_open(const Table table) {
     TableState *tableState = *table++;
     const TableInfo *tableInfo = *table++;
-    if ((tableState->stream = fopen(tableInfo->filename, "a+"))) {
+    if ((tableState->stream = fopen(tableInfo->fileName, "a+"))) {
         if ((freopen(NULL, "r+", tableState->stream))) {
             if (fgetpos(tableState->stream, &tableState->cursorPos) == 0) {
                 tableState->regSize = 0;
@@ -56,10 +57,8 @@ static int bin_next(const Table table, void *ptr) {
 
 static int bin_delete(const Table table) {
     const TableState *tableState = *table;
-    if (fsetpos(tableState->stream, &tableState->cursorPos) != 0) {
-        return 0;
-    }
-    return fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
+    return fsetpos(tableState->stream, &tableState->cursorPos) == 0
+           && fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
            && fgetc(tableState->stream) > 0
            && fseek(tableState->stream, -1, SEEK_CUR) == 0
            && fputc(0, tableState->stream) == 0
@@ -68,10 +67,8 @@ static int bin_delete(const Table table) {
 
 static int bin_update(const Table table, const void *ptr) {
     const TableState *tableState = *table;
-    if (fsetpos(tableState->stream, &tableState->cursorPos) != 0) {
-        return 0;
-    }
-    return fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
+    return fsetpos(tableState->stream, &tableState->cursorPos) == 0
+           && fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
            && fgetc(tableState->stream) > 0
            && fwrite(ptr, tableState->regSize, 1, tableState->stream) == 1;
 }

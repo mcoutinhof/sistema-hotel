@@ -1,5 +1,8 @@
 #pragma once
 
+#include "database.h"
+#include <stdbool.h>
+
 struct Hotel {
     unsigned int id; // 0 a 4294967295
     char nome_fantasia[64];
@@ -7,10 +10,10 @@ struct Hotel {
     char inscricao_estadual[20]; // Cada estado tem seu padrão
     char cnpj[20]; // 00.000.000/0000-00
     char endereco[256];
-    char telefone[20];
+    char telefone[24];
     char email[256];
     char nome_responsavel[64];
-    char telefone_responsavel[20];
+    char telefone_responsavel[24];
     char check_in[16]; // 14:00:00
     char check_out[16]; // 12:00:00
     float margem_lucro; // 60.000 (%)
@@ -21,7 +24,7 @@ struct Hospede {
     char nome[64];
     char endereco[256];
     char cpf[16]; // 000.000.000-00
-    char telefone[20];
+    char telefone[24];
     char email[256];
     char sexo[16]; // Masculino, Feminino
     char estado_civil[16]; // Solteiro, Casado, Divorciado ou Viúvo
@@ -66,11 +69,11 @@ struct Fornecedor {
     char inscricao_estadual[20]; // Cada estado tem seu padrão
     char cnpj[20]; // 00.000.000/0000-00
     char endereco[256];
-    char telefone[20];
+    char telefone[24];
     char email[256];
 };
 
-struct Funcionario {
+struct Operador {
     unsigned int id; // 0 a 4294967295
     char nome[64];
     char usuario[20];
@@ -85,17 +88,17 @@ struct Reserva {
     char data_inicial[16]; // 01/01/1970
     char data_final[16]; // 01/01/1970
     unsigned int periodo; // 0 a 4294967295
-    unsigned int check_in; // 1 (true) ou 0 (false)
-    unsigned int check_out; // 1 (true) ou 0 (false)
+    bool check_in; // 1 (true) ou 0 (false)
+    bool check_out; // 1 (true) ou 0 (false)
     unsigned int acomodacao_id; // 0 a 4294967295
     unsigned int hospede_id; // 0 a 4294967295
 };
 
-extern const Table Hotel;
-extern const Table Hospede;
-extern const Table Acomodacao;
-extern const Table Categoria;
-extern const Table Produto;
-extern const Table Fornecedor;
-extern const Table Funcionario;
-extern const Table Reserva;
+extern const Table Hoteis;
+extern const Table Hospedes;
+extern const Table Acomodacoes;
+extern const Table Categorias;
+extern const Table Produtos;
+extern const Table Fornecedores;
+extern const Table Operadores;
+extern const Table Reservas;

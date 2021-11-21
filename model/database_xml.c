@@ -3,6 +3,7 @@
  */
 
 #include "database_xml.h"
+#include "database_local.h"
 
 static int xml_open(const Table table) {
     return 0;
