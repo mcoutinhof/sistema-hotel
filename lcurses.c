@@ -38,9 +38,12 @@ void gotoxy(int x, int y) {
 }
 
 void wherexy(int *x, int *y) {
+    char buf[48];
+    register int c, i = 0;
     fputs("\033[6n", stdout);
-    char buf[48], i = 0;
-    while ((i < sizeof(buf) - 1) && (buf[i] = getch()) != EOF && (buf[i++]) != 'R');
+    while ((i < sizeof(buf) - 1)
+           && (c = getch()) != EOF
+           && (buf[i++] = c) != 'R');
     buf[i] = '\0';
     sscanf(buf, "%*c%*c%d%*c%d%*c", y, x);
 }
