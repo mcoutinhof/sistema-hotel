@@ -7,7 +7,6 @@
 int menu_principal() {
     while (1) {
         clrscr();
-        gotoxy(3, 2);
         switch (menu(5, "Cadastros", "Produtos", "Reservas", "Relatórios", "Sair")) {
         case 0:
             menu_cadastros();
@@ -30,7 +29,6 @@ int menu_principal() {
 int menu_cadastros() {
     while (1) {
         clrscr();
-        gotoxy(3, 2);
         switch (menu(8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos", "Fornecedores", "Voltar")) {
         case 0:
             menu_hospedes();
@@ -55,7 +53,6 @@ int menu_cadastros() {
 int menu_hospedes() {
     while (1) {
         clrscr();
-        gotoxy(3, 2);
         switch (menu(3, "Inserir hóspede", "Ver Hospede", "Voltar")) {
         case 0:
             cadastrar_hospede();
@@ -75,7 +72,6 @@ int menu_hospedes() {
 int menu_hotel() {
     while (1) {
         clrscr();
-        gotoxy(3, 2);
         switch (menu(4, "Cadastrar Hotel", "Editar Hotel", "Remover Hotel", "Exibir Hoteis", "Voltar")) {
         case 0:
             cadastrar_hotel();
@@ -97,7 +93,6 @@ int menu_hotel() {
 int menu_categoria() {
     while (1) {
         clrscr();
-        gotoxy(3, 2);
         switch (menu(4, "Cadastrar Categoria de Acomodação", "Editar Categoria de Acomodação", "Remover Categoria de Acomodação", "Exibir Categorias de Acomodações", "Voltar")) {
         case 0:
             cadastrar_categoria();
@@ -119,7 +114,6 @@ int menu_categoria() {
 int menu_acomodacao() {
     while (1) {
         clrscr();
-        gotoxy(3, 2);
         switch (menu(4, "Cadastrar Acomodação", "Editar Acomodação", "Remover Acomodação", "Exibir Acomodação", "Voltar")) {
         case 0:
             cadastrar_acomodacao();
@@ -140,7 +134,6 @@ int menu_acomodacao() {
 
 int cadastrar_hospede() {
     clrscr();     // Sempre limpar a tela ...
-    gotoxy(3, 2); // ... e reposicionar quando mudar de tela
 
     struct Hospede hosp = {}; // Sempre coloque as chaves pra zerar os valores da struct
     form(0, Hospedes, &hosp); // Modo 0 = Inserir
@@ -154,14 +147,10 @@ int cadastrar_hospede() {
 }
 
 int ver_hospede() {
-    clrscr();     // Sempre limpar a tela ...
-    gotoxy(3, 2); // ... e reposicionar quando mudar de tela
-
     DATABASE->open(Hospedes);
 
     DATABASE_forEach(struct Hospede, hosp, Hospedes) {
         clrscr();
-        gotoxy(3, 2);
         form(1, Hospedes, &hosp);
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
@@ -170,7 +159,6 @@ int ver_hospede() {
             continue;
         case 1:
             clrscr();     // Sempre limpar a tela ...
-            gotoxy(3, 2); // ... e reposicionar quando mudar de tela
             form(2, Hospedes, &hosp);
             DATABASE->update(Hospedes, &hosp);
             break;
@@ -187,7 +175,6 @@ int ver_hospede() {
 
 int cadastrar_hotel() {
     clrscr();
-    gotoxy(3, 2);
 
     struct Hotel hote = {}; // Sempre coloque as chaves pra zerar os valores da struct
     form(0, Hoteis, &hote); // Modo 0 = Inserir
@@ -202,7 +189,6 @@ int cadastrar_hotel() {
 
 int cadastrar_categoria() {
     clrscr();
-    gotoxy(3, 2);
 
     struct Categoria categ = {}; // Sempre coloque as chaves pra zerar os valores da struct
     form(0, Categorias, &categ); // Modo 0 = Inserir
@@ -217,7 +203,6 @@ int cadastrar_categoria() {
 
 int cadastrar_acomodacao() {
     clrscr();
-    gotoxy(3, 2);
 
     struct Acomodacao acomo = {}; // Sempre coloque as chaves pra zerar os valores da struct
     form(0, Acomodacoes, &acomo); // Modo 0 = Inserir
