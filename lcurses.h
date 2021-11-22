@@ -12,11 +12,29 @@ void clrtoeol();
 // Lê um caractere sem necessidade de apertar ENTER, mas não o escreve na tela.
 int getch();
 
+// Retorna 1 se getch() retornará um caractere, 0 se ele retornará EOF
+int kbhit();
+
 // Move o cursor para a coluna x e linha y.
 void gotoxy(int x, int y);
 
+// Move o cursor para a coluna x.
+void gotox(int x);
+
+// Move o cursor para a linha y.
+void gotoy(int y);
+
 // Guarda o número da coluna em x e o número da linha em y.
 void wherexy(int *x, int *y);
+
+// Retorna o número da coluna.
+int wherex();
+
+// Retorna o número da linha.
+int wherey();
+
+// Interrompe o programa e retorna quando o usuário apertar uma tecla.
+void alert(const char *message);
 
 #define $0  "\033[30m"  // Letra preta
 #define $1  "\033[34m"  // Letra azul-escura
