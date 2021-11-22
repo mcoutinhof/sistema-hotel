@@ -14,3 +14,19 @@ int cadastrar_hospede();
 
 // principal -> cadastro -> hospede -> ver_hospede
 int ver_hospede();
+
+int menu_hotel();
+int menu_categoria();
+int menu_acomodacao();
+
+//principal -> cadastro ->
+
+/*ORDEM 
+Hospedes --- e logo em seguida tudo relacionado com ele
+hotel
+Categoria de acomodação
+Operadores
+Acomodações
+Produtos
+Fornecedores
+*/
