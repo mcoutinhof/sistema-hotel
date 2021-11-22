@@ -42,7 +42,7 @@ void wherexy(int *x, int *y) {
     scanf("%*c%*c%d%*c%d%*c", y, x);
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &old_cfg);
 }
-#elifdef _WIN32
+#elif defined(_WIN32)
 #include <conio.h>
 
 void wherexy(int *x, int *y) {
