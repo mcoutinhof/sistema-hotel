@@ -3,7 +3,8 @@
 #include <unistd.h>
 
 void clrscr() {
-    fputs("\033[2J\033[3J\033[H", stdout);
+    //fputs("\033[2J\033[3J\033[H", stdout);
+    fputs("\033[2J\033[3J\033[2;3H", stdout);
 }
 
 void clrtobot() {
