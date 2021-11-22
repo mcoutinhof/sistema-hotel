@@ -159,17 +159,18 @@ int ver_hospede() {
 
     DATABASE->open(Hospedes);
 
-    printf("|------------- Hospedes cadastrados ----------------|\n");
-
     DATABASE_forEach(struct Hospede, hosp, Hospedes) {
-        printf("\033[3GNome: %s\n", hosp.nome);
-        int option = menu(4, "\033[3GPróximo", "\033[3GEditar", "\033[3GDeletar", "\033[3GSair");
+        clrscr();
+        gotoxy(3, 2);
+        form(1, Hospedes, &hosp);
+        gotoxy(3, wherey() + 2);
+        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
         case 1:
             clrscr();     // Sempre limpar a tela ...
-            gotoxy(3, 3); // ... e reposicionar quando mudar de tela
+            gotoxy(3, 2); // ... e reposicionar quando mudar de tela
             form(2, Hospedes, &hosp);
             DATABASE->update(Hospedes, &hosp);
             break;
