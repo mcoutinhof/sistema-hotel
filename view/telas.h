@@ -1,16 +1,16 @@
 #pragma once
 
-// main -> menu_principal
+// main -> principal
 int menu_principal();
 
-// menu_principal -> menu_cadastros
+// principal -> cadastros
 int menu_cadastros();
 
-// menu_cadastros -> menu_hospedes
+// principal -> cadastros -> hospedes
 int menu_hospedes();
 
-// menu_hospedes -> cadastrar_hospede
+// principal -> cadastro -> hospede -> cadastrar_hospede
 int cadastrar_hospede();
 
-// menu_hospedes -> procurar_hospede
-int procurar_hospede();
+// principal -> cadastro -> hospede -> ver_hospede
+int ver_hospede();
