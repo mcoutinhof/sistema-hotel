@@ -69,69 +69,6 @@ int menu_hospedes() {
     }
 }
 
-int menu_hotel() {
-    while (1) {
-        clrscr();
-        switch (menu(4, "Cadastrar Hotel", "Editar Hotel", "Remover Hotel", "Exibir Hoteis", "Voltar")) {
-        case 0:
-            cadastrar_hotel();
-            break;
-        case 1:
-            //editar_hotel(); //need code
-            break;
-        case 2:
-            //remover_hotel(); //need code
-            break;
-        case 3:
-            //exibir_hotel(); //need code
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
-}
-
-int menu_categoria() {
-    while (1) {
-        clrscr();
-        switch (menu(4, "Cadastrar Categoria de Acomodação", "Editar Categoria de Acomodação", "Remover Categoria de Acomodação", "Exibir Categorias de Acomodações", "Voltar")) {
-        case 0:
-            cadastrar_categoria();
-            break;
-        case 1:
-            //editar_hotel(); //need code
-            break;
-        case 2:
-            //remover_hotel(); //need code
-            break;
-        case 3:
-            //exibir_hotel(); //need code
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
-}
-
-int menu_acomodacao() {
-    while (1) {
-        clrscr();
-        switch (menu(4, "Cadastrar Acomodação", "Editar Acomodação", "Remover Acomodação", "Exibir Acomodação", "Voltar")) {
-        case 0:
-            cadastrar_acomodacao();
-            break;
-        case 1:
-
-            break;
-        case 2:
-
-            break;
-        case 3:
-
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
-}
-
 int cadastrar_hospede() {
     clrscr();     // Sempre limpar a tela ...
 
@@ -173,6 +110,27 @@ int ver_hospede() {
     DATABASE->close(Hospedes);
 }
 
+int menu_hotel() {
+    while (1) {
+        clrscr();
+        switch (menu(4, "Cadastrar Hotel", "Editar Hotel", "Remover Hotel", "Exibir Hoteis", "Voltar")) {
+            case 0:
+                cadastrar_hotel();
+                break;
+            case 1:
+                //editar_hotel(); //need code
+                break;
+            case 2:
+                //remover_hotel(); //need code
+                break;
+            case 3:
+                //exibir_hotel(); //need code
+            default: // Voltar
+                return EXIT_SUCCESS;
+        }
+    }
+}
+
 int cadastrar_hotel() {
     clrscr();
 
@@ -185,6 +143,27 @@ int cadastrar_hotel() {
     DATABASE->insert(Hoteis, &hote); // Insere o hotel no banco de dados
     DATABASE->close(Hoteis);
     return EXIT_SUCCESS;
+}
+
+int menu_categoria() {
+    while (1) {
+        clrscr();
+        switch (menu(4, "Cadastrar Categoria de Acomodação", "Editar Categoria de Acomodação", "Remover Categoria de Acomodação", "Exibir Categorias de Acomodações", "Voltar")) {
+            case 0:
+                cadastrar_categoria();
+                break;
+            case 1:
+                //editar_hotel(); //need code
+                break;
+            case 2:
+                //remover_hotel(); //need code
+                break;
+            case 3:
+                //exibir_hotel(); //need code
+            default: // Voltar
+                return EXIT_SUCCESS;
+        }
+    }
 }
 
 int cadastrar_categoria() {
@@ -201,6 +180,27 @@ int cadastrar_categoria() {
     return EXIT_SUCCESS;
 }
 
+int menu_acomodacao() {
+    while (1) {
+        clrscr();
+        switch (menu(4, "Cadastrar Acomodação", "Editar Acomodação", "Remover Acomodação", "Exibir Acomodação", "Voltar")) {
+            case 0:
+                cadastrar_acomodacao();
+                break;
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+            default: // Voltar
+                return EXIT_SUCCESS;
+        }
+    }
+}
+
 int cadastrar_acomodacao() {
     clrscr();
 
@@ -214,3 +214,7 @@ int cadastrar_acomodacao() {
     DATABASE->close(Acomodacoes);
     return EXIT_SUCCESS;
 }
+
+
+
+
