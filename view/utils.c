@@ -104,7 +104,9 @@ int form(int mode, const Table table, void *ptr) {
             printf($r $a "%s: " $r, colMeta->displayName); // Imprime o label do input
 
             int iX, iY; // Coordenadas do input
-            wherexy(&iX, &iY);
+            if (mode != 1) {
+                wherexy(&iX, &iY);
+            }
 
             if (mode != 0) { // Inserir = 0, não tem valores predefinidos
                 printVal(stdout, colMeta, ptr);
