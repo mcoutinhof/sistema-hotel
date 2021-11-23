@@ -49,6 +49,17 @@ int cadastrar_categoria();
 // principal -> cadastro -> categoria -> ver_categoria
 int ver_categoria();
 
+//###OPERADOR
+
+// principal -> cadastros -> operador
+int menu_operador();
+
+// principal -> cadastro -> operador -> cadastrar_operador
+int cadastrar_operador();
+
+// principal -> cadastro -> operador -> ver_operador
+int ver_operador();
+
 //###ACOMODACAO
 
 // principal -> cadastros -> acomodacao
@@ -82,11 +93,13 @@ int cadastrar_fornecedor();
 // principal -> cadastro -> fornecedor -> ver_fornecedor
 int ver_fornecedor();
 
-// principal -> cadastros -> operador
-int menu_operador();
+//###RESERVA
 
-// principal -> cadastro -> operador -> cadastrar_operador
-int cadastrar_operador();
+// principal -> reserva
+int menu_reservas();
 
-// principal -> cadastro -> operador -> ver_operador
-int ver_operador();
+// principal -> reserva -> cadastrar_reserva
+int cadastrar_reserva();
+
+// principal -> reserva -> ver_reserva
+int ver_reserva();

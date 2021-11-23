@@ -7,21 +7,21 @@
 int menu_principal() {
     while (1) {
         clrscr();
-        switch (menu(5, "Cadastros", "Produtos", "Reservas", "Relatórios", "Sair")) {
-            case 0:
-                menu_cadastros();
-                break;
-            case 1:
-                // menu_produtos();
-                break;
-            case 2:
-                // menu_reservas();
-                break;
-            case 3:
-                // menu_relatorios();
-                break;
-            default: // Sair
-                return EXIT_SUCCESS;
+        switch (menu(5, "Cadastros", "Gestão de Estoque", "Reservas", "Relatórios", "Sair")) {
+        case 0:
+            menu_cadastros();
+            break;
+        case 1:
+            // menu_produtos();
+            break;
+        case 2:
+            menu_reservas();
+            break;
+        case 3:
+            // menu_relatorios();
+            break;
+        default: // Sair
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -30,28 +30,28 @@ int menu_cadastros() {
     while (1) {
         clrscr();
         switch (menu(8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos", "Fornecedores", "Voltar")) {
-            case 0:
-                menu_hospedes();
-                break;
-            case 1:
-                menu_hotel();
-                break;
-            case 2:
-                menu_categoria();
-                break;
-            case 3:
-                menu_operador();
-                break;
-            case 4:
-                menu_acomodacao();
-                break;
-            case 5:
-                menu_produto();
-                break;
-            case 6:
-                menu_fornecedor();
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            menu_hospedes();
+            break;
+        case 1:
+            menu_hotel();
+            break;
+        case 2:
+            menu_categoria();
+            break;
+        case 3:
+            menu_operador();
+            break;
+        case 4:
+            menu_acomodacao();
+            break;
+        case 5:
+            menu_produto();
+            break;
+        case 6:
+            menu_fornecedor();
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -60,14 +60,14 @@ int menu_hospedes() {
     while (1) {
         clrscr();
         switch (menu(3, "Inserir hóspede", "Ver hóspede", "Voltar")) {
-            case 0:
-                cadastrar_hospede();
-                break;
-            case 1:
-                ver_hospede();
-                break;
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            cadastrar_hospede();
+            break;
+        case 1:
+            ver_hospede();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -93,16 +93,16 @@ int ver_hospede() {
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
-            case 0:
-                continue;
-            case 1:
-                clrscr();
-                form(2, Hospedes, &hosp);
-                DATABASE->update(Hospedes, &hosp);
-                break;
-            case 2:
-                DATABASE->delete(Hospedes);
-                break;
+        case 0:
+            continue;
+        case 1:
+            clrscr();
+            form(2, Hospedes, &hosp);
+            DATABASE->update(Hospedes, &hosp);
+            break;
+        case 2:
+            DATABASE->delete (Hospedes);
+            break;
         }
         if (option == 3)
             break;
@@ -115,14 +115,14 @@ int menu_hotel() {
     while (1) {
         clrscr();
         switch (menu(3, "Inserir hotel", "Ver hotel", "Voltar")) {
-            case 0:
-                cadastrar_hotel();
-                break;
-            case 1:
-                ver_hotel();
-                break;
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            cadastrar_hotel();
+            break;
+        case 1:
+            ver_hotel();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -148,16 +148,16 @@ int ver_hotel() {
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
-            case 0:
-                continue;
-            case 1:
-                clrscr();
-                form(2, Hoteis, &hotel);
-                DATABASE->update(Hoteis, &hotel);
-                break;
-            case 2:
-                DATABASE->delete(Hoteis);
-                break;
+        case 0:
+            continue;
+        case 1:
+            clrscr();
+            form(2, Hoteis, &hotel);
+            DATABASE->update(Hoteis, &hotel);
+            break;
+        case 2:
+            DATABASE->delete (Hoteis);
+            break;
         }
         if (option == 3)
             break;
@@ -170,14 +170,14 @@ int menu_categoria() {
     while (1) {
         clrscr();
         switch (menu(3, "Inserir categoria", "Ver categoria", "Voltar")) {
-            case 0:
-                cadastrar_categoria();
-                break;
-            case 1:
-                ver_categoria();
-                break;
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            cadastrar_categoria();
+            break;
+        case 1:
+            ver_categoria();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -205,16 +205,16 @@ int ver_categoria() {
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
-            case 0:
-                continue;
-            case 1:
-                clrscr(); // Sempre limpar a tela ...
-                form(2, Categorias, &cat);
-                DATABASE->update(Categorias, &cat);
-                break;
-            case 2:
-                DATABASE->delete(Categorias);
-                break;
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Categorias, &cat);
+            DATABASE->update(Categorias, &cat);
+            break;
+        case 2:
+            DATABASE->delete (Categorias);
+            break;
         }
         if (option == 3)
             break;
@@ -226,14 +226,14 @@ int menu_operador() {
     while (1) {
         clrscr();
         switch (menu(3, "Inserir operador", "Ver operador", "Voltar")) {
-            case 0:
-                cadastrar_operador();
-                break;
-            case 1:
-                ver_operador();
-                break;
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            cadastrar_operador();
+            break;
+        case 1:
+            ver_operador();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -259,16 +259,16 @@ int ver_operador() {
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
-            case 0:
-                continue;
-            case 1:
-                clrscr(); // Sempre limpar a tela ...
-                form(2, Operadores, &ope);
-                DATABASE->update(Operadores, &ope);
-                break;
-            case 2:
-                DATABASE->delete(Operadores);
-                break;
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Operadores, &ope);
+            DATABASE->update(Operadores, &ope);
+            break;
+        case 2:
+            DATABASE->delete (Operadores);
+            break;
         }
         if (option == 3)
             break;
@@ -281,14 +281,14 @@ int menu_acomodacao() {
     while (1) {
         clrscr();
         switch (menu(3, "Inserir acomodação", "Ver acomodação", "Voltar")) {
-            case 0:
-                cadastrar_acomodacao();
-                break;
-            case 1:
-                ver_acomodacao();
-                break;
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            cadastrar_acomodacao();
+            break;
+        case 1:
+            ver_acomodacao();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -314,16 +314,16 @@ int ver_acomodacao() {
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
-            case 0:
-                continue;
-            case 1:
-                clrscr(); // Sempre limpar a tela ...
-                form(2, Acomodacoes, &acom);
-                DATABASE->update(Acomodacoes, &acom);
-                break;
-            case 2:
-                DATABASE->delete(Acomodacoes);
-                break;
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Acomodacoes, &acom);
+            DATABASE->update(Acomodacoes, &acom);
+            break;
+        case 2:
+            DATABASE->delete (Acomodacoes);
+            break;
         }
         if (option == 3)
             break;
@@ -335,14 +335,14 @@ int menu_produto() {
     while (1) {
         clrscr();
         switch (menu(3, "Inserir produto", "Ver produto", "Voltar")) {
-            case 0:
-                cadastrar_produto();
-                break;
-            case 1:
-                ver_produto();
-                break;
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            cadastrar_produto();
+            break;
+        case 1:
+            ver_produto();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -368,16 +368,16 @@ int ver_produto() {
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
-            case 0:
-                continue;
-            case 1:
-                clrscr(); // Sempre limpar a tela ...
-                form(2, Produtos, &prod);
-                DATABASE->update(Produtos, &prod);
-                break;
-            case 2:
-                DATABASE->delete(Produtos);
-                break;
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Produtos, &prod);
+            DATABASE->update(Produtos, &prod);
+            break;
+        case 2:
+            DATABASE->delete (Produtos);
+            break;
         }
         if (option == 3)
             break;
@@ -390,14 +390,14 @@ int menu_fornecedor() {
     while (1) {
         clrscr();
         switch (menu(3, "Inserir Fornecedor", "Ver Fornecedor", "Voltar")) {
-            case 0:
-                cadastrar_fornecedor();
-                break;
-            case 1:
-                ver_fornecedor();
-                break;
-            default: // Voltar
-                return EXIT_SUCCESS;
+        case 0:
+            cadastrar_fornecedor();
+            break;
+        case 1:
+            ver_fornecedor();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
         }
     }
 }
@@ -423,20 +423,78 @@ int ver_fornecedor() {
         gotoxy(3, wherey() + 2);
         int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
-            case 0:
-                continue;
-            case 1:
-                clrscr(); // Sempre limpar a tela ...
-                form(2, Fornecedores, &forn);
-                DATABASE->update(Fornecedores, &forn);
-                break;
-            case 2:
-                DATABASE->delete(Fornecedores);
-                break;
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Fornecedores, &forn);
+            DATABASE->update(Fornecedores, &forn);
+            break;
+        case 2:
+            DATABASE->delete (Fornecedores);
+            break;
         }
         if (option == 3)
             break;
     }
 
     DATABASE->close(Fornecedores);
+}
+int menu_reservas() {
+    while (1) {
+        clrscr();
+        switch (menu(3, "Verificar reserva", "Inserir reserva", "Ver reserva", "Voltar")) {
+        case 0:
+            // verificar_reserva();
+            break;
+        case 1:
+            cadastrar_reserva();
+            break;
+        case 2:
+            ver_reserva();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
+        }
+    }
+}
+int cadastrar_reserva() {
+    clrscr();
+    //Recupera os dados da reserva
+    struct Reserva reserva = {};
+    form(0, Reservas, &reserva);
+
+    //Cria a reserva
+    DATABASE->open(Reservas);
+    DATABASE->insert(Reservas, &reserva);
+    DATABASE->close(Reservas);
+
+    return EXIT_SUCCESS;
+}
+
+int ver_reserva() {
+    DATABASE->open(Reservas);
+
+    DATABASE_forEach(struct Reserva, reserva, Reservas) {
+        clrscr();
+        form(1, Reservas, &reserva);
+        gotoxy(3, wherey() + 2);
+        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        switch (option) {
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Reservas, &reserva);
+            DATABASE->update(Reservas, &reserva);
+            break;
+        case 2:
+            DATABASE->delete (Reservas);
+            break;
+        }
+        if (option == 3)
+            break;
+    }
+
+    DATABASE->close(Reservas);
 }
