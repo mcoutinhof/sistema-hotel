@@ -7,7 +7,7 @@
 int menu_principal() {
     while (1) {
         clrscr();
-        switch (menu(5, "Cadastros", "Gestão de Estoque", "Reservas", "Relatórios", "Sair")) {
+        switch (menu($f, 5, "Cadastros", "Gestão de Estoque", "Reservas", "Relatórios", "Sair")) {
         case 0:
             menu_cadastros();
             break;
@@ -29,7 +29,7 @@ int menu_principal() {
 int menu_cadastros() {
     while (1) {
         clrscr();
-        switch (menu(8, "Inserir", "Ver")) {
+        switch (menu($f, 3, "Inserir", "Ver", "Voltar")) {
         case 0:
             menu_inserir();
             break;
@@ -43,7 +43,7 @@ int menu_cadastros() {
 }
 
 int entidades() {
-    return menu(8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos", "Fornecedores", "Voltar");
+    return menu($f, 8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos", "Fornecedores", "Voltar");
 }
 
 int menu_ver() {
@@ -125,7 +125,7 @@ int ver_hospede() {
         clrscr();
         form(1, Hospedes, &hosp);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
@@ -164,7 +164,7 @@ int ver_hotel() {
         clrscr();
         form(1, Hoteis, &hotel);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
@@ -205,7 +205,7 @@ int ver_categoria() {
         clrscr();
         form(1, Categorias, &cat);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
@@ -243,7 +243,7 @@ int ver_operador() {
         clrscr();
         form(1, Operadores, &ope);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
@@ -282,7 +282,7 @@ int ver_acomodacao() {
         clrscr();
         form(1, Acomodacoes, &acom);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
@@ -320,7 +320,7 @@ int ver_produto() {
         clrscr();
         form(1, Produtos, &prod);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
@@ -359,7 +359,7 @@ int ver_fornecedor() {
         clrscr();
         form(1, Fornecedores, &forn);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
@@ -382,7 +382,7 @@ int ver_fornecedor() {
 int menu_reservas() {
     while (1) {
         clrscr();
-        switch (menu(4, "Verificar reserva", "Inserir reserva", "Ver reserva", "Voltar")) {
+        switch (menu($f, 4, "Verificar reserva", "Inserir reserva", "Ver reserva", "Voltar")) {
         case 0:
             // verificar_reserva();
             break;
@@ -419,7 +419,7 @@ int ver_reserva() {
         clrscr();
         form(1, Reservas, &reserva);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;

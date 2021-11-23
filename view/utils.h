@@ -18,4 +18,4 @@ int form(int mode, const Table table, void *ptr);
  * @example <code>menu(">>", 3, "Item zero", "Item um", "Item dois");</code>
  * @return Retorna o índice do item selecionado pelo usuário.
  */
-int menu(int nitems, ...);
+int menu(const char *prefix, int nitems, ...);

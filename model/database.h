@@ -88,3 +88,6 @@ int DATABASE_findById(const Table table, void *ptr, unsigned int id);
 extern const Database *DATABASE;
 
 int initDatabase();
+
+/** @return 1 se o usuário logado é administrador, 0 se não. */
+int isAdmin();

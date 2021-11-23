@@ -114,7 +114,7 @@ int form(int mode, const Table table, void *ptr) {
 
             if (mode == 2) { // Editar = 2, pergunta se quer editar
                 gotoxy(x + 2, iY + 1);
-                int edit = menu(2, "Próximo", "Editar");
+                int edit = menu($f, 2, "Próximo", "Editar");
                 gotoxy(x + 2, iY + 1);
                 clrtobot();
                 if (!edit) continue;
@@ -135,7 +135,7 @@ int form(int mode, const Table table, void *ptr) {
     return 1;
 }
 
-int menu(int nitems, ...) {
+int menu(const char *prefix, int nitems, ...) {
     va_list items;
     int x, y, opt = 0;
     wherexy(&x, &y);
@@ -146,9 +146,9 @@ int menu(int nitems, ...) {
     for (int i = 0; i < nitems; ++i) {
         gotoxy(x, y + i);
         if (i == opt % nitems) {
-            printf($r $i "%s", va_arg(items, char *)); // Destaca a opção selecionada
+            printf($r "%s" $i "%s", prefix, va_arg(items, char *)); // Destaca a opção selecionada
         } else {
-            printf($r    "%s", va_arg(items, char *));
+            printf($r "%s" "%s", prefix, va_arg(items, char *));
         }
     }
 
