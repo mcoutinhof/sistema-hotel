@@ -59,3 +59,25 @@ int cadastrar_acomodacao();
 
 // principal -> cadastro -> acomodacao -> ver_acomodacao
 //int ver_acomodacao();
+
+//###PRODUTO
+
+// principal -> cadastros -> produto
+//int menu_produto();
+
+// principal -> cadastro -> produto -> cadastrar_produto
+//int cadastrar_produto();
+
+// principal -> cadastro -> produto -> ver_produto
+//int ver_produto();
+
+//###FORNECEDOR
+
+// principal -> cadastros -> fornecedor
+//int menu_fornecedor();
+
+// principal -> cadastro -> fornecedor -> cadastrar_fornecedor
+//int cadastrar_forncedor();
+
+// principal -> cadastro -> fornecedor -> ver_fornecedor
+//int ver_forncedor();
