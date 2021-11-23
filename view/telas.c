@@ -47,6 +47,8 @@ int menu_cadastros() {
         case 5:
             menu_produto();
             break;
+        case 6:
+            menu_fornecedor();
         default: // Voltar
             return EXIT_SUCCESS;
         }
@@ -163,7 +165,6 @@ int ver_hotel() {
     DATABASE->close(Hoteis);
 }
 
-
 int menu_categoria() {
     while (1) {
         clrscr();
@@ -193,7 +194,6 @@ int cadastrar_categoria() {
     DATABASE->close(Categorias);
     return EXIT_SUCCESS;
 }
-
 
 int ver_categoria() {
     DATABASE->open(Categorias);
@@ -328,4 +328,59 @@ int ver_produto() {
     }
 
     DATABASE->close(Produtos);
+}
+
+int menu_fornecedor() {
+    while (1) {
+        clrscr();
+        switch (menu(3, "Inserir Fornecedor", "Ver Fornecedor", "Voltar")) {
+        case 0:
+            cadastrar_fornecedor();
+            break;
+        case 1:
+            ver_fornecedor();
+            break;
+        default: // Voltar
+            return EXIT_SUCCESS;
+        }
+    }
+}
+
+int cadastrar_fornecedor() {
+    clrscr();
+
+    struct Fornecedor forn = {}; // Sempre coloque as chaves pra zerar os valores da struct
+    form(0, Fornecedores, &forn);
+
+    DATABASE->open(Fornecedores);
+    DATABASE->insert(Fornecedores, &forn);
+    DATABASE->close(Fornecedores);
+    return EXIT_SUCCESS;
+}
+
+int ver_fornecedor() {
+    DATABASE->open(Fornecedores);
+
+    DATABASE_forEach(struct Fornecedor, forn, Fornecedores) {
+        clrscr();
+        form(1, Fornecedores, &forn);
+        gotoxy(3, wherey() + 2);
+        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        switch (option) {
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Fornecedores, &forn);
+            DATABASE->update(Fornecedores, &forn);
+            break;
+        case 2:
+            DATABASE->delete (Fornecedores);
+            break;
+        }
+        if (option == 3)
+            break;
+    }
+
+    DATABASE->close(Fornecedores);
 }

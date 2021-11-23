@@ -74,10 +74,10 @@ int ver_produto();
 //###FORNECEDOR
 
 // principal -> cadastros -> fornecedor
-//int menu_fornecedor();
+int menu_fornecedor();
 
 // principal -> cadastro -> fornecedor -> cadastrar_fornecedor
-//int cadastrar_forncedor();
+int cadastrar_fornecedor();
 
 // principal -> cadastro -> fornecedor -> ver_fornecedor
-//int ver_forncedor();
+int ver_fornecedor();
