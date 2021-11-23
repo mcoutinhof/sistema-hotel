@@ -224,18 +224,13 @@ int ver_categoria() {
 int menu_acomodacao() {
     while (1) {
         clrscr();
-        switch (menu(4, "Cadastrar Acomodação", "Editar Acomodação", "Remover Acomodação", "Exibir Acomodação", "Voltar")) {
+        switch (menu(3, "Inserir acomodação", "Ver acomodação", "Voltar")) {
         case 0:
             cadastrar_acomodacao();
             break;
         case 1:
-
+            ver_acomodacao();
             break;
-        case 2:
-
-            break;
-        case 3:
-
         default: // Voltar
             return EXIT_SUCCESS;
         }
@@ -248,12 +243,36 @@ int cadastrar_acomodacao() {
     struct Acomodacao acomo = {}; // Sempre coloque as chaves pra zerar os valores da struct
     form(0, Acomodacoes, &acomo); // Modo 0 = Inserir
 
-    // Validações, se necessário
-
     DATABASE->open(Acomodacoes);
     DATABASE->insert(Acomodacoes, &acomo);
     DATABASE->close(Acomodacoes);
     return EXIT_SUCCESS;
+}
+
+int ver_acomodacao() {
+    DATABASE->open(Acomodacoes);
+
+    DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
+        clrscr();
+        form(1, Acomodacoes, &acom);
+        gotoxy(3, wherey() + 2);
+        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        switch (option) {
+        case 0:
+            continue;
+        case 1:
+            clrscr(); // Sempre limpar a tela ...
+            form(2, Acomodacoes, &acom);
+            DATABASE->update(Acomodacoes, &acom);
+            break;
+        case 2:
+            DATABASE->delete (Acomodacoes);
+            break;
+        }
+        if (option == 3)
+            break;
+    }
+    DATABASE->close(Acomodacoes);
 }
 
 int menu_produto() {

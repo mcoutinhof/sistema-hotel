@@ -58,7 +58,7 @@ int menu_acomodacao();
 int cadastrar_acomodacao();
 
 // principal -> cadastro -> acomodacao -> ver_acomodacao
-//int ver_acomodacao();
+int ver_acomodacao();
 
 //###PRODUTO
 
