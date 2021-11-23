@@ -81,3 +81,12 @@ int cadastrar_fornecedor();
 
 // principal -> cadastro -> fornecedor -> ver_fornecedor
 int ver_fornecedor();
+
+// principal -> cadastros -> operador
+int menu_operador();
+
+// principal -> cadastro -> operador -> cadastrar_operador
+int cadastrar_operador();
+
+// principal -> cadastro -> operador -> ver_operador
+int ver_operador();
