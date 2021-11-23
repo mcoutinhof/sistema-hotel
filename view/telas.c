@@ -163,21 +163,17 @@ int ver_hotel() {
     DATABASE->close(Hoteis);
 }
 
+
 int menu_categoria() {
     while (1) {
         clrscr();
-        switch (menu(4, "Cadastrar Categoria de Acomodação", "Editar Categoria de Acomodação", "Remover Categoria de Acomodação", "Exibir Categorias de Acomodações", "Voltar")) {
+        switch (menu(3, "Inserir categoria", "Ver categoria", "Voltar")) {
         case 0:
             cadastrar_categoria();
             break;
         case 1:
-            //editar_hotel(); //need code
+            ver_categoria();
             break;
-        case 2:
-            //remover_hotel(); //need code
-            break;
-        case 3:
-            //exibir_hotel(); //need code
         default: // Voltar
             return EXIT_SUCCESS;
         }
