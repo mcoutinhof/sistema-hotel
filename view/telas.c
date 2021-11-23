@@ -60,9 +60,6 @@ int menu_hospedes() {
         case 1:
             ver_hospede();
             break;
-        case 3:
-
-            //procurar_hospede();
         default: // Voltar
             return EXIT_SUCCESS;
         }
@@ -74,8 +71,6 @@ int cadastrar_hospede() {
 
     struct Hospede hosp = {}; // Sempre coloque as chaves pra zerar os valores da struct
     form(0, Hospedes, &hosp); // Modo 0 = Inserir
-
-    // Validações, se necessário
 
     DATABASE->open(Hospedes);
     DATABASE->insert(Hospedes, &hosp); // Insere o hóspede no banco de dados
@@ -113,18 +108,13 @@ int ver_hospede() {
 int menu_hotel() {
     while (1) {
         clrscr();
-        switch (menu(4, "Cadastrar Hotel", "Editar Hotel", "Remover Hotel", "Exibir Hoteis", "Voltar")) {
+        switch (menu(3, "Inserir hotel", "Ver hotel", "Voltar")) {
             case 0:
                 cadastrar_hotel();
                 break;
             case 1:
-                //editar_hotel(); //need code
+                ver_hotel();
                 break;
-            case 2:
-                //remover_hotel(); //need code
-                break;
-            case 3:
-                //exibir_hotel(); //need code
             default: // Voltar
                 return EXIT_SUCCESS;
         }
@@ -137,12 +127,37 @@ int cadastrar_hotel() {
     struct Hotel hote = {}; // Sempre coloque as chaves pra zerar os valores da struct
     form(0, Hoteis, &hote); // Modo 0 = Inserir
 
-    // Validações, se necessário
-
     DATABASE->open(Hoteis);
     DATABASE->insert(Hoteis, &hote); // Insere o hotel no banco de dados
     DATABASE->close(Hoteis);
     return EXIT_SUCCESS;
+}
+
+int ver_hotel() {
+    DATABASE->open(Hoteis);
+
+    DATABASE_forEach(struct Hotel, hotel, Hoteis) {
+        clrscr();
+        form(1, Hoteis, &hotel);
+        gotoxy(3, wherey() + 2);
+        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        switch (option) {
+            case 0:
+                continue;
+            case 1:
+                clrscr();     // Sempre limpar a tela ...
+                form(2, Hoteis, &hotel);
+                DATABASE->update(Hoteis, &hotel);
+                break;
+            case 2:
+                DATABASE->delete(Hoteis);
+                break;
+        }
+        if (option == 3)
+            break;
+    }
+
+    DATABASE->close(Hoteis);
 }
 
 int menu_categoria() {

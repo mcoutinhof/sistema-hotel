@@ -36,7 +36,7 @@ int menu_hotel();
 int cadastrar_hotel();
 
 // principal -> cadastro -> hotel -> ver_hotel
-//int ver_hotel();
+int ver_hotel();
 
 //###CATEGORIA
 
