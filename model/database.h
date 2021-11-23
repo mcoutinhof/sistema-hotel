@@ -76,6 +76,15 @@ for (elementType (elementName); DATABASE->next((table), &(elementName));)
 DATABASE->rewind((table));                            \
 for (elementType (elementName); DATABASE->next((table), &(elementName)); DATABASE->update((table), &(elementName)))
 
+/**
+ *
+ * @param table A tabela a ser lida.
+ * @param ptr Ponteiro para o local da memória onde o registro será armazenado.
+ * @param id O id que está sendo procurado.
+ * @return 1 se achar, 0 caso contrário.
+ */
+int DATABASE_findById(const Table table, void *ptr, unsigned int id);
+
 extern const Database *DATABASE;
 
 int initDatabase();
