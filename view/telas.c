@@ -29,43 +29,77 @@ int menu_principal() {
 int menu_cadastros() {
     while (1) {
         clrscr();
-        switch (menu(8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos", "Fornecedores", "Voltar")) {
+        switch (menu(8, "Inserir", "Ver")) {
         case 0:
-            menu_hospedes();
+            menu_inserir();
             break;
         case 1:
-            menu_hotel();
+            menu_ver();
             break;
-        case 2:
-            menu_categoria();
-            break;
-        case 3:
-            menu_operador();
-            break;
-        case 4:
-            menu_acomodacao();
-            break;
-        case 5:
-            menu_produto();
-            break;
-        case 6:
-            menu_fornecedor();
         default: // Voltar
             return EXIT_SUCCESS;
         }
     }
 }
 
-int menu_hospedes() {
+int entidades() {
+    return menu(8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos", "Fornecedores", "Voltar");
+}
+
+int menu_ver() {
     while (1) {
         clrscr();
-        switch (menu(3, "Inserir hóspede", "Ver hóspede", "Voltar")) {
+        switch (entidades()) {
+        case 0:
+            ver_hospede();
+            break;
+        case 1:
+            ver_hotel();
+            break;
+        case 2:
+            ver_categoria();
+            break;
+        case 3:
+            ver_operador();
+            break;
+        case 4:
+            ver_acomodacao();
+            break;
+        case 5:
+            ver_produto();
+            break;
+        case 6:
+            ver_fornecedor();
+        default: // Voltar
+            return EXIT_SUCCESS;
+        }
+    }
+}
+
+int menu_inserir() {
+    while (1) {
+        clrscr();
+        switch (entidades()) {
         case 0:
             cadastrar_hospede();
             break;
         case 1:
-            ver_hospede();
+            cadastrar_hotel();
             break;
+        case 2:
+            cadastrar_categoria();
+            break;
+        case 3:
+            cadastrar_operador();
+            break;
+        case 4:
+            cadastrar_acomodacao();
+            break;
+        case 5:
+            cadastrar_produto();
+            break;
+        case 6:
+            cadastrar_fornecedor();
         default: // Voltar
             return EXIT_SUCCESS;
         }
@@ -111,22 +145,6 @@ int ver_hospede() {
     DATABASE->close(Hospedes);
 }
 
-int menu_hotel() {
-    while (1) {
-        clrscr();
-        switch (menu(3, "Inserir hotel", "Ver hotel", "Voltar")) {
-        case 0:
-            cadastrar_hotel();
-            break;
-        case 1:
-            ver_hotel();
-            break;
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
-}
-
 int cadastrar_hotel() {
     clrscr();
 
@@ -164,22 +182,6 @@ int ver_hotel() {
     }
 
     DATABASE->close(Hoteis);
-}
-
-int menu_categoria() {
-    while (1) {
-        clrscr();
-        switch (menu(3, "Inserir categoria", "Ver categoria", "Voltar")) {
-        case 0:
-            cadastrar_categoria();
-            break;
-        case 1:
-            ver_categoria();
-            break;
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
 }
 
 int cadastrar_categoria() {
@@ -222,22 +224,6 @@ int ver_categoria() {
     DATABASE->close(Categorias);
 }
 
-int menu_operador() {
-    while (1) {
-        clrscr();
-        switch (menu(3, "Inserir operador", "Ver operador", "Voltar")) {
-        case 0:
-            cadastrar_operador();
-            break;
-        case 1:
-            ver_operador();
-            break;
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
-}
-
 int cadastrar_operador() {
     clrscr();
 
@@ -277,22 +263,6 @@ int ver_operador() {
     DATABASE->close(Operadores);
 }
 
-int menu_acomodacao() {
-    while (1) {
-        clrscr();
-        switch (menu(3, "Inserir acomodação", "Ver acomodação", "Voltar")) {
-        case 0:
-            cadastrar_acomodacao();
-            break;
-        case 1:
-            ver_acomodacao();
-            break;
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
-}
-
 int cadastrar_acomodacao() {
     clrscr();
 
@@ -329,22 +299,6 @@ int ver_acomodacao() {
             break;
     }
     DATABASE->close(Acomodacoes);
-}
-
-int menu_produto() {
-    while (1) {
-        clrscr();
-        switch (menu(3, "Inserir produto", "Ver produto", "Voltar")) {
-        case 0:
-            cadastrar_produto();
-            break;
-        case 1:
-            ver_produto();
-            break;
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
 }
 
 int cadastrar_produto() {
@@ -386,22 +340,6 @@ int ver_produto() {
     DATABASE->close(Produtos);
 }
 
-int menu_fornecedor() {
-    while (1) {
-        clrscr();
-        switch (menu(3, "Inserir Fornecedor", "Ver Fornecedor", "Voltar")) {
-        case 0:
-            cadastrar_fornecedor();
-            break;
-        case 1:
-            ver_fornecedor();
-            break;
-        default: // Voltar
-            return EXIT_SUCCESS;
-        }
-    }
-}
-
 int cadastrar_fornecedor() {
     clrscr();
 
@@ -440,10 +378,11 @@ int ver_fornecedor() {
 
     DATABASE->close(Fornecedores);
 }
+
 int menu_reservas() {
     while (1) {
         clrscr();
-        switch (menu(3, "Verificar reserva", "Inserir reserva", "Ver reserva", "Voltar")) {
+        switch (menu(4, "Verificar reserva", "Inserir reserva", "Ver reserva", "Voltar")) {
         case 0:
             // verificar_reserva();
             break;
@@ -458,6 +397,7 @@ int menu_reservas() {
         }
     }
 }
+
 int cadastrar_reserva() {
     clrscr();
     //Recupera os dados da reserva

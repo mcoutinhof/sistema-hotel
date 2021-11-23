@@ -6,20 +6,13 @@ int menu_principal();
 // principal -> cadastros
 int menu_cadastros();
 
-/*ORDEM 
-Hospedes --- e logo em seguida tudo relacionado com ele
-hotel
-Categoria de acomodação
-Operadores
-Acomodações
-Produtos
-Fornecedores
-*/
+// principal -> cadastros -> ver
+int menu_ver();
+
+// principal -> cadastros -> inserir
+int menu_inserir();
 
 //###HOSPEDE
-
-// principal -> cadastros -> hospedes
-int menu_hospedes();
 
 // principal -> cadastro -> hospede -> cadastrar_hospede
 int cadastrar_hospede();
@@ -29,9 +22,6 @@ int ver_hospede();
 
 //###HOTEL
 
-// principal -> cadastros -> hotel
-int menu_hotel();
-
 // principal -> cadastro -> hotel -> cadastrar_hotel
 int cadastrar_hotel();
 
@@ -39,9 +29,6 @@ int cadastrar_hotel();
 int ver_hotel();
 
 //###CATEGORIA
-
-// principal -> cadastros -> categoria
-int menu_categoria();
 
 // principal -> cadastro -> categoria -> cadastrar_categoria
 int cadastrar_categoria();
@@ -51,9 +38,6 @@ int ver_categoria();
 
 //###OPERADOR
 
-// principal -> cadastros -> operador
-int menu_operador();
-
 // principal -> cadastro -> operador -> cadastrar_operador
 int cadastrar_operador();
 
@@ -61,9 +45,6 @@ int cadastrar_operador();
 int ver_operador();
 
 //###ACOMODACAO
-
-// principal -> cadastros -> acomodacao
-int menu_acomodacao();
 
 // principal -> cadastro -> acomodacao -> cadastrar_acomodacao
 int cadastrar_acomodacao();
@@ -73,9 +54,6 @@ int ver_acomodacao();
 
 //###PRODUTO
 
-// principal -> cadastros -> produto
-int menu_produto();
-
 // principal -> cadastro -> produto -> cadastrar_produto
 int cadastrar_produto();
 
@@ -83,9 +61,6 @@ int cadastrar_produto();
 int ver_produto();
 
 //###FORNECEDOR
-
-// principal -> cadastros -> fornecedor
-int menu_fornecedor();
 
 // principal -> cadastro -> fornecedor -> cadastrar_fornecedor
 int cadastrar_fornecedor();
