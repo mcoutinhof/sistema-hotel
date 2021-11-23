@@ -47,7 +47,7 @@ int menu_categoria();
 int cadastrar_categoria();
 
 // principal -> cadastro -> categoria -> ver_categoria
-//int ver_categoria();
+int ver_categoria();
 
 //###ACOMODACAO
 
