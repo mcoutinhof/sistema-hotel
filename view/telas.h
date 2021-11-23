@@ -63,13 +63,13 @@ int cadastrar_acomodacao();
 //###PRODUTO
 
 // principal -> cadastros -> produto
-//int menu_produto();
+int menu_produto();
 
 // principal -> cadastro -> produto -> cadastrar_produto
-//int cadastrar_produto();
+int cadastrar_produto();
 
 // principal -> cadastro -> produto -> ver_produto
-//int ver_produto();
+int ver_produto();
 
 //###FORNECEDOR
 
