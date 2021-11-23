@@ -15,7 +15,7 @@ int menu_principal() {
                 // menu_produtos();
                 break;
             case 2:
-                // menu_reservas();
+                menu_reservas();
                 break;
             case 3:
                 // menu_relatorios();
@@ -439,4 +439,62 @@ int ver_fornecedor() {
     }
 
     DATABASE->close(Fornecedores);
+}
+int menu_reserva() {
+    while (1) {
+        clrscr();
+        switch (menu(3, "Verificar reserva", "Inserir reserva", "Ver reserva", "Voltar")) {
+            case 0:
+                // verificar_reserva();
+                break;
+            case 1:
+                cadastrar_reserva();
+                break;
+            case 2:
+                ver_reserva();
+                break;
+            default: // Voltar
+                return EXIT_SUCCESS;
+        }
+    }
+}
+int cadastrar_reserva() {
+    clrscr();
+    //Recupera os dados da reserva
+    struct Reserva reserva = {}; 
+    form(0, Reservas, &reserva);
+
+    //Cria a reserva
+    DATABASE->open(Reservas);
+    DATABASE->insert(Reservas, &reserva);
+    DATABASE->close(Reservas);
+    
+    return EXIT_SUCCESS;
+}
+
+int ver_reserva() {
+    DATABASE->open(Reservas);
+
+    DATABASE_forEach(struct Reserva, reserva, Reservas) {
+        clrscr();
+        form(1, Reservas, &reserva);
+        gotoxy(3, wherey() + 2);
+        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        switch (option) {
+            case 0:
+                continue;
+            case 1:
+                clrscr(); // Sempre limpar a tela ...
+                form(2, Reservas, &reserva);
+                DATABASE->update(Reservas, &reserva);
+                break;
+            case 2:
+                DATABASE->delete(Reservas);
+                break;
+        }
+        if (option == 3)
+            break;
+    }
+
+    DATABASE->close(Reservas);
 }
