@@ -1,3 +1,7 @@
+/**
+ * @author Mateus Coutinho
+ */
+
 #pragma once
 
 #include "database.h"

@@ -1,3 +1,7 @@
+/**
+ * @author Mateus Coutinho
+ */
+
 #pragma once
 
 // Limpa a tela e coloca o cursor no início.
@@ -14,6 +18,9 @@ int getch();
 
 // Retorna 1 se getch() retornará um caractere, 0 se ele retornará EOF
 int kbhit();
+
+// Limpa o stdin, lendo todos os caracteres até o fim.
+void clrbuf();
 
 // Move o cursor para a coluna x e linha y.
 void gotoxy(int x, int y);
@@ -32,9 +39,6 @@ int wherex();
 
 // Retorna o número da linha.
 int wherey();
-
-// Interrompe o programa e retorna quando o usuário apertar uma tecla.
-void alert(const char *message);
 
 #define $0  "\033[30m"  // Letra preta
 #define $1  "\033[34m"  // Letra azul-escura

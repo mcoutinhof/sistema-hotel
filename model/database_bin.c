@@ -1,6 +1,9 @@
 /**
+ * @author Mateus Coutinho
  * O armazenamento binário guarda registros (preferencialmente structs) de tamanho fixo (todas tem n bytes).
  * Antes de cada registro há um byte de controle: 1 se o registro está ocupado, 0 se está livre e pode ser sobrescrito.
+ * @note Os retornos com múltiplas condições são usados para mimicar um try-catch:
+ * Se uma função retorna código de sucesso, prossegue, se não, retorna 0. Se todas as funções tiverem sucesso, retorna 1.
  */
 
 #include "database_bin.h"
@@ -9,8 +12,8 @@
 static int bin_open(const Table table) {
     TableState *tableState = *table++;
     const TableInfo *tableInfo = *table++;
-    if ((tableState->stream = fopen(tableInfo->fileName, "a+"))) {
-        if ((freopen(NULL, "r+", tableState->stream))) {
+    if ((tableState->stream = fopen(tableInfo->fileName, "a+"))) { // a+ porque cria o arquivo se ele não existir.
+        if ((freopen(NULL, "r+", tableState->stream))) { // r+ porque permite sobrescrever os dados.
             if (fgetpos(tableState->stream, &tableState->cursorPos) == 0) {
                 tableState->regSize = 0;
                 for (ColumnMeta *colMeta; (colMeta = *table) != NULL; ++table) {

@@ -1,3 +1,7 @@
+/**
+ * @authors Mateus Coutinho, Ryan W. Fonseca & Arthur Gomes.
+ */
+
 #pragma once
 
 #include "database.h"

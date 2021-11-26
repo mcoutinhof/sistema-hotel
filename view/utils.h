@@ -1,21 +1,27 @@
+/**
+ * @author Mateus Coutinho
+ */
+
 #pragma once
 
 #include "../model/database.h"
 
 /**
- * Mostra um formulário de acordo com os campos de uma tabela.
+ * Mostra um formulário com campos de acordo com os metadados das colunas da tabela.
  * @param mode 0 = inserir, 1 = visualizar, 2 = editar.
- * @param table A tabela que contém os campos.
- * @param ptr Ponteiro para a struct onde os dados serão armazenados.
- * @example <code>form(0, Hospedes, &hosp);</code>
- * @return 1 se tiver sucesso, 0 caso contrário.
+ * @param table A tabela que contém as colunas.
+ * @param ptr Ponteiro para a struct de onde os dados serão lidos e/ou onde os dados serão armazenados.
  */
-int form(int mode, const Table table, void *ptr);
+void form(int mode, const Table table, void *ptr);
 
 /**
- * @param nitems Quantidade de itens do menu.
- * @param ... Strings contendo os nomes dos itens.
- * @example <code>menu(">>", 3, "Item zero", "Item um", "Item dois");</code>
- * @return Retorna o índice do item selecionado pelo usuário.
+ * Mostra um menu com n itens, permite ao usuário navegar pressionando TAB e selecionar um item pressionando ENTER.
+ * @param prefix O que é impresso antes do nome de cada item.
+ * @param nitems Número de itens do menu.
+ * @param ... Strings contendo o nome de cada item.
+ * @return o índice do item selecionado pelo usuário.
  */
 int menu(const char *prefix, int nitems, ...);
+
+/** Mostra uma mensagem e retorna quando o usuário pressionar uma tecla. */
+void alert(const char *message);

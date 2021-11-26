@@ -1,3 +1,7 @@
+/**
+ * @author Mateus Coutinho
+ */
+
 #pragma once
 
 /**
@@ -6,11 +10,12 @@
  * O segundo ponteiro deve apontar para uma TableInfo;
  * Os demais ponteiros devem apontar para uma ou mais ColumnMeta;
  * O último ponteiro deve ser NULL para denotar o fim do vetor.
+ * @note Table não armazena os registros, mas armazena informações suficientes para interagir com eles.
  */
 typedef void *Table[];
 
 /**
- * Uma espécie de interface (POO) para os diferentes tipos de armazenamento (binário, XML, etc).
+ * Uma espécie de interface (POO) para os diferentes tipos de armazenamento (binário ou XML).
  */
 typedef struct {
     /**
@@ -35,9 +40,9 @@ typedef struct {
     int (*rewind)(const Table table);
 
     /**
-     * Lê o próximo registro, o armazena na memória e avança o cursor.
+     * Lê o próximo registro, o armazena na struct e avança o cursor.
      * @param table A tabela a ser lida.
-     * @param ptr Ponteiro para o local da memória onde o registro será armazenado.
+     * @param ptr Ponteiro para a struct onde o registro será armazenado.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
     int (*next)(const Table table, void *ptr);
@@ -71,23 +76,20 @@ typedef struct {
 DATABASE->rewind((table));                                \
 for (elementType (elementName); DATABASE->next((table), &(elementName));)
 
-/** Itera por todos os registros da tabela e os atualiza ao final de cada iteração. */
-#define DATABASE_map(elementType, elementName, table) \
-DATABASE->rewind((table));                            \
-for (elementType (elementName); DATABASE->next((table), &(elementName)); DATABASE->update((table), &(elementName)))
-
 /**
- *
+ * Volta ao início da tabela e procura por um registro com um campo `id` específico.
  * @param table A tabela a ser lida.
- * @param ptr Ponteiro para o local da memória onde o registro será armazenado.
- * @param id O id que está sendo procurado.
- * @return 1 se achar, 0 caso contrário.
+ * @param ptr Ponteiro para a struct onde o registro será armazenado.
+ * @param id O ID que está sendo procurado.
+ * @return 1 ao encontrar, 0 caso contrário.
  */
 int DATABASE_findById(const Table table, void *ptr, unsigned int id);
 
+/** O sistema de banco de dados (binário ou xml) que está sendo usado. */
 extern const Database *DATABASE;
 
+/** Inicia o banco de dados. @return 1 se tiver sucesso, 0 caso contrário. */
 int initDatabase();
 
-/** @return 1 se o usuário logado é administrador, 0 se não. */
+/** @return 1 se o usuário logado tem permissões de administração, 0 caso contrário. */
 int isAdmin();
