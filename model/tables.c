@@ -1,3 +1,7 @@
+/**
+ * @author Mateus Coutinho
+ */
+
 #include "tables.h"
 #include "database_local.h"
 

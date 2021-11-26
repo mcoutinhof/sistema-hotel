@@ -1,3 +1,7 @@
+/**
+ * @authors Ryan W. Fonseca & Arthur Gomes.
+ */
+
 #pragma once
 
 // main -> principal

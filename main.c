@@ -1,3 +1,7 @@
+/**
+ * @author Mateus Coutinho
+ */
+
 #include "model/database.h"
 #include "view/telas.h"
 #include <stdio.h>
