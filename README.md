@@ -18,4 +18,4 @@
 * GCC  9.3.0-1 no Prompt de Comando do Windows 11 (WSL2 Ubuntu 20.04)
 * GCC  9.3.0-1 no GNOME Terminal do Linux Mint 20.2
 * **Não funciona** no MinGW, nem no "console" da IDE
-* **Pode não funcionar** em versões antigas do Windows 10.
+* **Pode não funcionar** em versões antigas do Windows 10
