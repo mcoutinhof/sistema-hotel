@@ -43,6 +43,7 @@
 *.pdb
 cmake-build-debug/
 cmake-build-debug-mingw/
+build/
 
 # IDE Project Configuration Files
 .idea/
