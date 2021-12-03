@@ -47,6 +47,7 @@ build/
 
 # IDE Project Configuration Files
 .idea/
+.vscode/
 
 # Kernel Module Compile Results
 *.mod*
