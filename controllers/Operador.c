@@ -2,7 +2,7 @@
 #include "../model/tables.h"
 #include "../view/utils.h"
 #include <stdlib.h>
-#include "../view/telas.h"
+#include "../view/rotas.h"
 
 int cadastrar_operador() {
     clrscr();
