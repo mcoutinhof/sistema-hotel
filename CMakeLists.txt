@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16.3)
 project(sistema-hotel C)
 
-set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD 11)
 
 add_executable(sistema-hotel
         main.c
         lcurses.c
         model/database.c model/database_bin.c model/database_xml.c model/tables.c
-        view/telas.c view/utils.c
+        view/rotas.c view/utils.c
         controllers/Acomodacao.c
         controllers/Categoria.c
         controllers/Fornecedor.c
