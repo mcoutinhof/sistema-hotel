@@ -1,8 +1,8 @@
 #include "../lcurses.h"
 #include "../model/tables.h"
-#include "utils.h"
+#include "../view/utils.h"
 #include <stdlib.h>
-#include "telas.h"
+#include "../view/telas.h"
 
 int cadastrar_produto() {
     clrscr();
@@ -23,7 +23,7 @@ int ver_produto() {
         clrscr();
         form(1, Produtos, &prod);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;

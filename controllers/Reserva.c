@@ -1,8 +1,8 @@
 #include "../lcurses.h"
 #include "../model/tables.h"
-#include "utils.h"
+#include "../view/utils.h"
 #include <stdlib.h>
-#include "telas.h"
+#include "../view/telas.h"
 
 int cadastrar_reserva() {
     clrscr();
@@ -25,7 +25,7 @@ int ver_reserva() {
         clrscr();
         form(1, Reservas, &reserva);
         gotoxy(3, wherey() + 2);
-        int option = menu(4, "Próximo", "Editar", "Deletar", "Sair");
+        int option = menu($f, 4, "Próximo", "Editar", "Deletar", "Sair");
         switch (option) {
         case 0:
             continue;
