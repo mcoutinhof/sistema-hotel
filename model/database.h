@@ -12,7 +12,7 @@
  * O último ponteiro deve ser NULL para denotar o fim do vetor.
  * @note Table não armazena os registros, mas armazena informações suficientes para interagir com eles.
  */
-typedef void *Table[];
+typedef const void *Table[];
 
 /**
  * Uma espécie de interface (POO) para os diferentes tipos de armazenamento (binário ou XML).

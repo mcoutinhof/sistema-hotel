@@ -102,10 +102,10 @@ static int bin_insert(const Table table, const void *ptr) {
 }
 
 const Database *BINARY_DATABASE = &(Database) {
-        .open = bin_open,
-        .close = bin_close,
+        .open   = bin_open,
+        .close  = bin_close,
         .rewind = bin_rewind,
-        .next = bin_next,
+        .next   = bin_next,
         .delete = bin_delete,
         .update = bin_update,
         .insert = bin_insert,

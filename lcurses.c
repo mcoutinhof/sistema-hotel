@@ -4,96 +4,164 @@
  */
 
 #include "lcurses.h"
-#include <stdio.h>
-#include <unistd.h>
 #include <termios.h>
+#include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
 
-void clrscr() {
-    fputs("\033[2J\033[3J\033[H", stdout);
-    gotoxy(3, 2); // Uma pequena margem do topo esquerdo da tela.
+static struct termios shellAttr, programAttr, savedAttr;
+static int shellFlags, programFlags, savedFlags;
+
+/**
+ * Salva o estado atual do terminal, a ser restaurado por resetty().
+ * @return OK se tiver sucesso e ERR caso falhar.
+ */
+static int savetty(void) {
+    savedAttr = programAttr;
+    savedFlags = programFlags;
+    return OK;
 }
 
-void clrtobot() {
-    fputs("\033[0J", stdout);
+/**
+ * Restaura o estado anterior do terminal, salvo por savetty().
+ * @return OK se tiver sucesso e ERR caso falhar.
+ */
+static int resetty(void) {
+    programAttr = savedAttr;
+    programFlags = savedFlags;
+    return fcntl(STDIN_FILENO, F_SETFL, programFlags)
+           | tcsetattr(STDIN_FILENO, TCSANOW, &programAttr);
 }
 
-void clrtoeol() {
-    fputs("\033[0K", stdout);
+int initscr(void) {
+    printf("\x1b[?1049h"); // Entra na tela alternativa
+    tcgetattr(STDIN_FILENO, &shellAttr);
+    shellFlags = fcntl(STDIN_FILENO, F_GETFL);
+    programFlags = shellFlags;
+    programAttr = shellAttr;
+    return OK;
 }
 
-int getch() {
-    struct termios old_cfg;
-    tcgetattr(STDIN_FILENO, &old_cfg); // Obtém as configurações atuais do terminal.
-    struct termios new_cfg = old_cfg;
-    // Desativa as flags ECHO e ICANON, e então os caracteres inseridos não serão exibidos, ...
-    new_cfg.c_lflag &= ~(ECHO | ICANON); // ... e estarão disponíveis sem ser necessário pressionar ENTER.
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_cfg); // Seta as novas configurações do terminal.
-    register int ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &old_cfg); // Volta às configurações anteriores do terminal.
+int endwin(void) {
+    return (printf("\x1b[?1049l") < 0 ? ERR : OK) // Sai da tela alternativa
+           | fcntl(STDIN_FILENO, F_SETFL, shellFlags)
+           | tcsetattr(STDIN_FILENO, TCSANOW, &shellAttr);
+}
+
+int echo(void) {
+    programAttr.c_lflag |= ECHO;
+    return tcsetattr(STDIN_FILENO, TCSANOW, &programAttr);
+}
+
+int noecho(void) {
+    programAttr.c_lflag &= ~ECHO;
+    return tcsetattr(STDIN_FILENO, TCSANOW, &programAttr);
+}
+
+int cbreak(void) {
+    programAttr.c_lflag &= ~ICANON;
+    return tcsetattr(STDIN_FILENO, TCSANOW, &programAttr);
+}
+
+int nocbreak(void) {
+    programAttr.c_lflag |= ICANON;
+    return tcsetattr(STDIN_FILENO, TCSANOW, &programAttr);
+}
+
+int timeout(int delay) {
+    if (delay) {
+        programFlags &= ~O_NONBLOCK;
+    } else {
+        programFlags |= O_NONBLOCK;
+    }
+    return fcntl(STDIN_FILENO, F_SETFL, programFlags);
+}
+
+int clrscr(void) {
+    return printf("\x1b[2J\x1b[3J\x1b[2;3H") < 0 ? ERR : OK;
+}
+
+int clrtobot(void) {
+    return printf("\x1b[0J") < 0 ? ERR : OK;
+}
+
+int clrtoeol(void) {
+    return printf("\x1b[0K") < 0 ? ERR : OK;
+}
+
+int getch(void) {
+    savetty();
+    noecho();
+    cbreak();
+    int ch = getchar();
+    resetty();
     return ch;
 }
 
-int kbhit() {
-    int old_flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Obtém as configurações atuais do terminal.
-    int new_flags = old_flags | O_NONBLOCK; // Ativa a flag O_NONBLOCK, e então o getch() não esperará por uma entrada.
-    fcntl(STDIN_FILENO, F_SETFL, new_flags); // Seta as novas configurações do terminal.
-    register int ch = getch();
-    fcntl(STDIN_FILENO, F_SETFL, old_flags); // Volta às configurações anteriores do terminal.
+int getche(void) {
+    savetty();
+    echo();
+    cbreak();
+    int ch = getchar();
+    resetty();
+    return ch;
+}
+
+int kbhit(void) {
+    savetty();
+    noecho();
+    cbreak();
+    timeout(0);
+    int ch = getchar();
+    resetty();
     if (ch != EOF) {
         ungetc(ch, stdin);
         return 1;
+    } else {
+        return 0;
     }
-    return 0;
 }
 
-void clrbuf() {
-    int old_flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Obtém as configurações atuais da stream.
-    int new_flags = old_flags | O_NONBLOCK; // Ativa a flag O_NONBLOCK, e então o getch() não esperará por uma entrada.
-    fcntl(STDIN_FILENO, F_SETFL, new_flags); // Seta as novas configurações da stream.
-    struct termios old_cfg;
-    tcgetattr(STDIN_FILENO, &old_cfg); // Obtém as configurações atuais do terminal.
-    struct termios new_cfg = old_cfg;
-    // Desativa as flags ECHO e ICANON, e então os caracteres inseridos não serão exibidos, ...
-    new_cfg.c_lflag &= ~(ECHO | ICANON); // ... e estarão disponíveis sem ser necessário pressionar ENTER.
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_cfg); // Seta as novas configurações do terminal.
-    while (getchar() != EOF); // Lê as entradas até o final.
-    tcsetattr(STDIN_FILENO, TCSANOW, &old_cfg); // Volta às configurações anteriores do terminal.
-    fcntl(STDIN_FILENO, F_SETFL, old_flags); // Volta às configurações anteriores da stream.
+int clrbuf(void) {
+    savetty();
+    noecho();
+    cbreak();
+    timeout(0);
+    while (getchar() != EOF) { /* Lê até o fim. */ }
+    resetty();
+    return OK;
 }
 
-void gotoxy(int x, int y) {
-    printf("\033[%d;%dH", y, x);
+int gotoxy(int x, int y) {
+    return printf("\x1b[%d;%dH", y, x) < 0 ? ERR : OK;
 }
 
-void gotox(int x) {
-    gotoxy(x, wherey());
+int gotox(int x) {
+    return printf("\x1b[%dG", x) < 0 ? ERR : OK;
 }
 
-void gotoy(int y) {
-    gotoxy(wherex(), y);
+int gotoy(int y) {
+    return gotoxy(wherex(), y);
 }
 
-void wherexy(int *x, int *y) {
-    struct termios old_cfg;
-    tcgetattr(STDIN_FILENO, &old_cfg); // Obtém as configurações atuais do terminal.
-    struct termios new_cfg = old_cfg;
-    // Desativa as flags ECHO e ICANON, e então os caracteres inseridos não serão exibidos, ...
-    new_cfg.c_lflag &= ~(ECHO | ICANON); // ... e estarão disponíveis sem ser necessário pressionar ENTER.
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_cfg); // Seta as novas configurações do terminal.
-    fputs("\033[6n", stdout); // Pergunta ao terminal a coordenada do cursor.
-    scanf("%*c%*c%d%*c%d%*c", y, x); // Ele responderá como \033[y;xR.
-    tcsetattr(STDIN_FILENO, TCSANOW, &old_cfg); // Volta às configurações anteriores do terminal.
+int wherexy(int *x, int *y) {
+    savetty();
+    noecho();
+    cbreak();
+    printf("\x1b[6n"); // Pergunta ao terminal a coordenada do cursor.
+    scanf("%*c%*c%d%*c%d%*c", y, x); // Ele responderá como \x1b[y;xR.
+    resetty();
+    return OK;
 }
 
 int wherex() {
-    int x, y;
+    int y, x = ERR;
     wherexy(&x, &y);
     return x;
 }
 
 int wherey() {
-    int x, y;
+    int x, y = ERR;
     wherexy(&x, &y);
     return y;
 }

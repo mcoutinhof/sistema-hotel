@@ -138,7 +138,7 @@ int menu(const char *prefix, int nitems, ...) {
     va_list items;
     int x, y, opt = 0;
     wherexy(&x, &y);
-    fputs("\033[?25l", stdout); // Esconde o cursor
+    printf("\x1b[?25l"); // Esconde o cursor
 
     printMenu: // Se colocar dentro do while vai re-renderizar quando o usuário pressionar uma tecla inválida.
     va_start(items, nitems);
@@ -158,7 +158,7 @@ int menu(const char *prefix, int nitems, ...) {
                 goto printMenu;
             case '\n': // Pressionou ENTER
                 va_end(items);
-                fputs("\033[?25h" $r, stdout); // Mostra o cursor e reseta o estilo
+                printf("\x1b[?25h" $r); // Mostra o cursor e reseta o estilo
                 return opt % nitems;
         }
     }

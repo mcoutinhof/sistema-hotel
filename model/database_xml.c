@@ -35,10 +35,10 @@ static int xml_insert(const Table table, const void *ptr) {
 }
 
 const Database *XML_DATABASE = &(Database) {
-        .open = xml_open,
-        .close = xml_close,
+        .open   = xml_open,
+        .close  = xml_close,
         .rewind = xml_rewind,
-        .next = xml_next,
+        .next   = xml_next,
         .delete = xml_delete,
         .update = xml_update,
         .insert = xml_insert,

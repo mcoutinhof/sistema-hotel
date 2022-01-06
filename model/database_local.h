@@ -57,12 +57,12 @@ typedef struct {
 
 
 /** Possíveis bit flags para o campo flags em ColumnMeta. */
-#define COL_FLAG_PRIMARY_KEY    (1 << 0 | 1 << 2) // 00000101
-#define COL_FLAG_UNIQUE_KEY     (1 << 0)          // 00000001
-#define COL_FLAG_AUTO_INCREMENT (1 << 1 | 1 << 3) // 00001010
-#define COL_FLAG_NOT_NULL       (1 << 2)          // 00000100
-#define COL_FLAG_SYS_GENERATED  (1 << 3)          // 00001000
-//#define COL_FLAG_LSB4           (1 << 4)          // 00010000
-//#define COL_FLAG_LSB5           (1 << 5)          // 00100000
-//#define COL_FLAG_LSB6           (1 << 6)          // 01000000
-//#define COL_FLAG_LSB7           (1 << 7)          // 10000000
+#define COL_FLAG_PRIMARY_KEY    (0b00000101) // 00000101
+#define COL_FLAG_UNIQUE_KEY     (0b00000001) // 00000001
+#define COL_FLAG_AUTO_INCREMENT (0b00001010) // 00001010
+#define COL_FLAG_NOT_NULL       (0b00000100) // 00000100
+#define COL_FLAG_SYS_GENERATED  (0b00001000) // 00001000
+//#define COL_FLAG_LSB4           (0b00010000) // 00010000
+//#define COL_FLAG_LSB5           (0b00100000) // 00100000
+//#define COL_FLAG_LSB6           (0b01000000) // 01000000
+//#define COL_FLAG_LSB7           (0b10000000) // 10000000
