@@ -89,8 +89,8 @@ struct Operador {
 struct Reserva {
     unsigned int id; // 0 a 4294967295
     char metodo_pagamento[64];
-    char data_inicial[16]; // 01/01/1970
-    char data_final[16]; // 01/01/1970
+    unsigned int data_inicial; // YYYYMMDD
+    unsigned int data_final; // YYYYMMDD
     unsigned int periodo; // 0 a 4294967295
     bool check_in; // 1 (true) ou 0 (false)
     bool check_out; // 1 (true) ou 0 (false)
@@ -98,11 +98,11 @@ struct Reserva {
     unsigned int hospede_id; // 0 a 4294967295
 };
 
-extern const Table Hoteis;
-extern const Table Hospedes;
-extern const Table Acomodacoes;
-extern const Table Categorias;
-extern const Table Produtos;
-extern const Table Fornecedores;
-extern const Table Operadores;
-extern const Table Reservas;
+extern Table Hoteis;
+extern Table Hospedes;
+extern Table Acomodacoes;
+extern Table Categorias;
+extern Table Produtos;
+extern Table Fornecedores;
+extern Table Operadores;
+extern Table Reservas;

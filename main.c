@@ -13,7 +13,9 @@ int main() {
         return EXIT_FAILURE;
     }
     fputs("\033[?1049h", stdout); // Entra na tela alternativa
-    menu_principal();
+    if (logar_operador()) {
+        menu_principal();
+    }
     return EXIT_SUCCESS;
 }
 

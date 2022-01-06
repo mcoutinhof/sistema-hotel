@@ -7,6 +7,25 @@
 #include "../model/database.h"
 
 /**
+ * Escreve um valor de acordo com os metadados da coluna a qual ele pertence.
+ * @param stream Stream onde o valor será escrito.
+ * @param colMeta Metadados da coluna a qual tal valor pertence.
+ * @param ptr Ponteiro para a variável de onde o valor será lido.
+ * @return a quantidade de caracteres impressos.
+ */
+int printVal(FILE *stream, const ColumnMeta *colMeta, const void *ptr);
+
+/**
+ * Lê um valor de acordo com os metadados da coluna a qual ele pertence.
+ * @param stream Stream de onde o valor será escrito.
+ * @param delimiter Caractere que delimita até quando ler a stream.
+ * @param colMeta Metadados da coluna a qual tal valor pertence.
+ * @param ptr Ponteiro para a variável onde o valor será armazenado.
+ * @return 1 se conseguir ler um valor válido, 0 caso contrário.
+ */
+int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr);
+
+/**
  * Mostra um formulário com campos de acordo com os metadados das colunas da tabela.
  * @param mode 0 = inserir, 1 = visualizar, 2 = editar.
  * @param table A tabela que contém as colunas.

@@ -4,7 +4,6 @@
 
 #include "utils.h"
 #include "../lcurses.h"
-#include "../model/database_local.h"
 #include <stdbool.h>
 #include <stdarg.h>
 #include <string.h>
@@ -31,14 +30,8 @@ static char *fgetstr(char *s, int n, int delimiter, FILE *stream) {
     return (p == s || ferror(stream)) ? NULL : s;
 }
 
-/**
- * Escreve um valor de acordo com os metadados da coluna a qual ele pertence.
- * @param stream Stream onde o valor será escrito.
- * @param colMeta Metadados da coluna a qual tal valor pertence.
- * @param ptr Ponteiro para a variável de onde o valor será lido.
- * @return a quantidade de caracteres impressos.
- */
-static int printVal(FILE *stream, const ColumnMeta *colMeta, const void *ptr) {
+int printVal(FILE *stream, const ColumnMeta *colMeta, const void *ptr) {
+    unsigned int year = 0, month = 0, day = 0;
     switch (colMeta->type) {
         case COL_TYPE_BOOL:
             return fprintf(stream, "%s", (*(bool *) ptr) ? "SIM" : "NÃO");
@@ -54,25 +47,23 @@ static int printVal(FILE *stream, const ColumnMeta *colMeta, const void *ptr) {
             return fprintf(stream, "%lf", *(double *) ptr);
         case COL_TYPE_STRING:
             return fprintf(stream, "%.*s", (int) colMeta->size, (char *) ptr);
+        case COL_TYPE_DATE:
+            year = (*(unsigned int *) ptr) / 10000;
+            month = (*(unsigned int *) ptr) / 100 % 100;
+            day = (*(unsigned int *) ptr) % 100;
+            return fprintf(stream, "%02u/%02u/%04u", day, month, year);
     }
     return 0;
 }
 
-/**
- * Lê um valor de acordo com os metadados da coluna a qual ele pertence.
- * @param stream Stream de onde o valor será escrito.
- * @param delimiter Caractere que delimita até quando ler a stream.
- * @param colMeta Metadados da coluna a qual tal valor pertence.
- * @param ptr Ponteiro para a variável onde o valor será armazenado.
- * @return 1 se conseguir ler um valor válido, 0 caso contrário.
- */
-static int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr) {
+int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr) {
     if (colMeta->type == COL_TYPE_STRING) {
         return fgetstr(ptr, colMeta->size, delimiter, stream) != NULL;
     }
     char buf[48];
     memset(ptr, 0, colMeta->size);
     if (fgetstr(buf, 48, delimiter, stream) != NULL) {
+        unsigned int year = 0, month = 0, day = 0;
         switch (colMeta->type) {
             case COL_TYPE_BOOL: // Tudo que começa com S, Y, V, T ou 1 é true, o resto é false.
                 *(bool *) ptr = (strchr("SYVT1", toupper(*buf)) != NULL);
@@ -87,6 +78,10 @@ static int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void 
                 return sscanf(buf, "%f", (float *) ptr);
             case COL_TYPE_DOUBLE:
                 return sscanf(buf, "%lf", (double *) ptr);
+            case COL_TYPE_DATE:
+                sscanf(buf, "%u%*c%u%*c%u", &day, &month, &year);
+                *(unsigned int *) ptr = year * 10000 + month * 100 + day;
+                return 0;
         }
     }
     return 0;

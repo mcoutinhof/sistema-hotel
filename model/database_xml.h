@@ -6,4 +6,4 @@
 
 #include "database.h"
 
-extern const Database *XML_DATABASE;
+extern Database *XML_DATABASE;

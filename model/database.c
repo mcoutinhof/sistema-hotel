@@ -3,10 +3,9 @@
  */
 
 #include "database_bin.h"
-#include "database_local.h"
 #include <string.h>
 
-const Database *DATABASE;
+Database *DATABASE;
 
 // TODO: Adicionar suporte a configurações.
 int initDatabase() {
@@ -18,15 +17,11 @@ int initDatabase() {
 
 // TODO: Adicionar função para importar e exportar tabelas em XML.
 
-int isAdmin() {
-    return 1;
-}
-
-int DATABASE_findById(const Table table, void *ptr, unsigned int id) {
+int DATABASE_findById(Table table, void *ptr, unsigned int id) {
     size_t offset = 0;
     DATABASE->rewind((table));
     TableState *tableState = *table++;
-    const TableInfo *tableInfo = *table++;
+    TableInfo *tableInfo = *table++;
     for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; offset += colMeta->size) {
         if (strcasecmp(colMeta->tagName, "id") == 0) {
             while (DATABASE->next(table, ptr)) {

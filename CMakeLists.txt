@@ -3,19 +3,24 @@ project(sistema-hotel C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(sistema-hotel
+add_executable(
+        sistema-hotel
         main.c
         lcurses.c
-        model/database.c model/database_bin.c model/database_xml.c model/tables.c
-        view/rotas.c view/utils.c
-        controllers/Acomodacao.c
-        controllers/Categoria.c
-        controllers/Fornecedor.c
-        controllers/Hospede.c
-        controllers/Hotel.c
-        controllers/Operador.c
-        controllers/Produto.c
-        controllers/Reserva.c
+        model/database.c
+        model/database_bin.c
+        model/database_xml.c
+        model/tables.c
+        view/rotas.c
+        view/utils.c
+        controller/acomodacao.c
+        controller/categoria.c
+        controller/fornecedor.c
+        controller/hospede.c
+        controller/hotel.c
+        controller/operador.c
+        controller/produto.c
+        controller/reserva.c
 )
 
 # Se precisar usar funções da math.h

@@ -4,6 +4,12 @@
 
 #pragma once
 
+/** 1 se o usuário logado tem permissões de administração, 0 caso contrário. */
+extern int isAdmin;
+
+// Ao iniciar
+int logar_operador();
+
 // main -> principal
 int menu_principal();
 

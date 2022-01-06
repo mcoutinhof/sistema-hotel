@@ -6,4 +6,4 @@
 
 #include "database.h"
 
-extern const Database *BINARY_DATABASE;
+extern Database *BINARY_DATABASE;
