@@ -40,5 +40,78 @@ int ver_acomodacao() {
 }
 
 int relatorio_acomodacoes() {
-    return EXIT_SUCCESS;
+    DATABASE->open(Acomodacoes);
+    DATABASE->open(Reservas);
+    DATABASE->open(Categorias);
+
+    bool porCodigo = false, porCategoria = false, porData = false;
+    unsigned int codInicio = 0, codFim = 0, dataInicio = 0, dataFim = 0;
+    char categoria[64];
+
+    while (1) {
+        clrscr();
+        int option = menu($f, 4, "Filtrar por categoria", "Filtrar faixa de código", "Filtrar por data de reserva", "Gerar relatório >>");
+        switch (option) {
+            case 0:
+                porCategoria = true;
+                clrscr();
+                printf($a "Categoria: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &categoria);
+                break;
+            case 1:
+                porCodigo = true;
+                clrscr();
+                printf($a "Código inicial: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
+                printf($a "Código final: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
+                break;
+            case 2: 
+                porData = true;
+                clrscr();
+                printf($a "Data inicial: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
+                printf($a "Data final: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataFim);
+        }
+        if (option == 3) break;
+    }
+
+    DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
+        bool obedeceFiltros = true;
+
+         //Verifica se o id da acomodação esta entre o intervalo informado
+        if(porCodigo) obedeceFiltros = acom.id >= codInicio && acom.id < codFim;
+
+        if(obedeceFiltros && porCategoria) {
+            DATABASE_forEach(struct Categoria, cat, Categorias) {
+                //Seleciona a categoria da acomodação
+                if (cat.id != acom.categoria_id) continue;
+
+                //Verifica se o nome da categoria corresponde ao informado
+                obedeceFiltros = strcasecmp(cat.titulo, categoria) == 0;
+                break;
+            }
+        }
+        if(obedeceFiltros && porData) {
+            DATABASE_forEach(struct Reserva, res, Reservas) {
+                //Seleciona as reservas da acomodação
+                if (res.acomodacao_id != acom.id) continue;
+
+                //Verifica se o nome da categoria corresponde ao informado
+                obedeceFiltros = dataInicio >= res.data_inicial && dataFim < res.data_final;
+                break;
+            }
+        }
+        if(obedeceFiltros) {
+            form(1, Acomodacoes, &acom);
+            printf(" \n\n");
+        }
+    }
+
+    alert("Aperte qualquer tecla para continuar... \n");
+
+    DATABASE->close(Acomodacoes);
+    DATABASE->close(Reservas);
+    DATABASE->close(Categorias);
 }
