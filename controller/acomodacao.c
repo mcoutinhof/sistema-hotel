@@ -38,3 +38,7 @@ int ver_acomodacao() {
     }
     DATABASE->close(Acomodacoes);
 }
+
+int relatorio_acomodacoes() {
+    return EXIT_SUCCESS;
+}

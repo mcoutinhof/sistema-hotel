@@ -78,7 +78,7 @@ int timeout(int delay) {
 }
 
 int clrscr(void) {
-    return printf("\x1b[2J\x1b[3J\x1b[2;3H") < 0 ? ERR : OK;
+    return printf("\x1b[2J\x1b[3J\x1b[H") < 0 ? ERR : OK;
 }
 
 int clrtobot(void) {

@@ -38,3 +38,50 @@ int ver_hospede() {
     }
     DATABASE->close(Hospedes);
 }
+
+int relatorio_hospedes() {
+    DATABASE->open(Hospedes);
+
+    bool porCodigo = false, porSexo = false;
+    unsigned int codInicio = 0, codFim = 0;
+    char sexo[16];
+
+    while (1) {
+        clrscr();
+        int option = menu($f, 3, "Filtrar por faixa de código", "Filtrar por sexo", "Gerar relatório >>");
+        switch (option) {
+            case 0:
+                clrscr();
+                porCodigo = true;
+                printf($a "Código inicial: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
+                printf($a "Código final: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
+                break;
+            case 1:
+                clrscr();
+                porSexo = true;
+                printf($a "Sexo: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 16}, &sexo);
+                break;
+        }
+        if (option == 2) break;
+    }
+
+    DATABASE_forEach(struct Hospede, hosp, Hospedes) {
+        bool obedeceFiltros = true;
+        //Verifica se o id do hóspede esta entre o intervalo informado
+        if(porCodigo) obedeceFiltros = hosp.id >= codInicio && hosp.id < codFim;
+        //Verifica se o sexo do hóspede corresponde ao informado
+        if(obedeceFiltros && porSexo) obedeceFiltros = strcasecmp(hosp.sexo, sexo) == 0;
+        //Exibe os dados do hóspede 
+        if(obedeceFiltros) {
+            form(1, Hospedes, &hosp);
+            printf(" \n\n");
+        }
+    }
+
+    alert("Aperte qualquer tecla para continuar... \n");
+
+    DATABASE->close(Hospedes);
+}

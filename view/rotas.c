@@ -22,7 +22,7 @@ int menu_principal() {
                 menu_reservas();
                 break;
             case 3:
-                // menu_relatorios();
+                menu_relatorios();
                 break;
             default: // Sair
                 return EXIT_SUCCESS;
@@ -122,6 +122,25 @@ int menu_reservas() {
                 break;
             case 2:
                 ver_reserva();
+                break;
+            default: // Voltar
+                return EXIT_SUCCESS;
+        }
+    }
+}
+
+int menu_relatorios() {
+    while (1) {
+        clrscr();
+        switch (menu($f, 4, "Hóspedes", "Acomodações", "Reservas", "Voltar")) {
+            case 0:
+                relatorio_hospede();
+                break;
+            case 1:
+                relatorio_acomodacoes();
+                break;
+            case 2:
+                relatorio_reservas();
                 break;
             default: // Voltar
                 return EXIT_SUCCESS;

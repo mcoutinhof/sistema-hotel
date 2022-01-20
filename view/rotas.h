@@ -88,3 +88,17 @@ int cadastrar_reserva();
 
 // principal -> reserva -> ver_reserva
 int ver_reserva();
+
+//###RELATÓRIOS
+
+// principal -> relatorios 
+int menu_relatorios();
+
+// principal -> relatorios -> hospede
+int relatorio_hospede();
+
+// principal -> relatorios -> acomodacoes
+int relatorio_acomodacoes();
+
+// principal -> relatorios -> reservas
+int relatorio_reservas();
