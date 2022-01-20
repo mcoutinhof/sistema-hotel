@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../model/database.h"
+#include <stdbool.h>
 
 /**
  * Escreve um valor de acordo com os metadados da coluna a qual ele pertence.
@@ -30,8 +31,9 @@ int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr);
  * @param mode 0 = inserir, 1 = visualizar, 2 = editar.
  * @param table A tabela que contém as colunas.
  * @param ptr Ponteiro para a struct de onde os dados serão lidos e/ou onde os dados serão armazenados.
+ *
  */
-void form(int mode, const Table table, void *ptr);
+bool *form(int mode, const Table table, void *ptr);
 
 /**
  * Mostra um menu com n itens, permite ao usuário navegar pressionando TAB e selecionar um item pressionando ENTER.
@@ -44,3 +46,12 @@ int menu(const char *prefix, int nitems, ...);
 
 /** Mostra uma mensagem e retorna quando o usuário pressionar uma tecla. */
 void alert(const char *message);
+
+/**
+ * @param table A tabela que contém as colunas.
+ * @param oneReg Um registro a ser comparado.
+ * @param otherReg Outro registro a ser comparado.
+ * @param fieldsToFilter Quais campos comparar.
+ * @return 1 se os campos selecionados de um registro são iguais aos de outro, 0 caso contrário.
+ */
+int compareFields(const Table table, void *oneReg, void *otherReg,  bool *fieldsToFilter);
