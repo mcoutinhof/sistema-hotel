@@ -4,7 +4,6 @@
 
 #include "utils.h"
 #include "../lcurses.h"
-#include <stdbool.h>
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
@@ -81,20 +80,23 @@ int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr) {
             case COL_TYPE_DATE:
                 sscanf(buf, "%u%*c%u%*c%u", &day, &month, &year);
                 *(unsigned int *) ptr = year * 10000 + month * 100 + day;
-                return 0;
+                return 1;
         }
     }
     return 0;
 }
 
 // 0 = Inserir, 1 = Visualizar, 2 = Editar.
-void form(int mode, const Table table, void *ptr) {
-    int i = 0; // Índice do campo atual.
+bool *form(int mode, const Table table, void *ptr) {
+    static bool filledFields[64] = {};
+    int i = 0; // Índice do campo atual (visualmente, não inclui campos ocultos).
+    int j = 0; // Índice do campo atual (inclui os campos ocultos).
     int x, y; // Coordenada do início do formulário.
     wherexy(&x, &y);
     TableState *tableState = *table++;
     const TableInfo *tableInfo = *table++;
-    for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; ptr += colMeta->size) {
+    for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; ptr += colMeta->size, j++) {
+        filledFields[j] = false;
         if (!(colMeta->flags & COL_FLAG_SYS_GENERATED) || mode == 1) { // 1 = Visualizar, pode ver campos do sistema.
             gotoxy(x, y + i++);
             printf($r $a "%s: " $r, colMeta->displayName);
@@ -119,7 +121,7 @@ void form(int mode, const Table table, void *ptr) {
             if (mode != 1) { // 1 = Visualizar, não permite inserir valores.
                 gotoxy(iX, iY);
                 clrtoeol();
-                readVal(stdin, '\n', colMeta, ptr);
+                filledFields[j] = readVal(stdin, '\n', colMeta, ptr);
 
                 gotoxy(iX, iY);
                 clrtoeol();
@@ -165,4 +167,23 @@ void alert(const char *message) {
     }
     getch();
     clrbuf(); // É necessário limpar o buffer, pois algumas teclas podem inserir mais de 1 caractere nele.
+}
+
+int compareFields(const Table table, void *oneReg, void *otherReg,  bool *fieldsToFilter) {
+    TableState *tableState = *table++;
+    const TableInfo *tableInfo = *table++;
+    for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; oneReg += colMeta->size, otherReg += colMeta->size) {
+        if (*fieldsToFilter++) {
+            if (colMeta->type == COL_TYPE_STRING) {
+                if (strncasecmp(oneReg, otherReg, colMeta->size) != 0) {
+                    return 0;
+                }
+            } else {
+                if (memcmp(oneReg, otherReg, colMeta->size) != 0) {
+                    return 0;
+                }
+            }
+        }
+    }
+    return 1;
 }
