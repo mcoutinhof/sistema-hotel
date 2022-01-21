@@ -50,21 +50,21 @@ int relatorio_acomodacoes() {
 
     while (1) {
         clrscr();
-        int option = menu($f, 4, "Filtrar por categoria", "Filtrar faixa de código", "Filtrar por data de reserva", "Gerar relatório >>");
+        int option = menu($f, 4, "Filtrar faixa de código", "Filtrar por categoria", "Filtrar por data de reserva", "Gerar relatório >>");
         switch (option) {
             case 0:
-                porCategoria = true;
-                clrscr();
-                printf($a "Categoria: ");
-                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &categoria);
-                break;
-            case 1:
                 porCodigo = true;
                 clrscr();
                 printf($a "Código inicial: ");
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
                 printf($a "Código final: ");
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
+                break;
+            case 1:
+                porCategoria = true;
+                clrscr();
+                printf($a "Categoria: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &categoria);
                 break;
             case 2: 
                 porData = true;
@@ -98,9 +98,13 @@ int relatorio_acomodacoes() {
                 //Seleciona as reservas da acomodação
                 if (res.acomodacao_id != acom.id) continue;
 
-                //Verifica se o nome da categoria corresponde ao informado
-                obedeceFiltros = dataInicio >= res.data_inicial && dataFim < res.data_final;
-                break;
+                //Verifica se não há sobreposição de datas do periodo da reserva com a data disponível informada
+                obedeceFiltros =  !((dataInicio < res.data_inicial && dataFim > res.data_inicial) 
+                                 || (dataInicio < res.data_inicial && dataFim > res.data_inicial)
+                                 || (dataInicio >= res.data_inicial && dataFim <= res.data_final));
+                
+                //Somente sai do loop se encontrar uma reserva que sobreponha a data disponível ou após verificar todas as reservas
+                if(!obedeceFiltros) break;
             }
         }
         if(obedeceFiltros) {
