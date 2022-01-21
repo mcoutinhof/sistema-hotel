@@ -2,6 +2,7 @@
 #include "../model/tables.h"
 #include "../view/utils.h"
 #include <stdlib.h>
+#include <string.h>
 #include "../view/rotas.h"
 
 int cadastrar_acomodacao() {
