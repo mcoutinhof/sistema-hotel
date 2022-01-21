@@ -95,7 +95,7 @@ int ver_reserva();
 int menu_relatorios();
 
 // principal -> relatorios -> hospede
-int relatorio_hospede();
+int relatorio_hospedes();
 
 // principal -> relatorios -> acomodacoes
 int relatorio_acomodacoes();

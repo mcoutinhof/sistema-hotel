@@ -141,3 +141,83 @@ int ver_reserva() {
     }
     DATABASE->close(Reservas);
 }
+
+int relatorio_reservas() {
+    DATABASE->open(Reservas);
+    DATABASE->open(Acomodacoes);
+    DATABASE->open(Hospedes);
+
+    bool filtroHospede[64] = {};
+    bool filtroAcomodacao[64] = {};
+    struct Hospede tempHosp = {};
+    struct Acomodacao tempAcom = {};
+    bool porHospede = false, porAcomodacao = false, porData = false;
+    unsigned int dataInicio = 0, dataFim = 0;
+
+    while (1) {
+        clrscr();
+        int option = menu($f, 4, 
+                            "Filtrar por dados do hóspede", 
+                            "Filtrar por dados da acomodação", 
+                            "Filtrar por periodo reservado", 
+                            "Gerar relatório >>");
+
+        switch (option) {
+            case 0:
+                porHospede = true;
+                clrscr();
+                memcpy(filtroHospede, form(0, Hospedes, &tempHosp), 64 * sizeof(bool));
+                break;
+            case 1:
+                porAcomodacao = true;
+                clrscr();
+                memcpy(filtroHospede, form(0, Acomodacoes, &tempAcom), 64 * sizeof(bool));
+            case 2:
+                porData = true;
+                clrscr();
+                printf($a "Data inicial: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
+                printf($a "Data final: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataFim);
+        }
+        if (option == 2) break;
+    }
+
+    DATABASE_forEach(struct Reserva, res, Reservas) {
+        bool obedeceFiltros = true;
+
+        //Verifica se o periodo da reserva está entre o período informado
+        if(porData) obedeceFiltros = dataInicio >= res.data_inicial && dataFim < res.data_final;
+
+        if(obedeceFiltros && porAcomodacao)  {
+            DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
+                //Seleciona a acomodação da reserva
+                if(res.acomodacao_id != acom.id) continue;
+
+                //Verifica se os campos correspondem
+                obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
+                break;
+            }
+        }
+        if(obedeceFiltros && porHospede)  {
+            DATABASE_forEach(struct Hospede, hosp, Reservas) {
+                //Seleciona o hóspede da reserva
+                if(res.hospede_id != hosp.id) continue;
+
+                //Verifica se os campos correspondem
+                obedeceFiltros = compareFields(Hospedes, &hosp, &tempHosp, filtroHospede);
+                break;
+            }
+        }
+        if(obedeceFiltros) {
+            form(1, Reservas, &res);
+            printf(" \n\n");
+        }
+    }
+
+    alert("Aperte qualquer tecla para continuar... \n");
+
+    DATABASE->close(Reservas);
+    DATABASE->close(Acomodacoes);
+    DATABASE->close(Hospedes);
+}
