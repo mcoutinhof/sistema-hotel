@@ -171,7 +171,7 @@ int relatorio_reservas() {
             case 1:
                 porAcomodacao = true;
                 clrscr();
-                memcpy(filtroHospede, form(0, Acomodacoes, &tempAcom), 64 * sizeof(bool));
+                memcpy(filtroAcomodacao, form(0, Acomodacoes, &tempAcom), 64 * sizeof(bool));
             case 2:
                 porData = true;
                 clrscr();
@@ -180,7 +180,7 @@ int relatorio_reservas() {
                 printf($a "Data final: ");
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataFim);
         }
-        if (option == 2) break;
+        if (option == 3) break;
     }
 
     DATABASE_forEach(struct Reserva, res, Reservas) {
