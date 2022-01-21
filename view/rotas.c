@@ -134,7 +134,7 @@ int menu_relatorios() {
         clrscr();
         switch (menu($f, 4, "Hóspedes", "Acomodações", "Reservas", "Voltar")) {
             case 0:
-                relatorio_hospede();
+                relatorio_hospedes();
                 break;
             case 1:
                 relatorio_acomodacoes();

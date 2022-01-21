@@ -55,8 +55,10 @@ int cadastrar_reserva() {
         clrscr();
         bool obedeceFiltros = true;
         if (porCategoria || porQtdPessoas) {
+            bool achouCategoria = false;
             DATABASE_forEach(struct Categoria, cat, Categorias) {
                 if (cat.id == acom.categoria_id) {
+                    achouCategoria = true;
                     if (porCategoria && strcasecmp(cat.titulo, categoria) != 0) {
                         obedeceFiltros = false;
                     } else if (porQtdPessoas && qtdPessoas > cat.lotacao) {
@@ -65,7 +67,9 @@ int cadastrar_reserva() {
                     break;
                 }
             }
+            if (!achouCategoria) obedeceFiltros = false;
         }
+
         if (porFacilidade && obedeceFiltros && strstr(acom.facilidades, facilidade) == NULL) {
             obedeceFiltros = false;
         }
@@ -95,6 +99,7 @@ int cadastrar_reserva() {
                 }
                 form(2, Reservas, &res);
                 DATABASE->insert(Reservas, &res);
+                break;
             } else if (option == 2) break;
         }
     }
@@ -159,7 +164,7 @@ int relatorio_reservas() {
         int option = menu($f, 4, 
                             "Filtrar por dados do hóspede", 
                             "Filtrar por dados da acomodação", 
-                            "Filtrar por periodo reservado", 
+                            "Filtrar por período reservado",
                             "Gerar relatório >>");
 
         switch (option) {
@@ -172,6 +177,7 @@ int relatorio_reservas() {
                 porAcomodacao = true;
                 clrscr();
                 memcpy(filtroAcomodacao, form(0, Acomodacoes, &tempAcom), 64 * sizeof(bool));
+                break;
             case 2:
                 porData = true;
                 clrscr();
@@ -179,6 +185,7 @@ int relatorio_reservas() {
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
                 printf($a "Data final: ");
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataFim);
+                break;
         }
         if (option == 3) break;
     }
@@ -187,7 +194,7 @@ int relatorio_reservas() {
         bool obedeceFiltros = true;
 
         //Verifica se o periodo da reserva está entre o período informado
-        if(porData) obedeceFiltros = dataInicio >= res.data_inicial && dataFim < res.data_final;
+        if(porData) obedeceFiltros = res.data_inicial >= dataInicio && res.data_final < dataFim;
 
         if(obedeceFiltros && porAcomodacao)  {
             DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
@@ -200,7 +207,7 @@ int relatorio_reservas() {
             }
         }
         if(obedeceFiltros && porHospede)  {
-            DATABASE_forEach(struct Hospede, hosp, Reservas) {
+            DATABASE_forEach(struct Hospede, hosp, Hospedes) {
                 //Seleciona o hóspede da reserva
                 if(res.hospede_id != hosp.id) continue;
 

@@ -3,6 +3,7 @@
 #include "../view/utils.h"
 #include <stdlib.h>
 #include "../view/rotas.h"
+#include <string.h>
 
 int cadastrar_acomodacao() {
     clrscr();
@@ -84,14 +85,18 @@ int relatorio_acomodacoes() {
         if(porCodigo) obedeceFiltros = acom.id >= codInicio && acom.id < codFim;
 
         if(obedeceFiltros && porCategoria) {
+            bool achouCategoria = false;
             DATABASE_forEach(struct Categoria, cat, Categorias) {
                 //Seleciona a categoria da acomodação
                 if (cat.id != acom.categoria_id) continue;
 
+                achouCategoria = true;
+
                 //Verifica se o nome da categoria corresponde ao informado
-                obedeceFiltros = strcasecmp(cat.titulo, categoria) == 0;
+                obedeceFiltros = strcasecmp(categoria, cat.titulo) == 0;
                 break;
             }
+            if (!achouCategoria) obedeceFiltros = false;
         }
         if(obedeceFiltros && porData) {
             DATABASE_forEach(struct Reserva, res, Reservas) {
@@ -113,7 +118,7 @@ int relatorio_acomodacoes() {
         }
     }
 
-    alert("Aperte qualquer tecla para continuar... \n");
+    alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Acomodacoes);
     DATABASE->close(Reservas);

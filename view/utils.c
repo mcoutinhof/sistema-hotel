@@ -129,6 +129,7 @@ bool *form(int mode, const Table table, void *ptr) {
             }
         }
     }
+    return filledFields;
 }
 
 int menu(const char *prefix, int nitems, ...) {
@@ -166,7 +167,7 @@ void alert(const char *message) {
         fputs(message, stdout);
     }
     getch();
-    clrbuf(); // É necessário limpar o buffer, pois algumas teclas podem inserir mais de 1 caractere nele.
+    //clrbuf(); // É necessário limpar o buffer, pois algumas teclas podem inserir mais de 1 caractere nele.
 }
 
 int compareFields(const Table table, void *oneReg, void *otherReg,  bool *fieldsToFilter) {
