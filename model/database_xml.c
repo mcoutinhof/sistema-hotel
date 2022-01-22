@@ -29,7 +29,7 @@ static int xml_update(Table table, const void *ptr) {
     return 0;
 }
 
-static int xml_insert(Table table, const void *ptr) {
+static int xml_insert(Table table, void *ptr) {
     return 0;
 }
 

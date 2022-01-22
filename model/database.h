@@ -134,7 +134,7 @@ typedef struct {
      * @param ptr Ponteiro para o registro a ser inserido.
      * @return 1 se tiver sucesso, 0 caso contrário.
      */
-    int (*insert)(Table table, const void *ptr);
+    int (*insert)(Table table, void *ptr);
 } Database;
 
 /** Itera por todos os registros da tabela. */
