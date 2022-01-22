@@ -108,20 +108,6 @@ int cadastrar_reserva() {
     DATABASE->close(Reservas);
 }
 
-/*int cadastrar_reserva() {
-    clrscr();
-
-    //Recupera os dados da reserva
-    struct Reserva reserva = {}; // Sempre coloque as chaves pra zerar os valores da struct
-    form(0, Reservas, &reserva); // Modo 0 = Inserir
-
-    //Cria a reserva
-    DATABASE->open(Reservas);
-    DATABASE->insert(Reservas, &reserva);
-    DATABASE->close(Reservas);
-    return EXIT_SUCCESS;
-}*/
-
 int ver_reserva() {
     DATABASE->open(Reservas);
     DATABASE_forEach(struct Reserva, reserva, Reservas) {
@@ -197,24 +183,14 @@ int relatorio_reservas() {
         if(porData) obedeceFiltros = res.data_inicial >= dataInicio && res.data_final < dataFim;
 
         if(obedeceFiltros && porAcomodacao)  {
-            DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
-                //Seleciona a acomodação da reserva
-                if(res.acomodacao_id != acom.id) continue;
-
-                //Verifica se os campos correspondem
-                obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
-                break;
-            }
+            struct Acomodacao acom = {};
+            if(!DATABASE_findById(Acomodacoes, &acom, res.acomodacao_id)) continue;
+            obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
         }
         if(obedeceFiltros && porHospede)  {
-            DATABASE_forEach(struct Hospede, hosp, Hospedes) {
-                //Seleciona o hóspede da reserva
-                if(res.hospede_id != hosp.id) continue;
-
-                //Verifica se os campos correspondem
-                obedeceFiltros = compareFields(Hospedes, &hosp, &tempHosp, filtroHospede);
-                break;
-            }
+            struct Hospede hosp = {};
+            if(!DATABASE_findById(Hospedes, &hosp, res.hospede_id)) continue;
+            obedeceFiltros = compareFields(Hospedes, &hosp, &tempHosp, filtroHospede);
         }
         if(obedeceFiltros) {
             form(1, Reservas, &res);

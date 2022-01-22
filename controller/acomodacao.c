@@ -86,18 +86,9 @@ int relatorio_acomodacoes() {
         if(porCodigo) obedeceFiltros = acom.id >= codInicio && acom.id < codFim;
 
         if(obedeceFiltros && porCategoria) {
-            bool achouCategoria = false;
-            DATABASE_forEach(struct Categoria, cat, Categorias) {
-                //Seleciona a categoria da acomodação
-                if (cat.id != acom.categoria_id) continue;
-
-                achouCategoria = true;
-
-                //Verifica se o nome da categoria corresponde ao informado
-                obedeceFiltros = strcasecmp(categoria, cat.titulo) == 0;
-                break;
-            }
-            if (!achouCategoria) obedeceFiltros = false;
+            struct Categoria cat = {};
+            if(!DATABASE_findById(Categorias, &cat, acom.categoria_id)) continue;
+            obedeceFiltros = strcasecmp(categoria, cat.titulo) == 0;
         }
         if(obedeceFiltros && porData) {
             DATABASE_forEach(struct Reserva, res, Reservas) {
@@ -197,12 +188,11 @@ int relatorio_movimentacao_acomodacoes() {
             if(obedeceFiltros && porRendimento) {
                 int valorDiaria = 0;
                 float total = 0;
-                //Recupera o valor da diária da acomodação
-                DATABASE_forEach(struct Categoria, cat, Categorias) {
-                    if(acom.categoria_id != cat.id) continue;
-                    valorDiaria = cat.valor_diaria;
-                    break;
-                }
+
+                struct Categoria cat = {};
+                if(!DATABASE_findById(Categorias, &cat, acom.categoria_id)) continue;
+                valorDiaria = cat.valor_diaria;
+
                 total = valorDiaria * countDiarias;
                 switch(pesquisaRendimento) {
                     case 0:
