@@ -38,3 +38,47 @@ int ver_produto() {
     }
     DATABASE->close(Produtos);
 }
+int relatorio_produtos() {
+    DATABASE->open(Produtos);
+
+    bool porCodigo = false, porEstoqueMinimo = false;
+    unsigned int codInicio = 0, codFim = 0;
+
+    while (1) {
+        clrscr();
+        int option = menu($f, 3, "Filtrar por faixa de código", "Filtrar por produtos em estoque mínimo", "Gerar relatório >>");
+
+        switch (option) {
+            case 0:
+                clrscr();
+                porCodigo = true;
+                printf($a "Código inicial: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
+                printf($a "Código final: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
+                break;
+            case 1:
+                porEstoqueMinimo = true;
+        }
+        if (option == 2) break;
+    }
+
+    DATABASE_forEach(struct Produto, prod, Produtos) {
+        bool obedeceFiltros = true;
+        //Verifica se o código do produto está entre o intervalo informado
+        if(porCodigo) obedeceFiltros = prod.id >= codInicio && prod.id < codFim;
+
+        //Verifica se a quantidade do produto em estoque atingiu a reserva
+        if(obedeceFiltros && porEstoqueMinimo) obedeceFiltros = prod.estoque <= prod.estoque_minimo;
+
+        //Exibe os dados do produto
+        if(obedeceFiltros) {
+            form(1, Produtos, &prod);
+            printf(" \n\n");
+        }
+    }
+
+    alert("Aperte qualquer tecla para continuar... \n");
+
+    DATABASE->close(Produtos);
+}

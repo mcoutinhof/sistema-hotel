@@ -102,3 +102,7 @@ int relatorio_acomodacoes();
 
 // principal -> relatorios -> reservas
 int relatorio_reservas();
+
+// principal -> relatorios -> produtos
+int relatorio_produtos();
+
