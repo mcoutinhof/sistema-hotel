@@ -106,6 +106,14 @@ struct Venda {
     unsigned int hospede_id; // 0 a 4294967295
 };
 
+struct ItemVenda {
+    unsigned int id; // 0 a 4294967295
+    unsigned int produto_id; // 0 a 4294967295
+    unsigned int venda_id; // 0 a 4294967295
+    float preco;
+    unsigned int quantidade; // YYYYMMDD
+};
+
 extern Table Hoteis;
 extern Table Hospedes;
 extern Table Acomodacoes;
@@ -115,3 +123,4 @@ extern Table Fornecedores;
 extern Table Operadores;
 extern Table Reservas;
 extern Table Vendas;
+extern Table ItensVenda;
