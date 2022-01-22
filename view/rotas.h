@@ -100,6 +100,9 @@ int relatorio_hospedes();
 // principal -> relatorios -> acomodacoes
 int relatorio_acomodacoes();
 
+// principal -> relatorios -> movimentacao_acomodacoes
+int relatorio_movimentacao_acomodacoes();
+
 // principal -> relatorios -> reservas
 int relatorio_reservas();
 

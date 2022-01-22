@@ -125,3 +125,107 @@ int relatorio_acomodacoes() {
     DATABASE->close(Reservas);
     DATABASE->close(Categorias);
 }
+int relatorio_movimentacao_acomodacoes() {
+    DATABASE->open(Acomodacoes);
+    DATABASE->open(Categorias);
+    DATABASE->open(Reservas);
+
+    bool porAcomodacao = false, porDiarias = false, porRendimento = false;
+
+    bool filtroAcomodacao[64] = {};
+    struct Acomodacao tempAcom = {};
+    unsigned int rendimento = 0, diarias = 0;
+    int pesquisaDiarias = 0, pesquisaRendimento = 0;
+
+    while (1) {
+        clrscr();
+        int option = menu($f, 4, "Filtrar por dados da acomodação", 
+                                 "Filtrar pelo número de diárias ocupadas", 
+                                 "Filtrar pelo rendimento em hospedagem", 
+                                 "Gerar relatório >>");
+        switch (option) {
+            case 0:
+                porAcomodacao = true;
+                clrscr();
+                memcpy(filtroAcomodacao, form(0, Acomodacoes, &tempAcom), 64 * sizeof(bool));
+                break;
+            case 1:
+                porDiarias = true;
+                clrscr();
+                printf($a "Número de diárias: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &diarias);
+                printf($a "Forma de busca: \n");
+                pesquisaDiarias = menu($f, 3, "Igual ao valor informado", "Número de diárias superior", "Número de diárias inferior");
+                break;
+            case 2: 
+                porRendimento = true;
+                clrscr();
+                printf($a "Rendimento em hospedagem: ");
+                readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &rendimento);
+                printf($a "Forma de busca: \n");
+                pesquisaRendimento = menu($f, 3, "Igual ao valor informado", "Rendimento superior", "Rendimento inferior");
+        }
+        if (option == 3) break;
+    }
+
+    DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
+        bool obedeceFiltros = true;
+
+        if(porAcomodacao) obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
+
+        if(obedeceFiltros && (porDiarias || porRendimento)) {
+            int countDiarias = 0;
+            //Calcula a quantidade de diárias reservadas da acomodação
+            DATABASE_forEach(struct Reserva, res, Reservas) {
+                if(res.acomodacao_id != acom.id) continue;
+                countDiarias+=res.periodo;
+            }
+            
+            if(porDiarias) {
+                switch(pesquisaDiarias) {
+                    case 0:
+                        obedeceFiltros = countDiarias == diarias;
+                        break;
+                    case 1: 
+                        obedeceFiltros = countDiarias >= diarias;
+                        break;
+                    case 2: 
+                        obedeceFiltros = countDiarias <= diarias;
+                        break;
+                }
+            } 
+            if(obedeceFiltros && porRendimento) {
+                int valorDiaria = 0;
+                float total = 0;
+                //Recupera o valor da diária da acomodação
+                DATABASE_forEach(struct Categoria, cat, Categorias) {
+                    if(acom.categoria_id != cat.id) continue;
+                    valorDiaria = cat.valor_diaria;
+                    break;
+                }
+                total = valorDiaria * countDiarias;
+                switch(pesquisaRendimento) {
+                    case 0:
+                        obedeceFiltros = total == rendimento;
+                        break;
+                    case 1: 
+                        obedeceFiltros = total >= rendimento;
+                        break;
+                    case 2: 
+                        obedeceFiltros = total <= rendimento;
+                        break;
+                }
+            }
+        }
+        if(obedeceFiltros) {
+            form(1, Acomodacoes, &acom);
+            printf(" \n\n");
+        }
+    }
+
+    alert("Aperte qualquer tecla para continuar...\n");
+
+    DATABASE->close(Acomodacoes);
+    DATABASE->close(Categorias);
+    DATABASE->close(Reservas);
+}

@@ -132,7 +132,7 @@ int menu_reservas() {
 int menu_relatorios() {
     while (1) {
         clrscr();
-        switch (menu($f, 5, "Hóspedes", "Acomodações", "Reservas", "Produtos", "Voltar")) {
+        switch (menu($f, 6, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Voltar")) {
             case 0:
                 relatorio_hospedes();
                 break;
@@ -140,9 +140,12 @@ int menu_relatorios() {
                 relatorio_acomodacoes();
                 break;
             case 2:
-                relatorio_reservas();
+                relatorio_movimentacao_acomodacoes();
                 break;
             case 3:
+                relatorio_reservas();
+                break;
+            case 4:
                 relatorio_produtos();
                 break;
             default: // Voltar
