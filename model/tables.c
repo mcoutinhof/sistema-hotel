@@ -140,3 +140,14 @@ Table ItensVenda = {
         &(ColumnMeta) {.displayName = "Quantidade", .tagName = "quantidade", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         NULL
 };
+
+Table Comandas = {
+        &(TableState) {},
+        &(TableInfo)  {.displayName = "Comanda", .tagName = "comanda", .fileName = "comanda.dat"},
+        &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
+        &(ColumnMeta) {.displayName = "ID do produto", .tagName = "produto_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "ID do hóspede", .tagName = "hospede_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Preço", .tagName = "preco", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        &(ColumnMeta) {.displayName = "Quantidade", .tagName = "quantidade", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        NULL
+};
