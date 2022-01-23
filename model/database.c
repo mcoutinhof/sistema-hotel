@@ -17,15 +17,15 @@ int initDatabase() {
 
 // TODO: Adicionar função para importar e exportar tabelas em XML.
 
-int DATABASE_findById(Table table, void *ptr, unsigned int id) {
+int DATABASE_findBy(const char *colName, const void *colValue, Table table, void *saveHere) {
     size_t offset = 0;
     DATABASE->rewind((table));
     TableState *tableState = *table++;
     TableInfo *tableInfo = *table++;
     for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; offset += colMeta->size) {
-        if (strcasecmp(colMeta->tagName, "id") == 0) {
-            while (DATABASE->next(table, ptr)) {
-                if (*(unsigned int *) (ptr + offset) == id) {
+        if (strcasecmp(colMeta->tagName, colName) == 0) {
+            while (DATABASE->next(table, saveHere)) {
+                if (memcmp(saveHere + offset, colValue + offset, colMeta->size) == 0) {
                     return 1;
                 }
             }

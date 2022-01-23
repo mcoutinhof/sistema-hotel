@@ -143,13 +143,15 @@ DATABASE->rewind((table));                                \
 for (elementType (elementName); DATABASE->next((table), &(elementName));)
 
 /**
- * Volta ao início da tabela e procura por um registro com um campo `id` específico.
+ * Volta ao início da tabela e procura um registro com uma coluna de nome igual a `colName` e valor igual a `colValue`
+ * e guarda em `saveHere`.
+ * @param colName Nome da coluna que está sendo procurada.
+ * @param colValue Ponteiro para o valor que está sendo procurado.
  * @param table A tabela a ser lida.
- * @param ptr Ponteiro para a struct onde o registro será armazenado.
- * @param id O ID que está sendo procurado.
+ * @param saveHere Ponteiro para a struct onde o registro será armazenado.
  * @return 1 ao encontrar, 0 caso contrário.
  */
-int DATABASE_findById(Table table, void *ptr, unsigned int id);
+int DATABASE_findBy(const char *colName, const void *colValue, Table table, void *saveHere);
 
 /** O sistema de banco de dados (binário ou xml) que está sendo usado. */
 extern Database *DATABASE;
