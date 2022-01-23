@@ -136,6 +136,23 @@ struct ItemEntrada {
     unsigned int quantidade; // YYYYMMDD
 };
 
+struct ContaPagar {
+    unsigned int id; // 0 a 4294967295
+    unsigned int fornecedor_id; // 0 a 4294967295
+    unsigned int hotel_id; // 0 a 4294967295
+    float valor_parcela;
+    unsigned int num_parcela; // YYYYMMDD
+};
+
+struct Caixa {
+    unsigned int id; // 0 a 4294967295
+    unsigned int hotel_id; // 0 a 4294967295
+    float valor;
+    char descricao[512];
+    char natureza[16];
+    unsigned int data; // YYYYMMDD
+};
+
 extern Table Hoteis;
 extern Table Hospedes;
 extern Table Acomodacoes;
@@ -149,5 +166,9 @@ extern Table ItensVenda;
 extern Table Comandas;
 extern Table Entradas;
 extern Table ItensEntrada;
+extern Table ContasPagar;
+extern Table Caixas;
+
+
 
 

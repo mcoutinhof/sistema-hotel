@@ -155,7 +155,7 @@ Table Entradas = {
         &(TableState) {},
         &(TableInfo)  {.displayName = "Entrada", .tagName = "entrada", .fileName = "entrada.dat"},
         &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
-        &(ColumnMeta) {.displayName = "ID do fornecedor", .tagName = "produto_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "ID do fornecedor", .tagName = "fornecedor_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Frete", .tagName = "frete", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
         &(ColumnMeta) {.displayName = "Imposto", .tagName = "imposto", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
         NULL
@@ -169,5 +169,28 @@ Table ItensEntrada = {
         &(ColumnMeta) {.displayName = "ID da entrada", .tagName = "entrada_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Preço", .tagName = "preco", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
         &(ColumnMeta) {.displayName = "Quantidade", .tagName = "quantidade", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        NULL
+};
+
+Table ContasPagar = {
+        &(TableState) {},
+        &(TableInfo)  {.displayName = "Contas a pagar", .tagName = "contaPagar", .fileName = "contaPagar.dat"},
+        &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
+        &(ColumnMeta) {.displayName = "ID do fornecedor", .tagName = "fornecedor_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "ID do hotel", .tagName = "hotel_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Valor da parcela", .tagName = "valor_parcela", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        &(ColumnMeta) {.displayName = "Número da parcela", .tagName = "num_parcela", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        NULL
+};
+
+Table Caixas = {
+        &(TableState) {},
+        &(TableInfo)  {.displayName = "Caixa", .tagName = "caixa", .fileName = "caixa.dat"},
+        &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
+        &(ColumnMeta) {.displayName = "ID do hotel", .tagName = "hotel_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Valor", .tagName = "valor", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        &(ColumnMeta) {.displayName = "Descrição", .tagName = "descricao", .type = COL_TYPE_STRING, .size = 512},
+        &(ColumnMeta) {.displayName = "Natureza", .tagName = "natureza", .type = COL_TYPE_STRING, .size = 16},
+        &(ColumnMeta) {.displayName = "Data", .tagName = "data", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
         NULL
 };
