@@ -23,6 +23,7 @@ add_executable(
         controller/reserva.c
         controller/venda.c
         controller/entrada.c
+        controller/caixa.c
 )
 
 # Se precisar usar funções da math.h

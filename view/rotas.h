@@ -125,3 +125,6 @@ int relatorio_reservas();
 // principal -> relatorios -> produtos
 int relatorio_produtos();
 
+// principal -> relatorios -> produtos
+int relatorio_caixas();
+
