@@ -112,7 +112,7 @@ int realizar_venda() {
         if(!count) {
             if(method == 0) DATABASE->delete(Vendas);
             feedback("Nenhum produto disponível para venda. Por favor, dê entrada nos produtos desejados antes de finalizar a venda \n");
-            break;
+            return 1;
         } else if(method == 0 && !itemSelecionado) {
             feedback("Para vendas a vista, é necessário incluir ao menos um produto antes de finalizar. Por favor, tente novamente! \n");
         }

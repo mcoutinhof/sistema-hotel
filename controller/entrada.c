@@ -4,10 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../view/rotas.h"
+#include <time.h>
 
 int realizar_entrada() {
     DATABASE->open(Entradas);
     DATABASE->open(Fornecedores);
+    DATABASE->open(Produtos);
     DATABASE->open(ItensEntrada);
 
     unsigned int fornecedor_id = 0;
@@ -54,7 +56,6 @@ int realizar_entrada() {
 
     feedback("Na próxima etapa, será necessário selecionar os produtos referentes a esta entrada");
 
-    //Seleciona os produtos da entrada
     while(!itemSelecionado) {
         unsigned int count = 0;
 
@@ -76,7 +77,7 @@ int realizar_entrada() {
                     if(!quantidade) printf($a "A quantidade deve ser maior que 0. Por favor, tente novamente! \n");
                 }
                 while(preco <= 0) {
-                    printf($a "Preço: ");
+                    printf($a "Preço de custo: ");
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &preco);
 
                     if(preco <= 0) printf($a "O preço deve ser maior que 0. Por favor, tente novamente! \n");
@@ -92,13 +93,14 @@ int realizar_entrada() {
                 precoTotal += item.quantidade * item.preco;
                     
                 itemSelecionado = true;
-            } else break;
+            } else if(option == 2) break;
         }
         if(!count) {
+            DATABASE->delete(Entradas);
             feedback("Nenhum produto cadastrado. Certifique-se de criar ao menos um produto para dar entrada \n");
-            break;
+            return 1;
         } else if(!itemSelecionado) {
-            feedback("Nenhum produto selecionado. Certifique-se de incluir ao menos um para dar entrada \n");
+            feedback("Nenhum produto selecionado. Certifique-se de incluir ao menos um produto para dar entrada \n");
         }
     }
     float fretePorProduto = entrada.frete / quantidadeTotal, 
@@ -115,8 +117,69 @@ int realizar_entrada() {
         prod.preco_venda = (fretePorProduto + impostoPorProduto + item.preco) * 1.05; 
         DATABASE->update(Produtos, &prod);
     }
+    realizar_pagamento_entrada(precoTotal, fornecedor_id);
 
     DATABASE->close(Entradas);
+    DATABASE->close(Produtos);
     DATABASE->close(Fornecedores);
     DATABASE->close(ItensEntrada);
+}
+int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
+    DATABASE->open(Caixas);
+    DATABASE->open(ContasPagar);
+
+    time_t mytime;
+    mytime = time(NULL);
+    struct tm tm = *localtime(&mytime);
+
+    struct Caixa caixa = {};
+    caixa.hotel_id = 1;
+    strcpy(caixa.natureza, "Débito");
+    caixa.data = (tm.tm_year + 1900) * 4 + (tm.tm_mon + 1) * 2 + tm.tm_mday;
+
+    clrscr();
+    printf($a "Como deseja realizar o pagamento?  \n");
+    int payment = menu($f, 2, "A vista", "Parcelado");
+
+    if(payment == 1) {
+        unsigned int numParcelas = 0;
+        float entradaPagamento = 0, valorParcela = 0;
+
+        clrscr();
+        printf($a "Número de parcelas: ");
+        readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &numParcelas);
+
+        while(entradaPagamento <= 0 || entradaPagamento > total) {
+            printf($a "Valor de entrada: ");
+            readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &entradaPagamento);
+
+            if(entradaPagamento < 0) 
+                printf($a "O valor de entrada deve ser maior ou igual a zero \n");
+            else if(entradaPagamento > total)
+                printf($a "O valor de entrada deve ser menor ou igual a: %f \n", total);
+        }
+
+        if(entradaPagamento > 0) {
+            caixa.valor = entradaPagamento;
+            strcpy(caixa.descricao, "Valor de entrada de pagamento parcelado no reestoque de produtos de consumo");
+            DATABASE->insert(Caixas, &caixa);
+        }
+        float valorParcela = (total - entradaPagamento) / numParcelas;
+
+        for(int i = 0; i < numParcelas; i++) {
+            struct ContaPagar conta = {};
+            conta.fornecedor_id = fornecedor_id;
+            conta.hotel_id = 1;
+            conta.valor_parcela = valorParcela;
+            conta.num_parcela = i + 1;
+            DATABASE->insert(ContasPagar, &conta);
+        }
+    } else  {
+        caixa.valor = total;
+        strcpy(caixa.descricao, "Entrada de produtos de consumo com pagamento a vista");
+        DATABASE->insert(Caixas, &caixa);
+    }
+
+    DATABASE->close(Caixas);
+    DATABASE->close(ContasPagar);
 }
