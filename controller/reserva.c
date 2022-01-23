@@ -184,12 +184,12 @@ int relatorio_reservas() {
 
         if(obedeceFiltros && porAcomodacao)  {
             struct Acomodacao acom = {};
-            if(!DATABASE_findById(Acomodacoes, &acom, res.acomodacao_id)) continue;
+            if(!DATABASE_findBy("id", &res.acomodacao_id, Acomodacoes, &acom)) continue;
             obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
         }
         if(obedeceFiltros && porHospede)  {
             struct Hospede hosp = {};
-            if(!DATABASE_findById(Hospedes, &hosp, res.hospede_id)) continue;
+            if(!DATABASE_findBy("id", &res.hospede_id, Hospedes, &hosp)) continue;
             obedeceFiltros = compareFields(Hospedes, &hosp, &tempHosp, filtroHospede);
         }
         if(obedeceFiltros) {

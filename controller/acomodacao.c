@@ -87,7 +87,7 @@ int relatorio_acomodacoes() {
 
         if(obedeceFiltros && porCategoria) {
             struct Categoria cat = {};
-            if(!DATABASE_findById(Categorias, &cat, acom.categoria_id)) continue;
+            if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
             obedeceFiltros = strcasecmp(categoria, cat.titulo) == 0;
         }
         if(obedeceFiltros && porData) {
@@ -190,7 +190,7 @@ int relatorio_movimentacao_acomodacoes() {
                 float total = 0;
 
                 struct Categoria cat = {};
-                if(!DATABASE_findById(Categorias, &cat, acom.categoria_id)) continue;
+                if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
                 valorDiaria = cat.valor_diaria;
 
                 total = valorDiaria * countDiarias;
