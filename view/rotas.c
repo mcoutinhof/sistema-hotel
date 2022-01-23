@@ -11,7 +11,7 @@
 int menu_principal() {
     while (1) {
         clrscr();
-        switch (menu($f, 5, "Cadastros", "Gestão de Estoque", "Reservas", "Relatórios", "Sair")) {
+        switch (menu($f, 4, "Cadastros", "Gestão de Estoque", "Reservas", "Relatórios", "Sair")) {
             case 0:
                 menu_cadastros();
                 break;
@@ -22,6 +22,9 @@ int menu_principal() {
                 menu_reservas();
                 break;
             case 3:
+                menu_vendas();
+                break;
+            case 4:
                 menu_relatorios();
                 break;
             default: // Sair
@@ -122,6 +125,22 @@ int menu_reservas() {
                 break;
             case 2:
                 ver_reserva();
+                break;
+            default: // Voltar
+                return EXIT_SUCCESS;
+        }
+    }
+}
+
+int menu_vendas() {
+    while (1) {
+        clrscr();
+        switch (menu($f, 3, "Realizar venda", "Ver venda", "Voltar")) {
+            case 0:
+                realizar_venda();
+                break;
+            case 1:
+                ver_venda();
                 break;
             default: // Voltar
                 return EXIT_SUCCESS;

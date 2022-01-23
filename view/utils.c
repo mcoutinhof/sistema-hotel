@@ -169,6 +169,10 @@ void alert(const char *message) {
     getch();
     //clrbuf(); // É necessário limpar o buffer, pois algumas teclas podem inserir mais de 1 caractere nele.
 }
+void feedback(const char *message) {
+    printf($a "%s", message);
+    alert("Pressione qualquer tecla para continuar...");
+}
 
 int compareFields(const Table table, void *oneReg, void *otherReg,  bool *fieldsToFilter) {
     TableState *tableState = *table++;

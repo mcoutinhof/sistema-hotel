@@ -101,7 +101,6 @@ struct Reserva {
 struct Venda {
     unsigned int id; // 0 a 4294967295
     float total;
-    unsigned int data; // YYYYMMDD
     char metodo_pagamento[64];
     unsigned int hospede_id; // 0 a 4294967295
 };

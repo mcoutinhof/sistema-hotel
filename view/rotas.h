@@ -89,6 +89,17 @@ int cadastrar_reserva();
 // principal -> reserva -> ver_reserva
 int ver_reserva();
 
+//###VENDA
+
+// principal -> vendas
+int menu_vendas();
+
+// principal -> vendas -> realizar_venda
+int realizar_venda();
+
+// principal -> vendas -> ver_venda
+int ver_venda();
+
 //###RELATÓRIOS
 
 // principal -> relatorios 

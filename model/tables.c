@@ -124,7 +124,6 @@ Table Vendas = {
         &(TableInfo)  {.displayName = "Venda", .tagName = "venda", .fileName = "venda.dat"},
         &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
         &(ColumnMeta) {.displayName = "Total", .tagName = "total", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
-        &(ColumnMeta) {.displayName = "Data", .tagName = "data", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Método de pagamento", .tagName = "metodo_pagamento", .type = COL_TYPE_STRING, .size = 64},
         &(ColumnMeta) {.displayName = "ID do hóspede", .tagName = "hospede_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         NULL

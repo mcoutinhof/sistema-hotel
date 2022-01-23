@@ -21,6 +21,7 @@ add_executable(
         controller/operador.c
         controller/produto.c
         controller/reserva.c
+        controller/venda.c
 )
 
 # Se precisar usar funções da math.h
