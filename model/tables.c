@@ -150,3 +150,24 @@ Table Comandas = {
         &(ColumnMeta) {.displayName = "Quantidade", .tagName = "quantidade", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         NULL
 };
+
+Table Entradas = {
+        &(TableState) {},
+        &(TableInfo)  {.displayName = "Entrada", .tagName = "entrada", .fileName = "entrada.dat"},
+        &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
+        &(ColumnMeta) {.displayName = "ID do fornecedor", .tagName = "produto_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Frete", .tagName = "frete", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        &(ColumnMeta) {.displayName = "Imposto", .tagName = "imposto", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        NULL
+};
+
+Table ItensEntrada = {
+        &(TableState) {},
+        &(TableInfo)  {.displayName = "Item de entrada", .tagName = "itemEntrada", .fileName = "itemEntrada.dat"},
+        &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
+        &(ColumnMeta) {.displayName = "ID do produto", .tagName = "produto_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "ID da entrada", .tagName = "entrada_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Preço", .tagName = "preco", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        &(ColumnMeta) {.displayName = "Quantidade", .tagName = "quantidade", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        NULL
+};

@@ -121,6 +121,21 @@ struct Comanda {
     unsigned int quantidade; // YYYYMMDD
 };
 
+struct Entrada {
+    unsigned int id; // 0 a 4294967295
+    unsigned int fornecedor_id; // 0 a 4294967295
+    float frete;
+    float imposto;
+};
+
+struct ItemEntrada {
+    unsigned int id; // 0 a 4294967295
+    unsigned int produto_id; // 0 a 4294967295
+    unsigned int entrada_id; // 0 a 4294967295
+    float preco;
+    unsigned int quantidade; // YYYYMMDD
+};
+
 extern Table Hoteis;
 extern Table Hospedes;
 extern Table Acomodacoes;
@@ -132,4 +147,7 @@ extern Table Reservas;
 extern Table Vendas;
 extern Table ItensVenda;
 extern Table Comandas;
+extern Table Entradas;
+extern Table ItensEntrada;
+
 
