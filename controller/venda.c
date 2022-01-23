@@ -132,9 +132,6 @@ int realizar_venda() {
     DATABASE->close(Hospedes);
     DATABASE->close(Comandas);
 }
-int ver_reserva() {
-    return 0;
-}
 int relatorio_vendas() {
     DATABASE->open(Vendas);
 

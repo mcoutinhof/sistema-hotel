@@ -97,9 +97,6 @@ int menu_vendas();
 // principal -> vendas -> realizar_venda
 int realizar_venda();
 
-// principal -> vendas -> ver_venda
-int ver_venda();
-
 //###ENTRADA
 
 // principal -> entrada
@@ -127,4 +124,8 @@ int relatorio_produtos();
 
 // principal -> relatorios -> produtos
 int relatorio_caixas();
+
+// principal -> relatorios -> contas_pagar
+int relatorio_contas_pagar();
+
 
