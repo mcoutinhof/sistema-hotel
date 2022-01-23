@@ -50,11 +50,15 @@ int realizar_venda() {
 
     //Se o cliente optar por pagar a vista, é gerada uma venda
     if(method == 0) {
+        clrscr();
+        printf($a "Como deseja realizar o pagamento?  \n");
+        int payment = menu($f, 2, "Dinheiro", "Cartão");
+
         venda.hospede_id = hospede_id;
-        strcpy(venda.metodo_pagamento, method ? "Anotar" : "A vista");
+        strcpy(venda.metodo_pagamento, payment ? "Dinheiro" : "Cartão");
         DATABASE->insert(Vendas, &venda);
     }
-
+    float total = 0;
     //Seleciona os produtos da venda
     while(!itemSelecionado) {
         unsigned int count = 0;
@@ -70,7 +74,7 @@ int realizar_venda() {
             int option = menu($f, 3, "Incluir", "Próximo", "Finalizar venda");
             if (option == 0) {
                 unsigned int quantidade = 0;
-
+                clrscr();
                 while(!quantidade) {
                     printf($a "Quantidade: ");
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &quantidade);
@@ -83,7 +87,7 @@ int realizar_venda() {
                             item.venda_id = venda.id;
                             item.quantidade = quantidade;
                             item.preco = prod.preco_venda;
-                            venda.total += item.quantidade * item.preco;
+                            total += item.quantidade * item.preco;
                             DATABASE->insert(ItensVenda, &item);
                         } else {
                             struct Comanda com = {};
@@ -91,7 +95,7 @@ int realizar_venda() {
                             com.hospede_id = hospede_id;
                             com.quantidade = quantidade;
                             com.preco = prod.preco_venda;
-                            venda.total += com.quantidade * com.preco;
+                            total += com.quantidade * com.preco;
                             DATABASE->insert(Comandas, &com);
                         }
                         prod.estoque -= quantidade;
@@ -104,7 +108,7 @@ int realizar_venda() {
             } else if(option == 2 && (method == 0 && itemSelecionado || method == 1)) break;
         }
         if(!count) {
-            DATABASE->delete(Vendas);
+            if(method == 0) DATABASE->delete(Vendas);
             feedback("Nenhum produto disponível para venda. Por favor, dê entrada nos produtos desejados antes de finalizar a venda \n");
             break;
         } else if(method == 0 && !itemSelecionado) {
@@ -112,9 +116,12 @@ int realizar_venda() {
         }
     }
     //Atualiza os dados da venda
-    if(method == 0) DATABASE->update(Vendas, &venda);
+    if(method == 0)  {
+        venda.total = total;
+        DATABASE->update(Vendas, &venda);
+    }
 
-    printf("Total a ser pago: %f", venda.total);
+    printf("Total a ser pago: %f", total);
     alert("Pressione qualquer tecla para continuar...");
 
     DATABASE->close(Produtos);
@@ -125,4 +132,34 @@ int realizar_venda() {
 }
 int ver_reserva() {
     return 0;
+}
+int relatorio_vendas() {
+    DATABASE->open(Vendas);
+
+    bool porMetodo = false;
+    int payment = 0;
+
+    while (1) {
+        clrscr();
+        int option = menu($f, 2, "Filtrar por forma de pagamento", "Gerar relatório >>");
+        if(option == 0) {
+            porMetodo = true;
+            clrscr();
+            printf($a "Forma de pagamento: ");
+            payment = menu($f, 2, "Dinheiro", "Cartão");
+        } else break;
+    }
+    DATABASE_forEach(struct Venda, venda, Vendas) {
+        bool obedeceFiltros = true;
+
+        if(porMetodo) obedeceFiltros = strcasecmp(venda.metodo_pagamento, payment == 0 ? "Dinheiro" : "Cartão") == 0;
+
+        if(obedeceFiltros) {
+            form(1, Vendas, &venda);
+            printf(" \n\n");
+        }
+    }
+    alert("Aperte qualquer tecla para continuar...\n");
+
+    DATABASE->close(Vendas);
 }
