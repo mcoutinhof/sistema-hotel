@@ -131,11 +131,12 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
     time_t mytime;
     mytime = time(NULL);
     struct tm tm = *localtime(&mytime);
+    int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
 
     struct Caixa caixa = {};
     caixa.hotel_id = 1;
     strcpy(caixa.natureza, "Débito");
-    caixa.data = (tm.tm_year + 1900) * 4 + (tm.tm_mon + 1) * 2 + tm.tm_mday;
+    caixa.data = month < 10 ? (year * 5 + month * 2 + day) : (year * 4 + month * 2 + day);
 
     clrscr();
     printf($a "Como deseja realizar o pagamento?  \n");
@@ -167,11 +168,17 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
         float valorParcela = (total - entradaPagamento) / numParcelas;
 
         for(int i = 0; i < numParcelas; i++) {
+            month++;
+            if(month > 12) {
+                year++;
+                month = 1;
+            }
             struct ContaPagar conta = {};
             conta.fornecedor_id = fornecedor_id;
             conta.hotel_id = 1;
             conta.valor_parcela = valorParcela;
             conta.num_parcela = i + 1;
+            conta.data_vencimento = month < 10 ? (year * 5 + month * 2 + day) : (year * 4 + month * 2 + day);
             DATABASE->insert(ContasPagar, &conta);
         }
     } else  {

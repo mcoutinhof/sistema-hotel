@@ -180,6 +180,7 @@ Table ContasPagar = {
         &(ColumnMeta) {.displayName = "ID do hotel", .tagName = "hotel_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Valor da parcela", .tagName = "valor_parcela", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
         &(ColumnMeta) {.displayName = "Número da parcela", .tagName = "num_parcela", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Data de vencimento", .tagName = "data_vencimento", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
         NULL
 };
 

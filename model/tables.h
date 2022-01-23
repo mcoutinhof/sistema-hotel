@@ -107,46 +107,47 @@ struct Venda {
 
 struct ItemVenda {
     unsigned int id; // 0 a 4294967295
-    unsigned int produto_id; // 0 a 4294967295
-    unsigned int venda_id; // 0 a 4294967295
+    unsigned int produto_id; 
+    unsigned int venda_id; 
     float preco;
     unsigned int quantidade; // YYYYMMDD
 };
 
 struct Comanda {
     unsigned int id; // 0 a 4294967295
-    unsigned int produto_id; // 0 a 4294967295
-    unsigned int hospede_id; // 0 a 4294967295
+    unsigned int produto_id; 
+    unsigned int hospede_id; 
     float preco;
     unsigned int quantidade; // YYYYMMDD
 };
 
 struct Entrada {
     unsigned int id; // 0 a 4294967295
-    unsigned int fornecedor_id; // 0 a 4294967295
+    unsigned int fornecedor_id; 
     float frete;
     float imposto;
 };
 
 struct ItemEntrada {
     unsigned int id; // 0 a 4294967295
-    unsigned int produto_id; // 0 a 4294967295
-    unsigned int entrada_id; // 0 a 4294967295
+    unsigned int produto_id; 
+    unsigned int entrada_id; 
     float preco;
     unsigned int quantidade; // YYYYMMDD
 };
 
 struct ContaPagar {
     unsigned int id; // 0 a 4294967295
-    unsigned int fornecedor_id; // 0 a 4294967295
-    unsigned int hotel_id; // 0 a 4294967295
+    unsigned int fornecedor_id; 
+    unsigned int hotel_id; 
     float valor_parcela;
-    unsigned int num_parcela; // YYYYMMDD
+    unsigned int num_parcela;
+    unsigned int data_vencimento; // YYYYMMDD
 };
 
 struct Caixa {
     unsigned int id; // 0 a 4294967295
-    unsigned int hotel_id; // 0 a 4294967295
+    unsigned int hotel_id; 
     float valor;
     char descricao[512];
     char natureza[16];
