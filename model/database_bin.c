@@ -75,8 +75,10 @@ static int bin_update(Table table, const void *ptr) {
            && fwrite(ptr, tableState->regSize, 1, tableState->stream) == 1;
 }
 
-static int bin_insert(Table table, const void *ptr) {
-    TableState *tableState = *table;
+static int bin_insert(Table table, void *ptr) {
+    TableState *tableState = *table++;
+    TableInfo *tableInfo = *table++;
+    size_t offset = 0;
     if (fseek(tableState->stream, 0, SEEK_SET) != 0) {
         return 0;
     }
@@ -87,6 +89,13 @@ static int bin_insert(Table table, const void *ptr) {
                     return 0;
                 }
             case 0:
+                // Auto-increment
+                for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; offset += colMeta->size) {
+                    if ((colMeta->flags & COL_FLAG_AUTO_INCREMENT)) {
+                        *((unsigned int *) ptr + offset) = 1 + (ftell(tableState->stream) - 1) / (tableState->regSize + 1);
+                    }
+                }
+
                 return fwrite(ptr, tableState->regSize, 1, tableState->stream) == 1
                        && fseek(tableState->stream, -1 * (tableState->regSize + 1), SEEK_CUR) == 0
                        && fputc(1, tableState->stream) > 0
