@@ -11,12 +11,12 @@
 int menu_principal() {
     while (1) {
         clrscr();
-        switch (menu($f, 4, "Cadastros", "Gestão de Estoque", "Reservas", "Relatórios", "Sair")) {
+        switch (menu($f, 4, "Cadastros", "Entrada de produtos", "Reservas", "Relatórios", "Sair")) {
             case 0:
                 menu_cadastros();
                 break;
             case 1:
-                // menu_produtos();
+                realizar_entrada();
                 break;
             case 2:
                 menu_reservas();

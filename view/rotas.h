@@ -100,6 +100,11 @@ int realizar_venda();
 // principal -> vendas -> ver_venda
 int ver_venda();
 
+//###ENTRADA
+
+// principal -> entrada
+int realizar_entrada();
+
 //###RELATÓRIOS
 
 // principal -> relatorios 

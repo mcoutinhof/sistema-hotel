@@ -59,6 +59,7 @@ int realizar_venda() {
         DATABASE->insert(Vendas, &venda);
     }
     float total = 0;
+    
     //Seleciona os produtos da venda
     while(!itemSelecionado) {
         unsigned int count = 0;
@@ -99,6 +100,7 @@ int realizar_venda() {
                             DATABASE->insert(Comandas, &com);
                         }
                         prod.estoque -= quantidade;
+                        DATABASE->update(Produtos, &prod);
                     } else {
                         quantidade = 0;
                         printf($a "Estoque insuficiente! A quantidade deve ser menor ou igual a: %u \n", prod.estoque);
