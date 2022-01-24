@@ -194,7 +194,7 @@ int menu_relatorios() {
                 relatorio_movimentacao_acomodacoes();
                 break;
             case 3:
-                relatorio_reservas();
+                relatorio_reservas(path);
                 break;
             case 4:
                 relatorio_produtos();

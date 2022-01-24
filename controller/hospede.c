@@ -81,16 +81,18 @@ int relatorio_hospedes(char *path) {
         //Exibe os dados do hóspede 
         if(obedeceFiltros) {
             if(strlen(path) != 0) {
-                fprint(fp, "%u;%s;%s;%s;%s;%s;%s;%s;%s;%u \n", hosp.id, hosp.nome, hosp.endereco, hosp.cpf, hosp.telefone, hosp.email, hosp.sexo, hosp.estado_civil, hosp.nascimento, hosp.hotel_id);
+                fprintf(fp, "%u;%s;%s;%s;%s;%s;%s;%s;%s;%u \n", hosp.id, hosp.nome, hosp.endereco, hosp.cpf, hosp.telefone, hosp.email, hosp.sexo, hosp.estado_civil, hosp.nascimento, hosp.hotel_id);
             } else {
                 form(1, Hospedes, &hosp);
                 printf(" \n\n");
             }
         }
     }
-    if(strlen(path) != 0) fclose(fp);
-
-    alert("Aperte qualquer tecla para continuar... \n");
+    if(strlen(path) != 0) {
+        clrscr();
+        fclose(fp);
+    } 
+    alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Hospedes);
 }

@@ -109,15 +109,17 @@ int relatorio_acomodacoes(char *path) {
         }
         if(obedeceFiltros) {
             if(strlen(path) != 0) {
-                fprint(fp, "%u;%s;%s;%s;%u;%u \n", acom.id, acom.titulo, acom.descricao, acom.facilidades, acom.categoria_id, acom.hotel_id);
+                fprintf(fp, "%u;%s;%s;%s;%u;%u \n", acom.id, acom.titulo, acom.descricao, acom.facilidades, acom.categoria_id, acom.hotel_id);
             } else {
                 form(1, Acomodacoes, &acom);
                 printf(" \n\n");
             }
         }
     }
-    if(strlen(path) != 0) fclose(fp);
-
+    if(strlen(path) != 0) {
+        clrscr();
+        fclose(fp);
+    } 
     alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Acomodacoes);

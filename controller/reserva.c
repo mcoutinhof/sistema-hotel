@@ -133,7 +133,7 @@ int ver_reserva() {
     DATABASE->close(Reservas);
 }
 
-int relatorio_reservas() {
+int relatorio_reservas(char *path) {
     DATABASE->open(Reservas);
     DATABASE->open(Acomodacoes);
     DATABASE->open(Hospedes);
@@ -144,6 +144,9 @@ int relatorio_reservas() {
     struct Acomodacao tempAcom = {};
     bool porHospede = false, porAcomodacao = false, porData = false;
     unsigned int dataInicio = 0, dataFim = 0;
+
+    FILE *fp;
+    if(strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -193,12 +196,19 @@ int relatorio_reservas() {
             obedeceFiltros = compareFields(Hospedes, &hosp, &tempHosp, filtroHospede);
         }
         if(obedeceFiltros) {
-            form(1, Reservas, &res);
-            printf(" \n\n");
+            if(strlen(path) != 0) {
+                fprintf(fp, "%u;%s;%u;%u;%u;%hhu;%hhu;%u;%u \n", res.id, res.metodo_pagamento, res.data_inicial, res.data_final, res.periodo, res.check_in, res.check_out, res.acomodacao_id, res.hospede_id);
+            } else {
+                form(1, Reservas, &res);
+                printf(" \n\n");
+            }
         }
     }
-
-    alert("Aperte qualquer tecla para continuar... \n");
+    if(strlen(path) != 0) {
+        clrscr();
+        fclose(fp);
+    } 
+    alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Reservas);
     DATABASE->close(Acomodacoes);
