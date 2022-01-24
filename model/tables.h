@@ -146,6 +146,17 @@ struct ContaPagar {
     bool pago;
 };
 
+struct ContaReceber {
+    unsigned int id; // 0 a 4294967295
+    unsigned int hospede_id; 
+    unsigned int hotel_id; 
+    float valor_parcela;
+    unsigned int num_parcela;
+    unsigned int data_vencimento; // YYYYMMDD
+    unsigned int data_recebimento; // YYYYMMDD
+    bool pago;
+};
+
 struct Caixa {
     unsigned int id; // 0 a 4294967295
     unsigned int hotel_id; 
@@ -169,6 +180,7 @@ extern Table Comandas;
 extern Table Entradas;
 extern Table ItensEntrada;
 extern Table ContasPagar;
+extern Table ContasReceber;
 extern Table Caixas;
 
 

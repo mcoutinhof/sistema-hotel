@@ -185,6 +185,20 @@ Table ContasPagar = {
         NULL
 };
 
+Table ContasPagar = {
+        &(TableState) {},
+        &(TableInfo)  {.displayName = "Contas a receber", .tagName = "contaReceber", .fileName = "contaReceber.dat"},
+        &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},
+        &(ColumnMeta) {.displayName = "ID do hospede", .tagName = "hospede_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "ID do hotel", .tagName = "hotel_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Valor da parcela", .tagName = "valor_parcela", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        &(ColumnMeta) {.displayName = "Número da parcela", .tagName = "num_parcela", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Data de vencimento", .tagName = "data_vencimento", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Data de recebimento", .tagName = "data_recebimento", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
+        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(bool)},
+        NULL
+};
+
 Table Caixas = {
         &(TableState) {},
         &(TableInfo)  {.displayName = "Caixa", .tagName = "caixa", .fileName = "caixa.dat"},
