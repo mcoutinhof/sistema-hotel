@@ -15,12 +15,12 @@ int realizar_entrada() {
     unsigned int fornecedor_id = 0;
     float precoTotal, quantidadeTotal;
     struct Entrada entrada = {};
-    bool itemSelecionado = false;
+    int itemSelecionado = false, achouFornecedor = false;
 
     clrscr();
 
     //Seleciona o fornecedor da entrada
-    while(!fornecedor_id) {
+    while(!achouFornecedor) {
         char nome[64] = {0};
         int count = 0;
 
@@ -35,13 +35,14 @@ int realizar_entrada() {
             form(1, Fornecedores, &forn);
             gotoxy(3, wherey() + 2);
             if(menu($f, 2, "Selecionar", "Próximo") == 0) {
+                achouFornecedor = true;
                 fornecedor_id = forn.id;
                 break;
             };
         }
         if(!count) {
             printf($a "Não foram encontrados fornecedores de nome: %s. Por favor, tente novamente! \n", nome);
-        } else if(!fornecedor_id) {
+        } else if(!achouFornecedor) {
             printf($a "Para prosseguir é necessário selecionar um fornecedor. Por favor, tente novamente! \n");
         }
     }

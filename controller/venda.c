@@ -60,6 +60,7 @@ int realizar_venda() {
 
     clrscr();
     feedback("Na próxima etapa, será necessário selecionar os produtos referentes a esta venda");
+    clrscr();
 
     //Seleciona os produtos da venda
     while(!itemSelecionado) {
