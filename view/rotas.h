@@ -155,3 +155,9 @@ int relatorio_contas_receber(char *path);
 
 // principal -> relatorios -> relatorio_vendas
 int relatorio_vendas(char *path);
+
+// principal -> check_in 
+int check_in();
+
+// principal -> check_out 
+int check_out();

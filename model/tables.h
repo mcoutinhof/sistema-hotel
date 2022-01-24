@@ -93,6 +93,7 @@ struct Reserva {
     unsigned int periodo; // 0 a 4294967295
     bool check_in; // 1 (true) ou 0 (false)
     bool check_out; // 1 (true) ou 0 (false)
+    bool pago;
     unsigned int acomodacao_id; // 0 a 4294967295
     unsigned int hospede_id; // 0 a 4294967295
 };

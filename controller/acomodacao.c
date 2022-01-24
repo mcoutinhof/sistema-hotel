@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../view/rotas.h"
-#include <string.h>
 
 int cadastrar_acomodacao() {
     clrscr();

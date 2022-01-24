@@ -114,6 +114,7 @@ Table Reservas = {
         &(ColumnMeta) {.displayName = "Período", .tagName = "periodo", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Check-in", .tagName = "check_in", .type = COL_TYPE_BOOL, .size = sizeof(bool)},
         &(ColumnMeta) {.displayName = "Check-out", .tagName = "check_out", .type = COL_TYPE_BOOL, .size = sizeof(bool)},
+        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(bool), .flags = COL_FLAG_SYS_GENERATED},
         &(ColumnMeta) {.displayName = "ID da acomodação", .tagName = "acomodacao_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "ID do hóspede", .tagName = "hospede_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         NULL

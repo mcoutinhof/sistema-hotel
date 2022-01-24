@@ -26,6 +26,7 @@ add_executable(
         controller/caixa.c
         controller/contaPagar.c
         controller/contaReceber.c
+        controller/check.c
 )
 
 # Se precisar usar funções da math.h
