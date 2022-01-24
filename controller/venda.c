@@ -13,15 +13,14 @@ int realizar_venda() {
     DATABASE->open(Hospedes);
     DATABASE->open(Comandas);
 
-    bool itemSelecionado = false;
+    int itemSelecionado = false, achouHospede = false;
     unsigned int hospede_id = 0;
-    bool achouHospede = false;
     struct Venda venda = {};
 
     clrscr();
 
     //Seleciona o hospede da venda
-    while(!hospede_id) {
+    while(!achouHospede) {
         char nome[64] = {0};
         int count = 0;
 
