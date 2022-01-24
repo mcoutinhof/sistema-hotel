@@ -136,7 +136,7 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
     struct Caixa caixa = {};
     caixa.hotel_id = 1;
     strcpy(caixa.natureza, "Débito");
-    caixa.data = month < 10 ? (year * 5 + month * 2 + day) : (year * 4 + month * 2 + day);
+    caixa.data = year * 10000 + month * 100 + day;
 
     clrscr();
     printf($a "Como deseja realizar o pagamento?  \n");
@@ -178,7 +178,8 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
             conta.hotel_id = 1;
             conta.valor_parcela = valorParcela;
             conta.num_parcela = i + 1;
-            conta.data_vencimento = month < 10 ? (year * 5 + month * 2 + day) : (year * 4 + month * 2 + day);
+            conta.paga = 0;
+            conta.data_vencimento = year * 10000 + month * 100 + day;
             DATABASE->insert(ContasPagar, &conta);
         }
     } else  {
@@ -189,4 +190,38 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
 
     DATABASE->close(Caixas);
     DATABASE->close(ContasPagar);
+}
+int baixar_nota() {
+    DATABASE->open(ContasPagar);
+    DATABASE->open(Caixas);
+
+    DATABASE_forEach(struct ContaPagar, conta, ContasPagar) {
+        clrscr();
+        form(1, ContasPagar, &conta);
+        gotoxy(3, wherey() + 2);
+        int option = menu($f, 3, "Próximo", "Dar baixa", "Sair");
+        if (option == 1) {
+            time_t mytime;
+            mytime = time(NULL);
+            struct tm tm = *localtime(&mytime);
+            int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
+
+            //Atualiza a situação da parcela
+            conta.pago = 1;
+            DATABASE->update(ContasPagar, &conta);
+
+            //Gera uma movimentação de débito no caixa do hotel
+            struct Caixa caixa = {};
+            caixa.hotel_id = 1;
+            caixa.valor = conta.valor_parcela;
+            strcpy(caixa.descricao, "Baixa de nota");
+            strcpy(caixa.natureza, "Débito");
+            caixa.data = year * 10000 + month * 100 + day;
+            DATABASE->insert(Caixas, &caixa);
+            
+        } else if (option == 2) break;
+    }
+
+    DATABASE->close(ContasPagar);
+    DATABASE->close(Caixas);
 }

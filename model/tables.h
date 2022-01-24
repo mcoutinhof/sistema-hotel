@@ -143,6 +143,7 @@ struct ContaPagar {
     float valor_parcela;
     unsigned int num_parcela;
     unsigned int data_vencimento; // YYYYMMDD
+    bool pago;
 };
 
 struct Caixa {

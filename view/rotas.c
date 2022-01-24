@@ -16,7 +16,7 @@ int menu_principal() {
                 menu_cadastros();
                 break;
             case 1:
-                realizar_entrada();
+                menu_entradas();
                 break;
             case 2:
                 menu_reservas();
@@ -141,6 +141,22 @@ int menu_vendas() {
                 break;
             case 1:
                 ver_venda();
+                break;
+            default: // Voltar
+                return EXIT_SUCCESS;
+        }
+    }
+}
+
+int menu_entradas() {
+    while (1) {
+        clrscr();
+        switch (menu($f, 3, "Realizar entrada", "Baixa de notas", "Voltar")) {
+            case 0:
+                realizar_entrada();
+                break;
+            case 1:
+                baixar_nota();
                 break;
             default: // Voltar
                 return EXIT_SUCCESS;

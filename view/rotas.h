@@ -100,7 +100,13 @@ int realizar_venda();
 //###ENTRADA
 
 // principal -> entrada
+int menu_entradas();
+
+// principal -> entrada -> realizar_entrada
 int realizar_entrada();
+
+// principal -> entrada -> baixar_nota
+int baixar_nota();
 
 //###RELATÓRIOS
 
