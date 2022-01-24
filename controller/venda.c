@@ -25,7 +25,7 @@ int realizar_venda() {
         char nome[64] = {0};
         int count = 0;
 
-        printf($a "Nome do hóspede: ");
+        printf($a "Nome do hóspede: " $f);
         readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &nome);
 
         DATABASE_forEach(struct Hospede, hosp, Hospedes) {
@@ -36,10 +36,10 @@ int realizar_venda() {
             form(1, Hospedes, &hosp);
             gotoxy(3, wherey() + 2);
             if(menu($f, 2, "Selecionar", "Próximo") == 0) {
+                achouHospede = true;
                 hospede_id = hosp.id;
                 break;
             };
-            achouHospede = true;
         }
         if(!count) {
             printf($a "Não foram encontrados hóspedes de nome: %s. Por favor, tente novamente! \n", nome);
@@ -128,6 +128,7 @@ int realizar_venda() {
         DATABASE->update(Vendas, &venda);
         realizar_pagamento_venda(total, hospede_id, method);
     } else {
+        clrscr();
         feedback("O(s) produto(s) foram adicionados na comanda do hospede.");
     }
 

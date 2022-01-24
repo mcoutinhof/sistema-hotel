@@ -16,7 +16,7 @@ int check_in_out(int operation) {
     DATABASE->open(Comandas);
 
     unsigned int hospede_id = 0;
-    bool achouHospede = false, pagarDiarias = false;
+    int achouHospede = false, pagarDiarias = false;
 
     clrscr();
 
@@ -24,7 +24,7 @@ int check_in_out(int operation) {
         char nome[64] = {0};
         int count = 0;
 
-        printf($a "Nome do hóspede: ");
+        printf($a "Nome do hóspede: " $f);
         readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &nome);
 
         DATABASE_forEach(struct Hospede, hosp, Hospedes) {
@@ -48,7 +48,7 @@ int check_in_out(int operation) {
     }
 
     DATABASE_forEach(struct Reserva, res, Reservas) {
-        if(res.hospede_id != hospede_id || operation == 0 && res.check_in || operation == 1 && res.check_out) continue;
+        if(res.hospede_id != hospede_id || (operation == 0 && res.check_in) || (operation == 1 && res.check_out)) continue;
 
         clrscr();
         form(1, Reservas, &res);
@@ -61,7 +61,7 @@ int check_in_out(int operation) {
             if(operation == 0) {
                 res.check_in = 1;
                 printf($a "Deseja realizar o pagamento das diárias? \n");
-                bool pagarDiarias = menu($f, 2, "Sim", "Não");
+                pagarDiarias = !menu($f, 2, "Sim", "Não");
             } else {
                 res.check_out = 1;
                 DATABASE_forEach(struct Comanda, com, Comandas) {
@@ -79,7 +79,7 @@ int check_in_out(int operation) {
                 total += res.periodo * cat.valor_diaria;
                 res.pago = 1;
             }
-            printf($a "Valor total a ser pago %f", total);
+            printf($a "\n Valor total a ser pago %f", total);
             alert("Pressione qualquer tecla para continuar...");
             clrscr();
 
@@ -90,7 +90,7 @@ int check_in_out(int operation) {
                 int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
 
                 printf($a "Método de pagamento: \n");
-                if(menu($f, 3, "Dinheiro", "Cartão") == 1) {
+                if(menu($f, 2, "Dinheiro", "Cartão") == 1) {
                     unsigned int numParcelas = 0, diaVencimento = 0;
 
                     printf($a "Número de parcelas: " $f);
