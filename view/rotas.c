@@ -22,7 +22,7 @@ int menu_principal() {
                 check_in_out(0);
                 break;
             case 3:
-                check_out_out(1);
+                check_in_out(1);
                 break;
             case 4:
                 menu_vendas();
@@ -123,14 +123,11 @@ int menu_inserir() {
 int menu_reservas() {
     while (1) {
         clrscr();
-        switch (menu($f, 4, "Verificar reserva", "Inserir reserva", "Ver reserva", "Voltar")) {
+        switch (menu($f, 3, "Inserir reserva", "Ver reserva", "Voltar")) {
             case 0:
-                // verificar_reserva();
-                break;
-            case 1:
                 cadastrar_reserva();
                 break;
-            case 2:
+            case 1:
                 ver_reserva();
                 break;
             default: // Voltar

@@ -46,12 +46,12 @@ int check_in_out(int operation) {
     }
 
     DATABASE_forEach(struct Reserva, res, Reservas) {
-        if(res.hospede_id != hospede_id) continue;
+        if(res.hospede_id != hospede_id || operation == 0 && res.check_in || operation == 1 && res.check_out) continue;
 
         clrscr();
         form(1, Reservas, &res);
         gotoxy(3, wherey() + 2);
-        int option = menu($f, 4, "Selecionar", "Próximo", "Sair");
+        int option = menu($f, 3, "Selecionar", "Próximo", "Sair");
         if(option == 0) {
             float total = 0;
             clrscr();

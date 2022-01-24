@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 /**
  * Lê STREAM até encontrar DELIMITER ou EOF e armazena os primeiros N menos 1 caracteres em S.
@@ -175,7 +176,13 @@ void feedback(const char *message) {
     printf($a "%s \n", message);
     alert("Pressione qualquer tecla para continuar...");
 }
-
+unsigned int current_date() {
+    time_t mytime;
+    mytime = time(NULL);
+    struct tm tm = *localtime(&mytime);
+    int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
+    return year * 10000 + month * 100 + day;
+}
 int compareFields(const Table table, void *oneReg, void *otherReg,  bool *fieldsToFilter) {
     TableState *tableState = *table++;
     const TableInfo *tableInfo = *table++;

@@ -87,7 +87,6 @@ struct Operador {
 
 struct Reserva {
     unsigned int id; // 0 a 4294967295
-    char metodo_pagamento[64];
     unsigned int data_inicial; // YYYYMMDD
     unsigned int data_final; // YYYYMMDD
     unsigned int periodo; // 0 a 4294967295

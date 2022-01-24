@@ -49,6 +49,8 @@ void alert(const char *message);
 
 void feedback(const char *message);
 
+unsigned int current_date();
+
 /**
  * @param table A tabela que contém as colunas.
  * @param oneReg Um registro a ser comparado.
