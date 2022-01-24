@@ -206,7 +206,7 @@ int menu_relatorios() {
                 relatorio_caixas();
                 break;
             case 7:
-                relatorio_contas_pagar();
+                relatorio_contas_pagar(path);
                 break;
             case 8:
                 relatorio_contas_receber(path);

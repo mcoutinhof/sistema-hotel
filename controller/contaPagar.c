@@ -4,12 +4,15 @@
 #include <stdlib.h>
 #include "../view/rotas.h"
 
-int relatorio_contas_pagar() {
+int relatorio_contas_pagar(char *path) {
     DATABASE->open(ContasPagar);
     DATABASE->open(Fornecedores);
 
     bool porData = false, porCodigo = false;
     unsigned int codInicio = 0, codFim, dataInicio = 0, dataFim = 0;
+
+    FILE *fp;
+    if(strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -34,6 +37,8 @@ int relatorio_contas_pagar() {
         }
         if(option == 2) break;
     }
+    clrscr();
+
     DATABASE_forEach(struct ContaPagar, conta, ContasPagar) {
         bool obedeceFiltros = true;
 
@@ -45,11 +50,18 @@ int relatorio_contas_pagar() {
             obedeceFiltros = forn.id >= codInicio && forn.id < codFim;
         }
         if(obedeceFiltros) {
-            form(1, ContasPagar, &conta);
-            printf(" \n\n");
+            if(strlen(path) != 0) {
+                fprintf(fp, "%u;%u;%u;%f;%u;%u;%hhu \n", conta.id, conta.fornecedor_id, conta.hotel_id, conta.valor_parcela, conta.num_parcela, conta.data_vencimento, conta.pago);
+            } else {
+                form(1, ContasPagar, &conta);
+                printf(" \n\n");
+            }
         }
     }
-
+    if(strlen(path) != 0) {
+        clrscr();
+        fclose(fp);
+    } 
     alert("Aperte qualquer tecla para continuar... \n");
 
     DATABASE->close(ContasPagar);
