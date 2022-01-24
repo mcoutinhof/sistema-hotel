@@ -6,43 +6,86 @@
 #include "../view/rotas.h"
 #include <time.h>
 
-int check_in() {
+int check_in_out(int operation) {
     DATABASE->open(Reservas);
+    DATABASE->open(Hospedes);
     DATABASE->open(Acomodacoes);
     DATABASE->open(Categorias);
     DATABASE->open(Caixas);
     DATABASE->open(ContasReceber);
+    DATABASE->open(Comandas);
 
-    clrscr();
+    unsigned int hospede_id = 0;
+    bool achouHospede = false, pagarDiarias = false;
+
+    while(!achouHospede) {
+        char nome[64] = {0};
+        int count = 0;
+
+        printf($a "Nome do hóspede: ");
+        readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &nome);
+
+        DATABASE_forEach(struct Hospede, hosp, Hospedes) {
+            if (strcasecmp(hosp.nome, nome) != 0) continue;
+
+            count++;
+            clrscr();
+            form(1, Hospedes, &hosp);
+            gotoxy(3, wherey() + 2);
+            if(menu($f, 2, "Selecionar", "Próximo") == 0) {
+                hospede_id = hosp.id;
+                break;
+            };
+            achouHospede = true;
+        }
+        if(!count) {
+            printf($a "Não foram encontrados hóspedes de nome: %s. Por favor, tente novamente! \n", nome);
+        } else if(!achouHospede) {
+            printf($a "Para prosseguir é necessário selecionar um hóspede. Por favor, tente novamente! \n");
+        }
+    }
+
     DATABASE_forEach(struct Reserva, res, Reservas) {
+        if(res.hospede_id != hospede_id) continue;
+
         clrscr();
         form(1, Reservas, &res);
         gotoxy(3, wherey() + 2);
         int option = menu($f, 4, "Selecionar", "Próximo", "Sair");
         if(option == 0) {
-            res.check_in = 1;
-
+            float total = 0;
             clrscr();
-            printf($a "Deseja realizar o pagamento das diárias? \n");
-            if(menu($f, 2, "Sim", "Não") == 0) {
-                res.pago = 1;
 
-                time_t mytime;
-                mytime = time(NULL);
-                struct tm tm = *localtime(&mytime);
-                int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
-
+            if(operation == 0) {
+                res.check_in = 1;
+                printf($a "Deseja realizar o pagamento das diárias? \n");
+                bool pagarDiarias = menu($f, 2, "Sim", "Não");
+            } else {
+                res.check_out = 1;
+                DATABASE_forEach(struct Comanda, com, Comandas) {
+                    if(res.hospede_id != com.hospede_id) continue;
+                    total += com.preco * com.quantidade;
+                }
+            }
+            if(operation == 0 && pagarDiarias || operation == 1 && !res.pago) {
                 struct Acomodacao acom = {};
                 if(!DATABASE_findBy("id", &res.acomodacao_id, Acomodacoes, &acom)) return 0;
 
                 struct Categoria cat = {};
                 if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) return 0;
 
-                float total = res.periodo * cat.valor_diaria;
+                total += res.periodo * cat.valor_diaria;
+                res.pago = 1;
+            }
+            printf($a "Valor total a ser pago %f", total);
+            alert("Pressione qualquer tecla para continuar...");
+            clrscr();
 
-                printf($a "Valor total a ser pago %f", total);
-                alert("Pressione qualquer tecla para continuar...");
-                clrscr();
+            if(total > 0) {
+                time_t mytime;
+                mytime = time(NULL);
+                struct tm tm = *localtime(&mytime);
+                int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
 
                 printf($a "Método de pagamento: \n");
                 if(menu($f, 3, "Dinheiro", "Cartão") == 1) {
@@ -75,24 +118,26 @@ int check_in() {
                     strcpy(caixa.natureza, "Crédito");
                     caixa.data = year * 10000 + month * 100 + day;
                     caixa.valor = total;
-                    strcpy(caixa.descricao, "Pagamento das diárias no check-in");
+                    strcpy(caixa.descricao, "Pagamento das diárias");
                     DATABASE->insert(Caixas, &caixa);
                 }
             }
+
             DATABASE->update(Reservas, &res);
             break;
         } else if(option == 2) break;
     }
     clrscr();
-    feedback("Check-in realizado com sucesso");
+    if(operation == 0) 
+        feedback("Check-in realizado com sucesso");
+    else 
+        feedback("Check-out realizado com sucesso");
 
     DATABASE->close(Reservas);
     DATABASE->close(Acomodacoes);
+    DATABASE->close(Hospedes);
     DATABASE->close(Categorias);
     DATABASE->close(Caixas);
     DATABASE->close(ContasReceber);
+    DATABASE->close(Comandas);
 }
-int check_out() {
-    return 1;
-}
-

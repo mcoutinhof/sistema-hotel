@@ -19,10 +19,10 @@ int menu_principal() {
                 menu_reservas();
                 break;
             case 2:
-                check_in();
+                check_in_out(0);
                 break;
             case 3:
-                check_out();
+                check_out_out(1);
                 break;
             case 4:
                 menu_vendas();

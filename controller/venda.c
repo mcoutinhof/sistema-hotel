@@ -15,6 +15,7 @@ int realizar_venda() {
 
     bool itemSelecionado = false;
     unsigned int hospede_id = 0;
+    bool achouHospede = false;
     struct Venda venda = {};
 
     clrscr();
@@ -38,10 +39,11 @@ int realizar_venda() {
                 hospede_id = hosp.id;
                 break;
             };
+            achouHospede = true;
         }
         if(!count) {
             printf($a "Não foram encontrados hóspedes de nome: %s. Por favor, tente novamente! \n", nome);
-        } else if(!hospede_id) {
+        } else if(!achouHospede) {
             printf($a "Para prosseguir é necessário selecionar um hóspede. Por favor, tente novamente! \n");
         }
     }
