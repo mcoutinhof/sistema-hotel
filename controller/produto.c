@@ -55,9 +55,9 @@ int relatorio_produtos(char *path) {
             case 0:
                 clrscr();
                 porCodigo = true;
-                printf($a "Código inicial: ");
+                printf($a "Código inicial: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
-                printf($a "Código final: ");
+                printf($a "Código final: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
                 break;
             case 1:
@@ -65,6 +65,7 @@ int relatorio_produtos(char *path) {
         }
         if (option == 2) break;
     }
+    clrscr();
 
     DATABASE_forEach(struct Produto, prod, Produtos) {
         bool obedeceFiltros = true;

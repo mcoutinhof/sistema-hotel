@@ -170,14 +170,15 @@ int relatorio_reservas(char *path) {
             case 2:
                 porData = true;
                 clrscr();
-                printf($a "Data inicial: ");
+                printf($a "Data inicial: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
-                printf($a "Data final: ");
+                printf($a "Data final: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataFim);
                 break;
         }
         if (option == 3) break;
     }
+    clrscr();
 
     DATABASE_forEach(struct Reserva, res, Reservas) {
         bool obedeceFiltros = true;

@@ -183,7 +183,7 @@ int menu_relatorios() {
         }
         clrscr();
         
-        switch (menu($f, 9, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Movimentação de caixa", "Contas a pagar", "Contas a receber","Voltar")) {
+        switch (menu($f, 10, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Vendas", "Movimentação de caixa", "Contas a pagar", "Contas a receber","Voltar")) {
             case 0:
                 relatorio_hospedes(path);
                 break;
@@ -200,12 +200,15 @@ int menu_relatorios() {
                 relatorio_produtos(path);
                 break;
             case 5:
-                relatorio_caixas();
+                relatorio_vendas(path);
                 break;
             case 6:
-                relatorio_contas_pagar();
+                relatorio_caixas();
                 break;
             case 7:
+                relatorio_contas_pagar();
+                break;
+            case 8:
                 relatorio_contas_receber();
                 break;
             default: // Voltar

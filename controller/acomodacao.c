@@ -60,27 +60,28 @@ int relatorio_acomodacoes(char *path) {
             case 0:
                 porCodigo = true;
                 clrscr();
-                printf($a "Código inicial: ");
+                printf($a "Código inicial: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
-                printf($a "Código final: ");
+                printf($a "Código final: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
                 break;
             case 1:
                 porCategoria = true;
                 clrscr();
-                printf($a "Categoria: ");
+                printf($a "Categoria: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &categoria);
                 break;
             case 2: 
                 porData = true;
                 clrscr();
-                printf($a "Data inicial: ");
+                printf($a "Data inicial: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
-                printf($a "Data final: ");
+                printf($a "Data final: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataFim);
         }
         if (option == 3) break;
     }
+    clrscr();
 
     DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
         bool obedeceFiltros = true;
@@ -156,7 +157,7 @@ int relatorio_movimentacao_acomodacoes(char *path) {
             case 1:
                 porDiarias = true;
                 clrscr();
-                printf($a "Número de diárias: ");
+                printf($a "Número de diárias: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &diarias);
                 printf($a "Forma de busca: \n");
                 pesquisaDiarias = menu($f, 3, "Igual ao valor informado", "Número de diárias superior", "Número de diárias inferior");
@@ -164,13 +165,14 @@ int relatorio_movimentacao_acomodacoes(char *path) {
             case 2: 
                 porRendimento = true;
                 clrscr();
-                printf($a "Rendimento em hospedagem: ");
+                printf($a "Rendimento em hospedagem: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &rendimento);
                 printf($a "Forma de busca: \n");
                 pesquisaRendimento = menu($f, 3, "Igual ao valor informado", "Rendimento superior", "Rendimento inferior");
         }
         if (option == 3) break;
     }
+    clrscr();
 
     DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
         bool obedeceFiltros = true;

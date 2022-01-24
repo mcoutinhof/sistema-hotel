@@ -57,20 +57,21 @@ int relatorio_hospedes(char *path) {
             case 0:
                 clrscr();
                 porCodigo = true;
-                printf($a "Código inicial: ");
+                printf($a "Código inicial: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
-                printf($a "Código final: ");
+                printf($a "Código final: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
                 break;
             case 1:
                 clrscr();
                 porSexo = true;
-                printf($a "Sexo: ");
+                printf($a "Sexo: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 16}, &sexo);
                 break;
         }
         if (option == 2) break;
     }
+    clrscr();
 
     DATABASE_forEach(struct Hospede, hosp, Hospedes) {
         bool obedeceFiltros = true;

@@ -234,11 +234,14 @@ int baixar_nota_venda() {
     DATABASE->close(ContasReceber);
     DATABASE->close(Caixas);
 }
-int relatorio_vendas() {
+int relatorio_vendas(char *path) {
     DATABASE->open(Vendas);
 
     bool porMetodo = false;
     int payment = 0;
+
+    FILE *fp;
+    if(strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -256,10 +259,18 @@ int relatorio_vendas() {
         if(porMetodo) obedeceFiltros = strcasecmp(venda.metodo_pagamento, payment == 0 ? "Dinheiro" : "Cartão") == 0;
 
         if(obedeceFiltros) {
-            form(1, Vendas, &venda);
-            printf(" \n\n");
+            if(strlen(path) != 0) {
+                fprintf(fp, "%u;%f;%s;%u \n", venda.id, venda.total, venda.metodo_pagamento, venda.hospede_id);
+            } else {
+                form(1, Vendas, &venda);
+                printf(" \n\n");
+            }
         }
     }
+    if(strlen(path) != 0) {
+        clrscr();
+        fclose(fp);
+    } 
     alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Vendas);

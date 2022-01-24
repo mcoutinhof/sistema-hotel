@@ -154,4 +154,4 @@ int relatorio_contas_pagar();
 int relatorio_contas_receber();
 
 // principal -> relatorios -> relatorio_vendas
-int relatorio_vendas();
+int relatorio_vendas(char *path);
