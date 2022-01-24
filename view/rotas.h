@@ -145,7 +145,7 @@ int relatorio_reservas(char *path);
 int relatorio_produtos(char *path);
 
 // principal -> relatorios -> produtos
-int relatorio_caixas();
+int relatorio_caixas(char *path);
 
 // principal -> relatorios -> contas_pagar
 int relatorio_contas_pagar(char *path);

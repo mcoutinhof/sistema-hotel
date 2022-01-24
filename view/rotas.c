@@ -203,7 +203,7 @@ int menu_relatorios() {
                 relatorio_vendas(path);
                 break;
             case 6:
-                relatorio_caixas();
+                relatorio_caixas(path);
                 break;
             case 7:
                 relatorio_contas_pagar(path);
