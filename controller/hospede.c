@@ -40,12 +40,14 @@ int ver_hospede() {
     DATABASE->close(Hospedes);
 }
 
-int relatorio_hospedes() {
+int relatorio_hospedes(char *path) {
     DATABASE->open(Hospedes);
 
     bool porCodigo = false, porSexo = false;
     unsigned int codInicio = 0, codFim = 0;
     char sexo[16];
+
+    FILE *fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -77,10 +79,15 @@ int relatorio_hospedes() {
         if(obedeceFiltros && porSexo) obedeceFiltros = strcasecmp(hosp.sexo, sexo) == 0;
         //Exibe os dados do hóspede 
         if(obedeceFiltros) {
-            form(1, Hospedes, &hosp);
-            printf(" \n\n");
+            if(strlen(path) != 0) {
+                fprint(fp, "%u;%s;%s;%s;%s;%s;%s;%s;%s;%u \n", hosp.id, hosp.nome, hosp.endereco, hosp.cpf, hosp.telefone, hosp.email, hosp.sexo, hosp.estado_civil, hosp.nascimento, hosp.hotel_id);
+            } else {
+                form(1, Hospedes, &hosp);
+                printf(" \n\n");
+            }
         }
     }
+    fclose(fp);
 
     alert("Aperte qualquer tecla para continuar... \n");
 

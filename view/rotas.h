@@ -130,7 +130,7 @@ int baixar_nota_entrada();
 int menu_relatorios();
 
 // principal -> relatorios -> hospede
-int relatorio_hospedes();
+int relatorio_hospedes(char *path);
 
 // principal -> relatorios -> acomodacoes
 int relatorio_acomodacoes();
