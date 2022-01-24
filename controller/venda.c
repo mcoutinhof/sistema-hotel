@@ -17,6 +17,8 @@ int realizar_venda() {
     unsigned int hospede_id = 0;
     struct Venda venda = {};
 
+    clrscr();
+
     //Seleciona o hospede da venda
     while(!hospede_id) {
         char nome[64] = {0};
@@ -46,7 +48,7 @@ int realizar_venda() {
     //Define o método de pagamento
     clrscr();
     printf($a "Método de pagamento: \n");
-    int method = menu($f, 2, "Dinheiro", "Cartão", "Anotar");
+    int method = menu($f, 3, "Dinheiro", "Cartão", "Anotar");
 
     if(method != 2) {
         venda.hospede_id = hospede_id;
@@ -115,14 +117,14 @@ int realizar_venda() {
         }
     }
     clrscr();
-    printf("Total a ser pago: %f", total);
+    printf("Total a ser pago: %f\n", total);
     alert("Pressione qualquer tecla para prosseguir...");
 
     //Atualiza os dados da venda
     if(method != 2)  {
         venda.total = total;
         DATABASE->update(Vendas, &venda);
-        realizar_pagamento_venda(total, hospede_id);
+        realizar_pagamento_venda(total, hospede_id, method);
     }
 
     DATABASE->close(Produtos);
@@ -131,7 +133,7 @@ int realizar_venda() {
     DATABASE->close(Hospedes);
     DATABASE->close(Comandas);
 }
-int realizar_pagamento_venda(float total, unsigned int hospede_id) {
+int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment) {
     DATABASE->open(Caixas);
     DATABASE->open(ContasReceber);
 
@@ -146,8 +148,6 @@ int realizar_pagamento_venda(float total, unsigned int hospede_id) {
     caixa.data = year * 10000 + month * 100 + day;
 
     clrscr();
-    printf($a "Como deseja realizar o pagamento?  \n");
-    int payment = menu($f, 2, "A vista", "Parcelado");
 
     if(payment == 1) {
         unsigned int numParcelas = 0;
@@ -169,7 +169,7 @@ int realizar_pagamento_venda(float total, unsigned int hospede_id) {
             conta.num_parcela = i + 1;
             conta.pago = 0;
             conta.data_vencimento = year * 10000 + month * 100 + day;
-            DATABASE->insert(ContasPagar, &conta);
+            DATABASE->insert(ContasReceber, &conta);
         }
     } else  {
         caixa.valor = total;

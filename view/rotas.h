@@ -98,7 +98,7 @@ int menu_vendas();
 int realizar_venda();
 
 // principal -> vendas -> realizar_pagamento_venda
-int realizar_pagamento_venda();
+int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment);
 
 //###ENTRADA
 
