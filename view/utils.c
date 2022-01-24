@@ -172,7 +172,7 @@ void alert(const char *message) {
 }
 
 void feedback(const char *message) {
-    printf($a "%s", message);
+    printf($a "%s \n", message);
     alert("Pressione qualquer tecla para continuar...");
 }
 

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../view/rotas.h"
+#include <time.h>
 
 int realizar_venda() {
     DATABASE->open(Produtos);
@@ -36,7 +37,6 @@ int realizar_venda() {
                 break;
             };
         }
-        
         if(!count) {
             printf($a "Não foram encontrados hóspedes de nome: %s. Por favor, tente novamente! \n", nome);
         } else if(!hospede_id) {
@@ -46,20 +46,18 @@ int realizar_venda() {
     //Define o método de pagamento
     clrscr();
     printf($a "Método de pagamento: \n");
-    int method = menu($f, 2, "A vista", "Anotar");
+    int method = menu($f, 2, "Dinheiro", "Cartão", "Anotar");
 
-    //Se o cliente optar por pagar a vista, é gerada uma venda
-    if(method == 0) {
-        clrscr();
-        printf($a "Como deseja realizar o pagamento?  \n");
-        int payment = menu($f, 2, "Dinheiro", "Cartão");
-
+    if(method != 2) {
         venda.hospede_id = hospede_id;
-        strcpy(venda.metodo_pagamento, payment ? "Dinheiro" : "Cartão");
+        strcpy(venda.metodo_pagamento, method == 0 ? "Dinheiro" : "Cartão");
         DATABASE->insert(Vendas, &venda);
     }
     float total = 0;
-    
+
+    clrscr();
+    feedback("Na próxima etapa, será necessário selecionar os produtos referentes a esta venda");
+
     //Seleciona os produtos da venda
     while(!itemSelecionado) {
         unsigned int count = 0;
@@ -81,56 +79,106 @@ int realizar_venda() {
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &quantidade);
                     if(!quantidade) {
                         printf($a "A quantidade deve ser maior ou igual a 1 \n");
-                    } else if(quantidade <= prod.estoque) {
-                        if(method == 0) {
-                            struct ItemVenda item = {};
-                            item.produto_id = prod.id;
-                            item.venda_id = venda.id;
-                            item.quantidade = quantidade;
-                            item.preco = prod.preco_venda;
-                            total += item.quantidade * item.preco;
-                            DATABASE->insert(ItensVenda, &item);
-                        } else {
-                            struct Comanda com = {};
-                            com.produto_id = prod.id;
-                            com.hospede_id = hospede_id;
-                            com.quantidade = quantidade;
-                            com.preco = prod.preco_venda;
-                            total += com.quantidade * com.preco;
-                            DATABASE->insert(Comandas, &com);
-                        }
-                        prod.estoque -= quantidade;
-                        DATABASE->update(Produtos, &prod);
-                    } else {
+                    } else if(quantidade > prod.estoque) {
                         quantidade = 0;
                         printf($a "Estoque insuficiente! A quantidade deve ser menor ou igual a: %u \n", prod.estoque);
                     }
                 }
+                if(method != 2) {
+                    struct ItemVenda item = {};
+                    item.produto_id = prod.id;
+                    item.venda_id = venda.id;
+                    item.quantidade = quantidade;
+                    item.preco = prod.preco_venda;
+                    total += item.quantidade * item.preco;
+                    DATABASE->insert(ItensVenda, &item);
+                } else {
+                    struct Comanda com = {};
+                    com.produto_id = prod.id;
+                    com.hospede_id = hospede_id;
+                    com.quantidade = quantidade;
+                    com.preco = prod.preco_venda;
+                    total += com.quantidade * com.preco;
+                    DATABASE->insert(Comandas, &com);
+                }
+                prod.estoque -= quantidade;
+                DATABASE->update(Produtos, &prod);
                 itemSelecionado = true;
-            } else if(option == 2 && (method == 0 && itemSelecionado || method == 1)) break;
+            } else if(option == 2) break;
         }
         if(!count) {
-            if(method == 0) DATABASE->delete(Vendas);
+            if(method != 2) DATABASE->delete(Vendas);
             feedback("Nenhum produto disponível para venda. Por favor, dê entrada nos produtos desejados antes de finalizar a venda \n");
             return 1;
-        } else if(method == 0 && !itemSelecionado) {
-            feedback("Para vendas a vista, é necessário incluir ao menos um produto antes de finalizar. Por favor, tente novamente! \n");
+        } else if(!itemSelecionado) {
+            feedback("É necessário incluir ao menos um produto antes de finalizar. Por favor, tente novamente! \n");
         }
     }
+    clrscr();
+    printf("Total a ser pago: %f", total);
+    alert("Pressione qualquer tecla para prosseguir...");
+
     //Atualiza os dados da venda
-    if(method == 0)  {
+    if(method != 2)  {
         venda.total = total;
         DATABASE->update(Vendas, &venda);
+        realizar_pagamento_venda(total, hospede_id);
     }
-
-    printf("Total a ser pago: %f", total);
-    alert("Pressione qualquer tecla para continuar...");
 
     DATABASE->close(Produtos);
     DATABASE->close(Vendas);
     DATABASE->close(ItensVenda);
     DATABASE->close(Hospedes);
     DATABASE->close(Comandas);
+}
+int realizar_pagamento_venda(float total, unsigned int hospede_id) {
+    DATABASE->open(Caixas);
+    DATABASE->open(ContasReceber);
+
+    time_t mytime;
+    mytime = time(NULL);
+    struct tm tm = *localtime(&mytime);
+    int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
+
+    struct Caixa caixa = {};
+    caixa.hotel_id = 1;
+    strcpy(caixa.natureza, "Crédito");
+    caixa.data = year * 10000 + month * 100 + day;
+
+    clrscr();
+    printf($a "Como deseja realizar o pagamento?  \n");
+    int payment = menu($f, 2, "A vista", "Parcelado");
+
+    if(payment == 1) {
+        unsigned int numParcelas = 0;
+        float valorParcela = 0;
+
+        printf($a "Número de parcelas: ");
+        readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &numParcelas);
+
+        for(int i = 0; i < numParcelas; i++) {
+            month++;
+            if(month > 12) {
+                year++;
+                month = 1;
+            }
+            struct ContaReceber conta = {};
+            conta.hospede_id = hospede_id;
+            conta.hotel_id = 1;
+            conta.valor_parcela = total / numParcelas;
+            conta.num_parcela = i + 1;
+            conta.pago = 0;
+            conta.data_vencimento = year * 10000 + month * 100 + day;
+            DATABASE->insert(ContasPagar, &conta);
+        }
+    } else  {
+        caixa.valor = total;
+        strcpy(caixa.descricao, "Venda de produtos de consumo com pagamento a vista");
+        DATABASE->insert(Caixas, &caixa);
+    }
+
+    DATABASE->close(Caixas);
+    DATABASE->close(ContasReceber);
 }
 int relatorio_vendas() {
     DATABASE->open(Vendas);
