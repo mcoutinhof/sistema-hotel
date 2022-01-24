@@ -125,6 +125,8 @@ int realizar_venda() {
         venda.total = total;
         DATABASE->update(Vendas, &venda);
         realizar_pagamento_venda(total, hospede_id, method);
+    } else {
+        feedback("O(s) produto(s) foram adicionados na comanda do hospede.");
     }
 
     DATABASE->close(Produtos);
@@ -140,9 +142,7 @@ int ver_venda() {
         clrscr();
         form(1, Vendas, &venda);
         gotoxy(3, wherey() + 2);
-        int option = menu($f, 2, "Próximo", "Sair");
-       
-        if (option == 3) break;
+        if (menu($f, 2, "Próximo", "Sair") == 1) break;
     }
     DATABASE->close(Vendas);
 }
@@ -163,11 +163,14 @@ int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment) 
     clrscr();
 
     if(payment == 1) {
-        unsigned int numParcelas = 0;
+        unsigned int numParcelas = 0, diaVencimento;
         float valorParcela = 0;
 
-        printf($a "Número de parcelas: ");
+        printf($a "Número de parcelas: " $f);
         readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &numParcelas);
+
+        printf($a "Dia de vencimento do cartão: " $f);
+        readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &diaVencimento);
 
         for(int i = 0; i < numParcelas; i++) {
             month++;
@@ -181,7 +184,7 @@ int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment) 
             conta.valor_parcela = total / numParcelas;
             conta.num_parcela = i + 1;
             conta.pago = 0;
-            conta.data_vencimento = year * 10000 + month * 100 + day;
+            conta.data_recebimento = year * 10000 + month * 100 + diaVencimento;
             DATABASE->insert(ContasReceber, &conta);
         }
     } else  {
@@ -190,8 +193,44 @@ int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment) 
         DATABASE->insert(Caixas, &caixa);
     }
 
+    feedback("Venda realizada com sucesso \n");
+
     DATABASE->close(Caixas);
     DATABASE->close(ContasReceber);
+}
+int baixar_nota_venda() {
+    DATABASE->open(ContasReceber);
+    DATABASE->open(Caixas);
+
+    DATABASE_forEach(struct ContaReceber, conta, ContasReceber) {
+        clrscr();
+        form(1, ContasReceber, &conta);
+        gotoxy(3, wherey() + 2);
+        int option = menu($f, 3, "Próximo", "Dar baixa", "Sair");
+        if (option == 1) {
+            time_t mytime;
+            mytime = time(NULL);
+            struct tm tm = *localtime(&mytime);
+            int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
+
+            //Atualiza a situação da parcela
+            conta.pago = 1;
+            DATABASE->update(ContasReceber, &conta);
+
+            //Gera uma movimentação de débito no caixa do hotel
+            struct Caixa caixa = {};
+            caixa.hotel_id = 1;
+            caixa.valor = conta.valor_parcela;
+            strcpy(caixa.descricao, "Baixa de nota");
+            strcpy(caixa.natureza, "Crédito");
+            caixa.data = year * 10000 + month * 100 + day;
+            DATABASE->insert(Caixas, &caixa);
+            
+        } else if (option == 2) break;
+    }
+
+    DATABASE->close(ContasReceber);
+    DATABASE->close(Caixas);
 }
 int relatorio_vendas() {
     DATABASE->open(Vendas);

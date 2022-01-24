@@ -103,6 +103,9 @@ int ver_venda();
 // principal -> vendas -> realizar_pagamento_venda
 int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment);
 
+// principal -> entrada -> baixar_nota_venda
+int baixar_nota_venda();
+
 //###ENTRADA
 
 // principal -> entrada
@@ -114,8 +117,8 @@ int realizar_entrada();
 // entradas.c
 int realizar_pagamento_entrada(float total, unsigned int fornecedor_id);
 
-// principal -> entrada -> baixar_nota
-int baixar_nota();
+// principal -> entrada -> baixar_nota_entrada
+int baixar_nota_entrada();
 
 
 //###RELATÓRIOS

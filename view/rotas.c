@@ -136,11 +136,14 @@ int menu_reservas() {
 int menu_vendas() {
     while (1) {
         clrscr();
-        switch (menu($f, 3, "Realizar venda", "Ver venda", "Voltar")) {
+        switch (menu($f, 4, "Realizar venda", "Baixa de notas", "Ver venda", "Voltar")) {
             case 0:
                 realizar_venda();
                 break;
             case 1:
+                baixar_nota_venda();
+                break;
+            case 2:
                 ver_venda();
                 break;
             default: // Voltar
@@ -152,12 +155,15 @@ int menu_vendas() {
 int menu_entradas() {
     while (1) {
         clrscr();
-        switch (menu($f, 3, "Realizar entrada", "Baixa de notas", "Voltar")) {
+        switch (menu($f, 4, "Realizar entrada", "Baixa de notas", "Voltar")) {
             case 0:
                 realizar_entrada();
                 break;
             case 1:
-                baixar_nota();
+                baixar_nota_entrada();
+                break;
+            case 2:
+                ver_entrada();
                 break;
             default: // Voltar
                 return EXIT_SUCCESS;

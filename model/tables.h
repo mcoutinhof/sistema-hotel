@@ -152,7 +152,6 @@ struct ContaReceber {
     unsigned int hotel_id; 
     float valor_parcela;
     unsigned int num_parcela;
-    unsigned int data_vencimento; // YYYYMMDD
     unsigned int data_recebimento; // YYYYMMDD
     bool pago;
 };

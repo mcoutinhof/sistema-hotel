@@ -191,12 +191,12 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
         DATABASE->insert(Caixas, &caixa);
     }
 
-    feedback("Entrada de produtos de consumo realizada com sucesso \n");
+    feedback("Entrada de produtos de consumo realizada com sucesso");
 
     DATABASE->close(Caixas);
     DATABASE->close(ContasPagar);
 }
-int baixar_nota() {
+int baixar_nota_entrada() {
     DATABASE->open(ContasPagar);
     DATABASE->open(Caixas);
 
