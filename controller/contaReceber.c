@@ -3,6 +3,7 @@
 #include "../view/utils.h"
 #include <stdlib.h>
 #include "../view/rotas.h"
+#include <string.h>
 
 int relatorio_contas_receber(char *path) {
     DATABASE->open(ContasReceber);
@@ -49,10 +50,12 @@ int relatorio_contas_receber(char *path) {
         }
         if(obedeceFiltros) {
             if(strlen(path) != 0) {
-                fprintf(fp, "%u;%u;%u;%f;%u;%u;%u;%hhu \n", conta.id, conta.hospede_id, conta.hotel_id, conta.valor_parcela, conta.num_parcela, conta.data_recebimento, conta.data_vencimento, conta.pago);
+                fprintf(fp, "%u;%u;%u;%f;%u;%u;%u;%u \n", conta.id, conta.hospede_id, conta.hotel_id, conta.valor_parcela, conta.num_parcela, conta.data_recebimento, conta.data_vencimento, conta.pago);
             } else {
+                clrscr();
                 form(1, ContasReceber, &conta);
-                printf(" \n\n");
+                gotoxy(3, wherey() + 2);
+                if (menu($f, 2, "Próximo", "Sair") == 1) break;
             }
         }
     }
@@ -60,7 +63,7 @@ int relatorio_contas_receber(char *path) {
         clrscr();
         fclose(fp);
     } 
-    alert("Aperte qualquer tecla para continuar... \n");
+    alert("\nAperte qualquer tecla para continuar... \n");
 
     DATABASE->close(ContasReceber);
     DATABASE->close(Hospedes);

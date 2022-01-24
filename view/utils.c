@@ -34,7 +34,7 @@ int printVal(FILE *stream, const ColumnMeta *colMeta, const void *ptr) {
     unsigned int year = 0, month = 0, day = 0;
     switch (colMeta->type) {
         case COL_TYPE_BOOL:
-            return fprintf(stream, "%s", (*(bool *) ptr) ? "SIM" : "NÃO");
+            return fprintf(stream, "%s", (*(unsigned int *) ptr) ? "SIM" : "NÃO");
         case COL_TYPE_CHAR:
             return fprintf(stream, "%c", *(char *) ptr);
         case COL_TYPE_INT:
@@ -66,7 +66,7 @@ int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr) {
         unsigned int year = 0, month = 0, day = 0;
         switch (colMeta->type) {
             case COL_TYPE_BOOL: // Tudo que começa com S, Y, V, T ou 1 é true, o resto é false.
-                *(bool *) ptr = (strchr("SYVT1", toupper(*buf)) != NULL);
+                *(unsigned int *) ptr = (strchr("SYVT1", toupper(*buf)) != NULL);
                 return 1;
             case COL_TYPE_CHAR:
                 return sscanf(buf, "%c", (char *) ptr);

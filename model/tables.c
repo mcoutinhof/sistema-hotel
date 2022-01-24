@@ -111,9 +111,9 @@ Table Reservas = {
         &(ColumnMeta) {.displayName = "Data inicial", .tagName = "data_inicial", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Data final", .tagName = "data_final", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Período", .tagName = "periodo", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
-        &(ColumnMeta) {.displayName = "Check-in", .tagName = "check_in", .type = COL_TYPE_BOOL, .size = sizeof(bool), .flags = COL_FLAG_SYS_GENERATED},
-        &(ColumnMeta) {.displayName = "Check-out", .tagName = "check_out", .type = COL_TYPE_BOOL, .size = sizeof(bool), .flags = COL_FLAG_SYS_GENERATED},
-        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(bool), .flags = COL_FLAG_SYS_GENERATED},
+        &(ColumnMeta) {.displayName = "Check-in", .tagName = "check_in", .type = COL_TYPE_BOOL, .size = sizeof(unsigned int), .flags = COL_FLAG_SYS_GENERATED},
+        &(ColumnMeta) {.displayName = "Check-out", .tagName = "check_out", .type = COL_TYPE_BOOL, .size = sizeof(unsigned int), .flags = COL_FLAG_SYS_GENERATED},
+        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(unsigned int), .flags = COL_FLAG_SYS_GENERATED},
         &(ColumnMeta) {.displayName = "ID da acomodação", .tagName = "acomodacao_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "ID do hóspede", .tagName = "hospede_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         NULL
@@ -181,7 +181,7 @@ Table ContasPagar = {
         &(ColumnMeta) {.displayName = "Valor da parcela", .tagName = "valor_parcela", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
         &(ColumnMeta) {.displayName = "Número da parcela", .tagName = "num_parcela", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Data de vencimento", .tagName = "data_vencimento", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
-        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(bool)},
+        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(unsigned int)},
         NULL
 };
 
@@ -195,7 +195,7 @@ Table ContasReceber = {
         &(ColumnMeta) {.displayName = "Número da parcela", .tagName = "num_parcela", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Data de recebimento", .tagName = "data_recebimento", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Data de vencimento", .tagName = "data_vencimento", .type = COL_TYPE_DATE, .size = sizeof(unsigned int)},
-        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(bool)},
+        &(ColumnMeta) {.displayName = "Pago", .tagName = "pago", .type = COL_TYPE_BOOL, .size = sizeof(unsigned int)},
         NULL
 };
 

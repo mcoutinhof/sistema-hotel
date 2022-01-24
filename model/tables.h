@@ -90,9 +90,9 @@ struct Reserva {
     unsigned int data_inicial; // YYYYMMDD
     unsigned int data_final; // YYYYMMDD
     unsigned int periodo; // 0 a 4294967295
-    bool check_in; // 1 (true) ou 0 (false)
-    bool check_out; // 1 (true) ou 0 (false)
-    bool pago;
+    unsigned int check_in; // 1 (true) ou 0 (false)
+    unsigned int check_out; // 1 (true) ou 0 (false)
+    unsigned int pago;
     unsigned int acomodacao_id; // 0 a 4294967295
     unsigned int hospede_id; // 0 a 4294967295
 };
@@ -142,7 +142,7 @@ struct ContaPagar {
     float valor_parcela;
     unsigned int num_parcela;
     unsigned int data_vencimento; // YYYYMMDD
-    bool pago;
+    unsigned int pago;
 };
 
 struct ContaReceber {
@@ -153,7 +153,7 @@ struct ContaReceber {
     unsigned int num_parcela;
     unsigned int data_recebimento; // YYYYMMDD
     unsigned int data_vencimento; // YYYYMMDD
-    bool pago;
+    unsigned int pago;
 };
 
 struct Caixa {
