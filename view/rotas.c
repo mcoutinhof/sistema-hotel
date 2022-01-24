@@ -209,7 +209,7 @@ int menu_relatorios() {
                 relatorio_contas_pagar();
                 break;
             case 8:
-                relatorio_contas_receber();
+                relatorio_contas_receber(path);
                 break;
             default: // Voltar
                 return EXIT_SUCCESS;

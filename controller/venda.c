@@ -253,6 +253,8 @@ int relatorio_vendas(char *path) {
             payment = menu($f, 2, "Dinheiro", "Cartão");
         } else break;
     }
+    clrscr();
+
     DATABASE_forEach(struct Venda, venda, Vendas) {
         bool obedeceFiltros = true;
 
