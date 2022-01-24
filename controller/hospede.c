@@ -47,7 +47,8 @@ int relatorio_hospedes(char *path) {
     unsigned int codInicio = 0, codFim = 0;
     char sexo[16];
 
-    FILE *fp = fopen(path, "w");
+    FILE *fp;
+    if(strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -87,7 +88,7 @@ int relatorio_hospedes(char *path) {
             }
         }
     }
-    fclose(fp);
+    if(strlen(path) != 0) fclose(fp);
 
     alert("Aperte qualquer tecla para continuar... \n");
 

@@ -133,7 +133,7 @@ int menu_relatorios();
 int relatorio_hospedes(char *path);
 
 // principal -> relatorios -> acomodacoes
-int relatorio_acomodacoes();
+int relatorio_acomodacoes(char *path);
 
 // principal -> relatorios -> movimentacao_acomodacoes
 int relatorio_movimentacao_acomodacoes();

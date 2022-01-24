@@ -177,8 +177,10 @@ int menu_relatorios() {
         printf($a "Onde deseja imprimir os dados? \n");
         char path[256] = {};
         if(menu($f, 2, "Em tela", "Em arquivo") == 1) {
+            clrscr();
             printf($a "Caminho do arquivo: ");
             readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 256}, &path);
+            clrscr();
         }
         
         switch (menu($f, 9, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Movimentação de caixa", "Contas a pagar", "Contas a receber","Voltar")) {
@@ -186,7 +188,7 @@ int menu_relatorios() {
                 relatorio_hospedes(path);
                 break;
             case 1:
-                relatorio_acomodacoes();
+                relatorio_acomodacoes(path);
                 break;
             case 2:
                 relatorio_movimentacao_acomodacoes();

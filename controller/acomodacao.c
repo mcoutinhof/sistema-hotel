@@ -41,7 +41,7 @@ int ver_acomodacao() {
     DATABASE->close(Acomodacoes);
 }
 
-int relatorio_acomodacoes() {
+int relatorio_acomodacoes(char *path) {
     DATABASE->open(Acomodacoes);
     DATABASE->open(Reservas);
     DATABASE->open(Categorias);
@@ -49,6 +49,9 @@ int relatorio_acomodacoes() {
     bool porCodigo = false, porCategoria = false, porData = false;
     unsigned int codInicio = 0, codFim = 0, dataInicio = 0, dataFim = 0;
     char categoria[64];
+
+    FILE *fp;
+    if(strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -105,10 +108,15 @@ int relatorio_acomodacoes() {
             }
         }
         if(obedeceFiltros) {
-            form(1, Acomodacoes, &acom);
-            printf(" \n\n");
+            if(strlen(path) != 0) {
+                fprint(fp, "%u;%s;%s;%s;%u;%u \n", acom.id, acom.titulo, acom.descricao, acom.facilidades, acom.categoria_id, acom.hotel_id);
+            } else {
+                form(1, Acomodacoes, &acom);
+                printf(" \n\n");
+            }
         }
     }
+    if(strlen(path) != 0) fclose(fp);
 
     alert("Aperte qualquer tecla para continuar...\n");
 
