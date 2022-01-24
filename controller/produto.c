@@ -38,11 +38,14 @@ int ver_produto() {
     }
     DATABASE->close(Produtos);
 }
-int relatorio_produtos() {
+int relatorio_produtos(char *path) {
     DATABASE->open(Produtos);
 
     bool porCodigo = false, porEstoqueMinimo = false;
     unsigned int codInicio = 0, codFim = 0;
+
+    FILE *fp;
+    if(strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -73,12 +76,19 @@ int relatorio_produtos() {
 
         //Exibe os dados do produto
         if(obedeceFiltros) {
-            form(1, Produtos, &prod);
-            printf(" \n\n");
+            if(strlen(path) != 0) {
+                fprintf(fp, "%u;%s;%s;%u;%u;%f;%u;%u \n", prod.id, prod.nome, prod.descricao, prod.estoque, prod.estoque_minimo, prod.preco_venda, prod.fornecedor_id, prod.hotel_id);
+            } else {
+                form(1, Produtos, &prod);
+                printf(" \n\n");
+            }
         }
     }
-
-    alert("Aperte qualquer tecla para continuar... \n");
+    if(strlen(path) != 0) {
+        clrscr();
+        fclose(fp);
+    } 
+    alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Produtos);
 }

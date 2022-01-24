@@ -142,7 +142,7 @@ int relatorio_movimentacao_acomodacoes(char *path);
 int relatorio_reservas(char *path);
 
 // principal -> relatorios -> produtos
-int relatorio_produtos();
+int relatorio_produtos(char *path);
 
 // principal -> relatorios -> produtos
 int relatorio_caixas();

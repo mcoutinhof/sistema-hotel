@@ -226,9 +226,9 @@ int relatorio_movimentacao_acomodacoes(char *path) {
                 fprintf(fp, "%u;%s;%s;%s;%u;%u;%f;%u \n", acom.id, acom.titulo, acom.descricao, acom.facilidades, acom.categoria_id, acom.hotel_id, total, countDiarias);
             } else {
                 form(1, Acomodacoes, &acom);
-                printf($a "Rendimento em hospedagem");
+                printf($a "Rendimento em hospedagem: ");
                 printVal(stdout, &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &total);
-                printf($a "\n Quantidade de diárias ocupadas");
+                printf($a "\n Quantidade de diárias ocupadas: ");
                 printVal(stdout, &(ColumnMeta) {.type = COL_TYPE_UINT}, &countDiarias);
                 printf(" \n\n");
             }

@@ -180,8 +180,8 @@ int menu_relatorios() {
             clrscr();
             printf($a "Caminho do arquivo: ");
             readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 256}, &path);
-            clrscr();
         }
+        clrscr();
         
         switch (menu($f, 9, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Movimentação de caixa", "Contas a pagar", "Contas a receber","Voltar")) {
             case 0:
@@ -197,7 +197,7 @@ int menu_relatorios() {
                 relatorio_reservas(path);
                 break;
             case 4:
-                relatorio_produtos();
+                relatorio_produtos(path);
                 break;
             case 5:
                 relatorio_caixas();
