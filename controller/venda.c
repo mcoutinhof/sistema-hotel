@@ -163,7 +163,7 @@ int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment) 
     clrscr();
 
     if(payment == 1) {
-        unsigned int numParcelas = 0, diaVencimento;
+        unsigned int numParcelas = 0, diaVencimento = 0;
         float valorParcela = 0;
 
         printf($a "Número de parcelas: " $f);
@@ -184,7 +184,7 @@ int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment) 
             conta.valor_parcela = total / numParcelas;
             conta.num_parcela = i + 1;
             conta.pago = 0;
-            conta.data_recebimento = year * 10000 + month * 100 + diaVencimento;
+            conta.data_vencimento = year * 10000 + month * 100 + diaVencimento;
             DATABASE->insert(ContasReceber, &conta);
         }
     } else  {
@@ -212,9 +212,11 @@ int baixar_nota_venda() {
             mytime = time(NULL);
             struct tm tm = *localtime(&mytime);
             int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
+            unsigned int current_date = year * 10000 + month * 100 + day;
 
             //Atualiza a situação da parcela
             conta.pago = 1;
+            conta.data_recebimento = current_date;
             DATABASE->update(ContasReceber, &conta);
 
             //Gera uma movimentação de débito no caixa do hotel
@@ -223,7 +225,7 @@ int baixar_nota_venda() {
             caixa.valor = conta.valor_parcela;
             strcpy(caixa.descricao, "Baixa de nota");
             strcpy(caixa.natureza, "Crédito");
-            caixa.data = year * 10000 + month * 100 + day;
+            caixa.data = current_date;
             DATABASE->insert(Caixas, &caixa);
             
         } else if (option == 2) break;

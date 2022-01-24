@@ -153,6 +153,7 @@ struct ContaReceber {
     float valor_parcela;
     unsigned int num_parcela;
     unsigned int data_recebimento; // YYYYMMDD
+    unsigned int data_vencimento; // YYYYMMDD
     bool pago;
 };
 
