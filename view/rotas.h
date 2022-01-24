@@ -136,7 +136,7 @@ int relatorio_hospedes(char *path);
 int relatorio_acomodacoes(char *path);
 
 // principal -> relatorios -> movimentacao_acomodacoes
-int relatorio_movimentacao_acomodacoes();
+int relatorio_movimentacao_acomodacoes(char *path);
 
 // principal -> relatorios -> reservas
 int relatorio_reservas(char *path);

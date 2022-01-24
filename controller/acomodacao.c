@@ -126,7 +126,7 @@ int relatorio_acomodacoes(char *path) {
     DATABASE->close(Reservas);
     DATABASE->close(Categorias);
 }
-int relatorio_movimentacao_acomodacoes() {
+int relatorio_movimentacao_acomodacoes(char *path) {
     DATABASE->open(Acomodacoes);
     DATABASE->open(Categorias);
     DATABASE->open(Reservas);
@@ -137,6 +137,9 @@ int relatorio_movimentacao_acomodacoes() {
     struct Acomodacao tempAcom = {};
     unsigned int rendimento = 0, diarias = 0;
     int pesquisaDiarias = 0, pesquisaRendimento = 0;
+
+    FILE *fp;
+    if(strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -172,16 +175,25 @@ int relatorio_movimentacao_acomodacoes() {
     DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
         bool obedeceFiltros = true;
 
+        int countDiarias = 0, valorDiaria = 0;
+        float total = 0;
+
+        //Calcula a quantidade de diárias reservadas da acomodação
+        DATABASE_forEach(struct Reserva, res, Reservas) {
+            if(res.acomodacao_id != acom.id) continue;
+            countDiarias+=res.periodo;
+        }
+        //Recupera o valor da diária da acomodação
+        struct Categoria cat = {};
+        if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
+        valorDiaria = cat.valor_diaria;
+
+        //Calcula o rendimento em hospedagem
+        total = valorDiaria * countDiarias;
+
         if(porAcomodacao) obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
 
         if(obedeceFiltros && (porDiarias || porRendimento)) {
-            int countDiarias = 0;
-            //Calcula a quantidade de diárias reservadas da acomodação
-            DATABASE_forEach(struct Reserva, res, Reservas) {
-                if(res.acomodacao_id != acom.id) continue;
-                countDiarias+=res.periodo;
-            }
-            
             if(porDiarias) {
                 switch(pesquisaDiarias) {
                     case 0:
@@ -196,14 +208,6 @@ int relatorio_movimentacao_acomodacoes() {
                 }
             } 
             if(obedeceFiltros && porRendimento) {
-                int valorDiaria = 0;
-                float total = 0;
-
-                struct Categoria cat = {};
-                if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
-                valorDiaria = cat.valor_diaria;
-
-                total = valorDiaria * countDiarias;
                 switch(pesquisaRendimento) {
                     case 0:
                         obedeceFiltros = total == rendimento;
@@ -218,11 +222,22 @@ int relatorio_movimentacao_acomodacoes() {
             }
         }
         if(obedeceFiltros) {
-            form(1, Acomodacoes, &acom);
-            printf(" \n\n");
+            if(strlen(path) != 0) {
+                fprintf(fp, "%u;%s;%s;%s;%u;%u;%f;%u \n", acom.id, acom.titulo, acom.descricao, acom.facilidades, acom.categoria_id, acom.hotel_id, total, countDiarias);
+            } else {
+                form(1, Acomodacoes, &acom);
+                printf($a "Rendimento em hospedagem");
+                printVal(stdout, &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &total);
+                printf($a "\n Quantidade de diárias ocupadas");
+                printVal(stdout, &(ColumnMeta) {.type = COL_TYPE_UINT}, &countDiarias);
+                printf(" \n\n");
+            }
         }
     }
-
+    if(strlen(path) != 0) {
+        clrscr();
+        fclose(fp);
+    } 
     alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Acomodacoes);
