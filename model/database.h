@@ -14,16 +14,21 @@ typedef struct {
     size_t regSize;
     /** Última posição segura do cursor, para retornar em caso de erros de leitura ou escrita. */
     fpos_t cursorPos;
+
+    /** Array de registros */
+    void *arr;
+    /** Índice atual na array de registros */
+    size_t arrIndex;
+    /** Tamanho da array de registros */
+    size_t arrSize;
 } TableState;
 
 /** As informações da tabela são dados permanentes informados pelo programador e usados para se referir à tabela. */
 typedef struct {
     /** Nome da tabela exibido ao usuário. */
     const char *displayName;
-    /** Nome da tag XML que armazena a tabela. */
+    /** Nome da tag XML que armazena a tabela, e o nome (sem extensão) do arquivo da tabela. */
     const char *tagName;
-    /** Caminho para o arquivo que armazena a tabela. */
-    const char *fileName;
 } TableInfo;
 
 /** Os metadados de uma coluna definem como devem ser tratados os dados armazenados nessa coluna. */
