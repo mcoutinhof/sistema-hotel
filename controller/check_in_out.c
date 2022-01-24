@@ -79,7 +79,7 @@ int check_in_out(int operation) {
                 total += res.periodo * cat.valor_diaria;
                 res.pago = 1;
             }
-            printf($a "\n Valor total a ser pago %f", total);
+            printf($a "\n Valor total a ser pago %f \n", total);
             alert("Pressione qualquer tecla para continuar...");
             clrscr();
 
@@ -93,7 +93,7 @@ int check_in_out(int operation) {
                 if(menu($f, 2, "Dinheiro", "Cartão") == 1) {
                     unsigned int numParcelas = 0, diaVencimento = 0;
 
-                    printf($a "Número de parcelas: " $f);
+                    printf($a "\n Número de parcelas: " $f);
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &numParcelas);
 
                     printf($a "Dia de vencimento do cartão: " $f);

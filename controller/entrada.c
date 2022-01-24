@@ -24,7 +24,7 @@ int realizar_entrada() {
         char nome[64] = {0};
         int count = 0;
 
-        printf($a "\nNome fantasia do fornecedor: ");
+        printf($a "Nome fantasia do fornecedor: " $f);
         readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &nome);
 
         DATABASE_forEach(struct Fornecedor, forn, Fornecedores) {
@@ -47,10 +47,10 @@ int realizar_entrada() {
         }
     }
     clrscr();
-    printf($a "Frete: ");
+    printf($a "Frete: " $f);
     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &entrada.frete);
 
-    printf($a "Imposto: ");
+    printf($a "Imposto: " $f);
     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &entrada.imposto);
 
     entrada.fornecedor_id = fornecedor_id;
@@ -74,13 +74,13 @@ int realizar_entrada() {
                 clrscr();
 
                 while(!quantidade) {
-                    printf($a "Quantidade: ");
+                    printf($a "Quantidade: " $f);
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &quantidade);
 
                     if(!quantidade) printf($a "A quantidade deve ser maior que 0. Por favor, tente novamente! \n");
                 }
                 while(preco <= 0) {
-                    printf($a "Preço de custo unitário: ");
+                    printf($a "Preço de custo unitário: " $f);
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &preco);
 
                     if(preco <= 0) printf($a "O preço deve ser maior que 0. Por favor, tente novamente! \n");
@@ -100,10 +100,10 @@ int realizar_entrada() {
         }
         if(!count) {
             DATABASE->delete(Entradas);
-            feedback("Nenhum produto cadastrado. Certifique-se de criar ao menos um produto para dar entrada \n");
+            feedback("\n Nenhum produto cadastrado. Certifique-se de criar ao menos um produto para dar entrada");
             return 1;
         } else if(!itemSelecionado) {
-            feedback("Nenhum produto selecionado. Certifique-se de incluir ao menos um produto para dar entrada \n");
+            feedback("\n Nenhum produto selecionado. Certifique-se de incluir ao menos um produto para dar entrada");
         }
     }
     float fretePorProduto = entrada.frete / quantidadeTotal, 

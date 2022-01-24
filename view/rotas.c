@@ -158,7 +158,7 @@ int menu_vendas() {
 int menu_entradas() {
     while (1) {
         clrscr();
-        switch (menu($f, 4, "Realizar entrada", "Baixa de notas", "Voltar")) {
+        switch (menu($f, 4, "Realizar entrada", "Baixa de notas", "Ver entrada", "Voltar")) {
             case 0:
                 realizar_entrada();
                 break;
@@ -179,11 +179,12 @@ int menu_relatorios() {
         clrscr();
         printf($a "Onde deseja imprimir os dados? \n");
         char path[256] = {};
-        if(menu($f, 2, "Em tela", "Em arquivo") == 1) {
+        option = menu($f, 3, "Em tela", "Em arquivo", "Voltar");
+        if(option == 1) {
             clrscr();
-            printf($a "Caminho do arquivo: ");
+            printf($a "Caminho do arquivo: " $f);
             readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 256}, &path);
-        }
+        } else if(option == 2) return 1;
         clrscr();
         
         switch (menu($f, 10, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Vendas", "Movimentação de caixa", "Contas a pagar", "Contas a receber","Voltar")) {
