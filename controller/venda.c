@@ -267,8 +267,10 @@ int relatorio_vendas(char *path) {
             if(strlen(path) != 0) {
                 fprintf(fp, "%u;%f;%s;%u \n", venda.id, venda.total, venda.metodo_pagamento, venda.hospede_id);
             } else {
+                clrscr();
                 form(1, Vendas, &venda);
-                printf(" \n\n");
+                gotoxy(3, wherey() + 2);
+                if (menu($f, 2, "Próximo", "Sair") == 1) break;
             }
         }
     }
@@ -276,7 +278,7 @@ int relatorio_vendas(char *path) {
         clrscr();
         fclose(fp);
     } 
-    alert("Aperte qualquer tecla para continuar...\n");
+    alert("\nAperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Vendas);
 }

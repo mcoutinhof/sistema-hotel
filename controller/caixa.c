@@ -3,6 +3,7 @@
 #include "../view/utils.h"
 #include <stdlib.h>
 #include "../view/rotas.h"
+#include <string.h>
 
 int relatorio_caixas(char *path) {
     DATABASE->open(Caixas);
@@ -37,8 +38,10 @@ int relatorio_caixas(char *path) {
             if(strlen(path) != 0) {
                 fprintf(fp, "%u;%u;%f;%s;%s;%u \n", caixa.id, caixa.hotel_id, caixa.valor, caixa.descricao, caixa.natureza, caixa.data);
             } else {
+                clrscr();
                 form(1, Caixas, &caixa);
-                printf(" \n\n");
+                gotoxy(3, wherey() + 2);
+                if (menu($f, 2, "Próximo", "Sair") == 1) break;
             }
         }
     }
@@ -46,7 +49,7 @@ int relatorio_caixas(char *path) {
         clrscr();
         fclose(fp);
     } 
-    alert("Aperte qualquer tecla para continuar... \n");
+    alert("\nAperte qualquer tecla para continuar... \n");
 
     DATABASE->close(Caixas);
 }
