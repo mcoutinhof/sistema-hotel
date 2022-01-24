@@ -7,23 +7,23 @@
  */
 
 #include "database_bin.h"
-#include "string.h"
+#include <string.h>
 
 static int bin_open(Table table) {
     TableState *tableState = *table++;
     TableInfo *tableInfo = *table++;
 
+    tableState->regSize = 0;
+    for (ColumnMeta *colMeta; (colMeta = *table++) != NULL;) {
+        tableState->regSize += colMeta->size;
+    }
+
     char fileName[256];
-    strcpy(fileName, tableInfo->tagName);
-    strcat(fileName, ".dat");
+    sprintf(fileName, "%s.dat", tableInfo->tagName);
 
     if ((tableState->stream = fopen(fileName, "a+"))) { // a+ porque cria o arquivo se ele não existir.
         if ((freopen(NULL, "r+", tableState->stream))) { // r+ porque permite sobrescrever os dados.
             if (fgetpos(tableState->stream, &tableState->cursorPos) == 0) {
-                tableState->regSize = 0;
-                for (ColumnMeta *colMeta; (colMeta = *table) != NULL; ++table) {
-                    tableState->regSize += colMeta->size;
-                }
                 return 1;
             }
         }

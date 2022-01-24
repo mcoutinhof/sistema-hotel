@@ -1,7 +1,6 @@
 #include "../lcurses.h"
 #include "../model/tables.h"
 #include "../view/utils.h"
-#include <stdlib.h>
 #include "../view/rotas.h"
 #include <string.h>
 
@@ -12,13 +11,13 @@ int relatorio_caixas(char *path) {
     unsigned int dataInicio = 0, dataFim = 0;
 
     FILE *fp;
-    if(strlen(path) != 0) fp = fopen(path, "w");
+    if (strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
         int option = menu($f, 2, "Filtrar por data", "Gerar relatório >>");
 
-        if(option == 0) {
+        if (option == 0) {
             porData = true;
             clrscr();
             printf($a "Data inicial: " $f);
@@ -28,15 +27,16 @@ int relatorio_caixas(char *path) {
         } else break;
     }
     clrscr();
-    
+
     DATABASE_forEach(struct Caixa, caixa, Caixas) {
         bool obedeceFiltros = true;
 
-        if(porData) obedeceFiltros = caixa.data >= dataInicio && caixa.data < dataFim;
+        if (porData) obedeceFiltros = caixa.data >= dataInicio && caixa.data < dataFim;
 
-        if(obedeceFiltros) {
-            if(strlen(path) != 0) {
-                fprintf(fp, "%u;%u;%f;%s;%s;%u \n", caixa.id, caixa.hotel_id, caixa.valor, caixa.descricao, caixa.natureza, caixa.data);
+        if (obedeceFiltros) {
+            if (strlen(path) != 0) {
+                fprintf(fp, "%u;%u;%f;%s;%s;%u\n", caixa.id, caixa.hotel_id, caixa.valor, caixa.descricao,
+                        caixa.natureza, caixa.data);
             } else {
                 clrscr();
                 form(1, Caixas, &caixa);
@@ -45,11 +45,11 @@ int relatorio_caixas(char *path) {
             }
         }
     }
-    if(strlen(path) != 0) {
+    if (strlen(path) != 0) {
         clrscr();
         fclose(fp);
-    } 
-    alert("\nAperte qualquer tecla para continuar... \n");
+    }
+    alert("\nAperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Caixas);
 }

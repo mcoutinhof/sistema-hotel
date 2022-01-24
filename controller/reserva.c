@@ -12,7 +12,7 @@ int cadastrar_reserva() {
     bool porData = true, porCategoria = false, porQtdPessoas = false, porFacilidade = false;
     unsigned int dataInicio = 0, dataFim = 0, qtdPessoas = 0;
     char categoria[64], facilidade[512];
-    
+
     while (1) {
         clrscr();
         int option = menu($f, 4,
@@ -42,7 +42,7 @@ int cadastrar_reserva() {
         }
         if (option == 3) break;
     }
-    
+
     clrscr();
     printf($a "Data inicial: " $f);
     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
@@ -53,18 +53,18 @@ int cadastrar_reserva() {
     DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
         clrscr();
         bool obedeceFiltros = true;
-        
+
         //Filtro de data
         DATABASE_forEach(struct Reserva, res, Reservas) {
             //Percorre todas as reservas da acomodação
             if (res.acomodacao_id != acom.id) continue;
 
             //Se ao menos um dos casos de colisões de data acontecer, obedeceFiltros recebe false
-            obedeceFiltros = !((dataInicio < res.data_inicial && dataFim > res.data_inicial) 
-                            || (dataFim > res.data_final && dataInicio < res.data_final) 
-                            || (dataInicio >= res.data_inicial && dataFim <= res.data_final));
-            
-            if(!obedeceFiltros) break;
+            obedeceFiltros = !((dataInicio < res.data_inicial && dataFim > res.data_inicial)
+                               || (dataFim > res.data_final && dataInicio < res.data_final)
+                               || (dataInicio >= res.data_inicial && dataFim <= res.data_final));
+
+            if (!obedeceFiltros) break;
         }
         //Filtro de categoria e lotação
         if (obedeceFiltros && (porCategoria || porQtdPessoas)) {
@@ -73,9 +73,9 @@ int cadastrar_reserva() {
                 if (cat.id != acom.categoria_id) continue;
 
                 //Verifica se o nome da categoria corresponde ao informado
-                if(porCategoria) obedeceFiltros = strcasecmp(cat.titulo, categoria) == 0;
+                if (porCategoria) obedeceFiltros = strcasecmp(cat.titulo, categoria) == 0;
                 //Verifica se a categoria suporta a lotação informada
-                if(obedeceFiltros && porQtdPessoas) obedeceFiltros = qtdPessoas <= cat.lotacao;
+                if (obedeceFiltros && porQtdPessoas) obedeceFiltros = qtdPessoas <= cat.lotacao;
                 break;
             }
         }
@@ -99,8 +99,9 @@ int cadastrar_reserva() {
             } else if (option == 2) break;
         }
     }
-    if(!count) feedback("Nenhuma acomodação disponível para os critérios de busca informados! Por favor, tente novamente");
-    
+    if (!count)
+        feedback("Nenhuma acomodação disponível para os critérios de busca informados! Por favor, tente novamente");
+
     DATABASE->close(Acomodacoes);
     DATABASE->close(Categorias);
     DATABASE->close(Reservas);
@@ -112,7 +113,7 @@ int ver_reserva() {
     DATABASE->open(Reservas);
     DATABASE_forEach(struct Reserva, reserva, Reservas) {
         //Seleciona apenas as reservas ativas
-        if(reserva.data_final < date) continue;
+        if (reserva.data_final < date) continue;
 
         clrscr();
         form(1, Reservas, &reserva);
@@ -148,15 +149,15 @@ int relatorio_reservas(char *path) {
     unsigned int dataInicio = 0, dataFim = 0;
 
     FILE *fp;
-    if(strlen(path) != 0) fp = fopen(path, "w");
+    if (strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
-        int option = menu($f, 4, 
-                            "Filtrar por dados do hóspede", 
-                            "Filtrar por dados da acomodação", 
-                            "Filtrar por período reservado",
-                            "Gerar relatório >>");
+        int option = menu($f, 4,
+                          "Filtrar por dados do hóspede",
+                          "Filtrar por dados da acomodação",
+                          "Filtrar por período reservado",
+                          "Gerar relatório >>");
 
         switch (option) {
             case 0:
@@ -186,21 +187,22 @@ int relatorio_reservas(char *path) {
         bool obedeceFiltros = true;
 
         //Verifica se o periodo da reserva está entre o período informado
-        if(porData) obedeceFiltros = res.data_inicial >= dataInicio && res.data_final < dataFim;
+        if (porData) obedeceFiltros = res.data_inicial >= dataInicio && res.data_final < dataFim;
 
-        if(obedeceFiltros && porAcomodacao)  {
+        if (obedeceFiltros && porAcomodacao) {
             struct Acomodacao acom = {};
-            if(!DATABASE_findBy("id", &res.acomodacao_id, Acomodacoes, &acom)) continue;
+            if (!DATABASE_findBy("id", &res.acomodacao_id, Acomodacoes, &acom)) continue;
             obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
         }
-        if(obedeceFiltros && porHospede)  {
+        if (obedeceFiltros && porHospede) {
             struct Hospede hosp = {};
-            if(!DATABASE_findBy("id", &res.hospede_id, Hospedes, &hosp)) continue;
+            if (!DATABASE_findBy("id", &res.hospede_id, Hospedes, &hosp)) continue;
             obedeceFiltros = compareFields(Hospedes, &hosp, &tempHosp, filtroHospede);
         }
-        if(obedeceFiltros) {
-            if(strlen(path) != 0) {
-                fprintf(fp, "%u;%u;%u;%u;%u;%u;%u;%u \n", res.id, res.data_inicial, res.data_final, res.periodo, res.check_in, res.check_out, res.acomodacao_id, res.hospede_id);
+        if (obedeceFiltros) {
+            if (strlen(path) != 0) {
+                fprintf(fp, "%u;%u;%u;%u;%u;%u;%u;%u \n", res.id, res.data_inicial, res.data_final, res.periodo,
+                        res.check_in, res.check_out, res.acomodacao_id, res.hospede_id);
             } else {
                 clrscr();
                 form(1, Reservas, &res);
@@ -209,10 +211,10 @@ int relatorio_reservas(char *path) {
             }
         }
     }
-    if(strlen(path) != 0) {
+    if (strlen(path) != 0) {
         clrscr();
         fclose(fp);
-    } 
+    }
     alert("\nAperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Reservas);

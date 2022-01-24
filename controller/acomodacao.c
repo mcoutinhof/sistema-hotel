@@ -1,9 +1,9 @@
 #include "../lcurses.h"
 #include "../model/tables.h"
 #include "../view/utils.h"
+#include "../view/rotas.h"
 #include <stdlib.h>
 #include <string.h>
-#include "../view/rotas.h"
 
 int cadastrar_acomodacao() {
     clrscr();
@@ -50,29 +50,30 @@ int relatorio_acomodacoes(char *path) {
     char categoria[64];
 
     FILE *fp;
-    if(strlen(path) != 0) fp = fopen(path, "w");
+    if (strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
-        int option = menu($f, 4, "Filtrar faixa de código", "Filtrar por categoria", "Filtrar por data de reserva", "Gerar relatório >>");
+        int option = menu($f, 4, "Filtrar faixa de código", "Filtrar por categoria", "Filtrar por data de reserva",
+                          "Gerar relatório >>");
         switch (option) {
             case 0:
-                porCodigo = true;
                 clrscr();
+                porCodigo = true;
                 printf($a "Código inicial: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codInicio);
                 printf($a "Código final: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &codFim);
                 break;
             case 1:
-                porCategoria = true;
                 clrscr();
+                porCategoria = true;
                 printf($a "Categoria: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &categoria);
                 break;
-            case 2: 
-                porData = true;
+            case 2:
                 clrscr();
+                porData = true;
                 printf($a "Data inicial: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
                 printf($a "Data final: " $f);
@@ -85,31 +86,32 @@ int relatorio_acomodacoes(char *path) {
     DATABASE_forEach(struct Acomodacao, acom, Acomodacoes) {
         bool obedeceFiltros = true;
 
-         //Verifica se o id da acomodação esta entre o intervalo informado
-        if(porCodigo) obedeceFiltros = acom.id >= codInicio && acom.id < codFim;
+        //Verifica se o id da acomodação esta entre o intervalo informado
+        if (porCodigo) obedeceFiltros = acom.id >= codInicio && acom.id < codFim;
 
-        if(obedeceFiltros && porCategoria) {
+        if (obedeceFiltros && porCategoria) {
             struct Categoria cat = {};
-            if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
+            if (!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
             obedeceFiltros = strcasecmp(categoria, cat.titulo) == 0;
         }
-        if(obedeceFiltros && porData) {
+        if (obedeceFiltros && porData) {
             DATABASE_forEach(struct Reserva, res, Reservas) {
                 //Seleciona as reservas da acomodação
                 if (res.acomodacao_id != acom.id) continue;
 
                 //Verifica se não há sobreposição de datas do periodo da reserva com a data disponível informada
-                obedeceFiltros =  !((dataInicio < res.data_inicial && dataFim > res.data_inicial) 
-                                 || (dataInicio < res.data_inicial && dataFim > res.data_inicial)
-                                 || (dataInicio >= res.data_inicial && dataFim <= res.data_final));
-                
+                obedeceFiltros = !((dataInicio < res.data_inicial && dataFim > res.data_inicial)
+                                   || (dataInicio < res.data_inicial && dataFim > res.data_inicial)
+                                   || (dataInicio >= res.data_inicial && dataFim <= res.data_final));
+
                 //Somente sai do loop se encontrar uma reserva que sobreponha a data disponível ou após verificar todas as reservas
-                if(!obedeceFiltros) break;
+                if (!obedeceFiltros) break;
             }
         }
-        if(obedeceFiltros) {
-            if(strlen(path) != 0) {
-                fprintf(fp, "%u;%s;%s;%s;%u;%u \n", acom.id, acom.titulo, acom.descricao, acom.facilidades, acom.categoria_id, acom.hotel_id);
+        if (obedeceFiltros) {
+            if (strlen(path) != 0) {
+                fprintf(fp, "%u;%s;%s;%s;%u;%u\n", acom.id, acom.titulo, acom.descricao, acom.facilidades,
+                        acom.categoria_id, acom.hotel_id);
             } else {
                 clrscr();
                 form(1, Acomodacoes, &acom);
@@ -118,16 +120,17 @@ int relatorio_acomodacoes(char *path) {
             }
         }
     }
-    if(strlen(path) != 0) {
+    if (strlen(path) != 0) {
         clrscr();
         fclose(fp);
-    } 
+    }
     alert("\nAperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Acomodacoes);
     DATABASE->close(Reservas);
     DATABASE->close(Categorias);
 }
+
 int relatorio_movimentacao_acomodacoes(char *path) {
     DATABASE->open(Acomodacoes);
     DATABASE->open(Categorias);
@@ -141,14 +144,14 @@ int relatorio_movimentacao_acomodacoes(char *path) {
     int pesquisaDiarias = 0, pesquisaRendimento = 0;
 
     FILE *fp;
-    if(strlen(path) != 0) fp = fopen(path, "w");
+    if (strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
-        int option = menu($f, 4, "Filtrar por dados da acomodação", 
-                                 "Filtrar pelo número de diárias ocupadas", 
-                                 "Filtrar pelo rendimento em hospedagem", 
-                                 "Gerar relatório >>");
+        int option = menu($f, 4, "Filtrar por dados da acomodação",
+                          "Filtrar pelo número de diárias ocupadas",
+                          "Filtrar pelo rendimento em hospedagem",
+                          "Gerar relatório >>");
         switch (option) {
             case 0:
                 porAcomodacao = true;
@@ -161,15 +164,17 @@ int relatorio_movimentacao_acomodacoes(char *path) {
                 printf($a "Número de diárias: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &diarias);
                 printf($a "Forma de busca: \n");
-                pesquisaDiarias = menu($f, 3, "Igual ao valor informado", "Número de diárias superior", "Número de diárias inferior");
+                pesquisaDiarias = menu($f, 3, "Igual ao valor informado", "Número de diárias superior",
+                                       "Número de diárias inferior");
                 break;
-            case 2: 
+            case 2:
                 porRendimento = true;
                 clrscr();
                 printf($a "Rendimento em hospedagem: " $f);
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &rendimento);
                 printf($a "Forma de busca: \n");
-                pesquisaRendimento = menu($f, 3, "Igual ao valor informado", "Rendimento superior", "Rendimento inferior");
+                pesquisaRendimento = menu($f, 3, "Igual ao valor informado", "Rendimento superior",
+                                          "Rendimento inferior");
         }
         if (option == 3) break;
     }
@@ -183,50 +188,51 @@ int relatorio_movimentacao_acomodacoes(char *path) {
 
         //Calcula a quantidade de diárias reservadas da acomodação
         DATABASE_forEach(struct Reserva, res, Reservas) {
-            if(res.acomodacao_id != acom.id) continue;
-            countDiarias+=res.periodo;
+            if (res.acomodacao_id != acom.id) continue;
+            countDiarias += res.periodo;
         }
         //Recupera o valor da diária da acomodação
         struct Categoria cat = {};
-        if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
+        if (!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) continue;
         valorDiaria = cat.valor_diaria;
 
         //Calcula o rendimento em hospedagem
         total = valorDiaria * countDiarias;
 
-        if(porAcomodacao) obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
+        if (porAcomodacao) obedeceFiltros = compareFields(Acomodacoes, &acom, &tempAcom, filtroAcomodacao);
 
-        if(obedeceFiltros && (porDiarias || porRendimento)) {
-            if(porDiarias) {
-                switch(pesquisaDiarias) {
+        if (obedeceFiltros && (porDiarias || porRendimento)) {
+            if (porDiarias) {
+                switch (pesquisaDiarias) {
                     case 0:
                         obedeceFiltros = countDiarias == diarias;
                         break;
-                    case 1: 
+                    case 1:
                         obedeceFiltros = countDiarias >= diarias;
                         break;
-                    case 2: 
+                    case 2:
                         obedeceFiltros = countDiarias <= diarias;
                         break;
                 }
-            } 
-            if(obedeceFiltros && porRendimento) {
-                switch(pesquisaRendimento) {
+            }
+            if (obedeceFiltros && porRendimento) {
+                switch (pesquisaRendimento) {
                     case 0:
                         obedeceFiltros = total == rendimento;
                         break;
-                    case 1: 
+                    case 1:
                         obedeceFiltros = total >= rendimento;
                         break;
-                    case 2: 
+                    case 2:
                         obedeceFiltros = total <= rendimento;
                         break;
                 }
             }
         }
-        if(obedeceFiltros) {
-            if(strlen(path) != 0) {
-                fprintf(fp, "%u;%s;%s;%s;%u;%u;%f;%u \n", acom.id, acom.titulo, acom.descricao, acom.facilidades, acom.categoria_id, acom.hotel_id, total, countDiarias);
+        if (obedeceFiltros) {
+            if (strlen(path) != 0) {
+                fprintf(fp, "%u;%s;%s;%s;%u;%u;%f;%u\n", acom.id, acom.titulo, acom.descricao, acom.facilidades,
+                        acom.categoria_id, acom.hotel_id, total, countDiarias);
             } else {
                 form(1, Acomodacoes, &acom);
                 printf($a "Rendimento em hospedagem: ");
@@ -237,10 +243,10 @@ int relatorio_movimentacao_acomodacoes(char *path) {
             }
         }
     }
-    if(strlen(path) != 0) {
+    if (strlen(path) != 0) {
         clrscr();
         fclose(fp);
-    } 
+    }
     alert("Aperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Acomodacoes);

@@ -31,7 +31,6 @@ static char *fgetstr(char *s, int n, int delimiter, FILE *stream) {
 }
 
 int printVal(FILE *stream, const ColumnMeta *colMeta, const void *ptr) {
-    unsigned int year = 0, month = 0, day = 0;
     switch (colMeta->type) {
         case COL_TYPE_BOOL:
             return fprintf(stream, "%s", (*(unsigned int *) ptr) ? "SIM" : "NÃO");
@@ -47,23 +46,23 @@ int printVal(FILE *stream, const ColumnMeta *colMeta, const void *ptr) {
             return fprintf(stream, "%lf", *(double *) ptr);
         case COL_TYPE_STRING:
             return fprintf(stream, "%.*s", (int) colMeta->size, (char *) ptr);
-        case COL_TYPE_DATE:
-            year = (*(unsigned int *) ptr) / 10000;
-            month = (*(unsigned int *) ptr) / 100 % 100;
-            day = (*(unsigned int *) ptr) % 100;
+        case COL_TYPE_DATE: {
+            unsigned int year = (*(unsigned int *) ptr) / 10000;
+            unsigned int month = (*(unsigned int *) ptr) / 100 % 100;
+            unsigned int day = (*(unsigned int *) ptr) % 100;
             return fprintf(stream, "%02u/%02u/%04u", day, month, year);
+        }
     }
     return 0;
 }
 
 int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr) {
+    memset(ptr, 0, colMeta->size);
     if (colMeta->type == COL_TYPE_STRING) {
         return fgetstr(ptr, colMeta->size, delimiter, stream) != NULL;
     }
     char buf[48];
-    memset(ptr, 0, colMeta->size);
     if (fgetstr(buf, 48, delimiter, stream) != NULL) {
-        unsigned int year = 0, month = 0, day = 0;
         switch (colMeta->type) {
             case COL_TYPE_BOOL: // Tudo que começa com S, Y, V, T ou 1 é true, o resto é false.
                 *(unsigned int *) ptr = (strchr("SYVT1", toupper(*buf)) != NULL);
@@ -78,10 +77,12 @@ int readVal(FILE *stream, int delimiter, const ColumnMeta *colMeta, void *ptr) {
                 return sscanf(buf, "%f", (float *) ptr);
             case COL_TYPE_DOUBLE:
                 return sscanf(buf, "%lf", (double *) ptr);
-            case COL_TYPE_DATE:
+            case COL_TYPE_DATE: {
+                unsigned int year = 0, month = 0, day = 0;
                 sscanf(buf, "%u%*c%u%*c%u", &day, &month, &year);
                 *(unsigned int *) ptr = year * 10000 + month * 100 + day;
                 return 1;
+            }
         }
     }
     return 0;
@@ -169,13 +170,14 @@ void alert(const char *message) {
         fputs(message, stdout);
     }
     getch();
-    //clrbuf(); // É necessário limpar o buffer, pois algumas teclas podem inserir mais de 1 caractere nele.
+    // clrbuf(); // É necessário limpar o buffer, pois algumas teclas podem inserir mais de 1 caractere nele.
 }
 
 void feedback(const char *message) {
-    printf($a "%s \n", message);
-    alert("Pressione qualquer tecla para continuar...");
+    printf($a "%s\n", message);
+    alert("Pressione qualquer tecla para continuar...\n");
 }
+
 unsigned int current_date() {
     time_t mytime;
     mytime = time(NULL);
@@ -183,7 +185,8 @@ unsigned int current_date() {
     int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
     return year * 10000 + month * 100 + day;
 }
-int compareFields(const Table table, void *oneReg, void *otherReg,  bool *fieldsToFilter) {
+
+int compareFields(const Table table, void *oneReg, void *otherReg, bool *fieldsToFilter) {
     TableState *tableState = *table++;
     const TableInfo *tableInfo = *table++;
     for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; oneReg += colMeta->size, otherReg += colMeta->size) {

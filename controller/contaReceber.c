@@ -13,13 +13,14 @@ int relatorio_contas_receber(char *path) {
     unsigned int codInicio = 0, codFim, dataInicio = 0, dataFim = 0;
 
     FILE *fp;
-    if(strlen(path) != 0) fp = fopen(path, "w");
+    if (strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
-        int option = menu($f, 3, "Filtrar por data de recebimento", "Filtrar por código do cliente", "Gerar relatório >>");
-        switch(option) {
-            case 0: 
+        int option = menu($f, 3, "Filtrar por data de recebimento", "Filtrar por código do cliente",
+                          "Gerar relatório >>");
+        switch (option) {
+            case 0:
                 porData = true;
                 clrscr();
                 printf($a "Data inicial: " $f);
@@ -36,21 +37,23 @@ int relatorio_contas_receber(char *path) {
                 readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &codFim);
                 break;
         }
-        if(option == 2) break;
+        if (option == 2) break;
     }
     DATABASE_forEach(struct ContaReceber, conta, ContasReceber) {
         bool obedeceFiltros = true;
 
-        if(porData) obedeceFiltros = conta.data_recebimento >= dataInicio && conta.data_recebimento < dataFim;
+        if (porData) obedeceFiltros = conta.data_recebimento >= dataInicio && conta.data_recebimento < dataFim;
 
-        if(obedeceFiltros && porCodigo) {
+        if (obedeceFiltros && porCodigo) {
             struct Hospede hosp = {};
-            if(!DATABASE_findBy("id", &conta.hospede_id, Hospedes, &hosp)) continue;
+            if (!DATABASE_findBy("id", &conta.hospede_id, Hospedes, &hosp)) continue;
             obedeceFiltros = hosp.id >= codInicio && hosp.id < codFim;
         }
-        if(obedeceFiltros) {
-            if(strlen(path) != 0) {
-                fprintf(fp, "%u;%u;%u;%f;%u;%u;%u;%u \n", conta.id, conta.hospede_id, conta.hotel_id, conta.valor_parcela, conta.num_parcela, conta.data_recebimento, conta.data_vencimento, conta.pago);
+        if (obedeceFiltros) {
+            if (strlen(path) != 0) {
+                fprintf(fp, "%u;%u;%u;%f;%u;%u;%u;%u \n", conta.id, conta.hospede_id, conta.hotel_id,
+                        conta.valor_parcela, conta.num_parcela, conta.data_recebimento, conta.data_vencimento,
+                        conta.pago);
             } else {
                 clrscr();
                 form(1, ContasReceber, &conta);
@@ -59,10 +62,10 @@ int relatorio_contas_receber(char *path) {
             }
         }
     }
-    if(strlen(path) != 0) {
+    if (strlen(path) != 0) {
         clrscr();
         fclose(fp);
-    } 
+    }
     alert("\nAperte qualquer tecla para continuar... \n");
 
     DATABASE->close(ContasReceber);

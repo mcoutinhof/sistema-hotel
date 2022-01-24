@@ -15,7 +15,7 @@ typedef struct {
     /** Última posição segura do cursor, para retornar em caso de erros de leitura ou escrita. */
     fpos_t cursorPos;
 
-    /** Array de registros */
+    /** Array de registros usada no XML */
     void *arr;
     /** Índice atual na array de registros */
     size_t arrIndex;
@@ -27,7 +27,7 @@ typedef struct {
 typedef struct {
     /** Nome da tabela exibido ao usuário. */
     const char *displayName;
-    /** Nome da tag XML que armazena a tabela, e o nome (sem extensão) do arquivo da tabela. */
+    /** Nome da tag XML que armaz   ena a tabela, e o nome (sem extensão) do arquivo da tabela. */
     const char *tagName;
 } TableInfo;
 

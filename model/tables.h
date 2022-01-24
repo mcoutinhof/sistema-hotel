@@ -106,39 +106,39 @@ struct Venda {
 
 struct ItemVenda {
     unsigned int id; // 0 a 4294967295
-    unsigned int produto_id; 
-    unsigned int venda_id; 
+    unsigned int produto_id;
+    unsigned int venda_id;
     float preco;
     unsigned int quantidade; // YYYYMMDD
 };
 
 struct Comanda {
     unsigned int id; // 0 a 4294967295
-    unsigned int produto_id; 
-    unsigned int hospede_id; 
+    unsigned int produto_id;
+    unsigned int hospede_id;
     float preco;
     unsigned int quantidade; // YYYYMMDD
 };
 
 struct Entrada {
     unsigned int id; // 0 a 4294967295
-    unsigned int fornecedor_id; 
+    unsigned int fornecedor_id;
     float frete;
     float imposto;
 };
 
 struct ItemEntrada {
     unsigned int id; // 0 a 4294967295
-    unsigned int produto_id; 
-    unsigned int entrada_id; 
+    unsigned int produto_id;
+    unsigned int entrada_id;
     float preco;
     unsigned int quantidade; // YYYYMMDD
 };
 
 struct ContaPagar {
     unsigned int id; // 0 a 4294967295
-    unsigned int fornecedor_id; 
-    unsigned int hotel_id; 
+    unsigned int fornecedor_id;
+    unsigned int hotel_id;
     float valor_parcela;
     unsigned int num_parcela;
     unsigned int data_vencimento; // YYYYMMDD
@@ -147,8 +147,8 @@ struct ContaPagar {
 
 struct ContaReceber {
     unsigned int id; // 0 a 4294967295
-    unsigned int hospede_id; 
-    unsigned int hotel_id; 
+    unsigned int hospede_id;
+    unsigned int hotel_id;
     float valor_parcela;
     unsigned int num_parcela;
     unsigned int data_recebimento; // YYYYMMDD
@@ -158,7 +158,7 @@ struct ContaReceber {
 
 struct Caixa {
     unsigned int id; // 0 a 4294967295
-    unsigned int hotel_id; 
+    unsigned int hotel_id;
     float valor;
     char descricao[512];
     char natureza[16];
@@ -181,7 +181,3 @@ extern Table ItensEntrada;
 extern Table ContasPagar;
 extern Table ContasReceber;
 extern Table Caixas;
-
-
-
-

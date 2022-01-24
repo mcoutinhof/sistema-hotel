@@ -5,13 +5,13 @@
 #include "rotas.h"
 #include "utils.h"
 #include "../lcurses.h"
-#include "../model/tables.h"
 #include <stdlib.h>
 
 int menu_principal() {
     while (1) {
         clrscr();
-        switch (menu($f, 8, "Cadastros", "Reservas", "Check-in", "Check-out", "Vendas", "Entrada de produtos", "Relatórios", "Sair")) {
+        switch (menu($f, 8, "Cadastros", "Reservas", "Check-in", "Check-out", "Vendas", "Entrada de produtos",
+                     "Relatórios", "Sair")) {
             case 0:
                 menu_cadastros();
                 break;
@@ -56,7 +56,8 @@ int menu_cadastros() {
 }
 
 static inline int entidades() {
-    return menu($f, 8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos", "Fornecedores", "Voltar");
+    return menu($f, 8, "Hóspedes", "Hotel", "Categorias de acomodações", "Operadores", "Acomodações", "Produtos",
+                "Fornecedores", "Voltar");
 }
 
 int menu_ver() {
@@ -83,6 +84,7 @@ int menu_ver() {
                 break;
             case 6:
                 ver_fornecedor();
+                break;
             default: // Voltar
                 return EXIT_SUCCESS;
         }
@@ -179,15 +181,16 @@ int menu_relatorios() {
         clrscr();
         printf($a "Onde deseja imprimir os dados? \n");
         char path[256] = {};
-        option = menu($f, 3, "Em tela", "Em arquivo", "Voltar");
-        if(option == 1) {
+        int option = menu($f, 3, "Em tela", "Em arquivo", "Voltar");
+        if (option == 1) {
             clrscr();
             printf($a "Caminho do arquivo: " $f);
             readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 256}, &path);
-        } else if(option == 2) return 1;
+        } else if (option == 2) return 1;
         clrscr();
-        
-        switch (menu($f, 10, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Vendas", "Movimentação de caixa", "Contas a pagar", "Contas a receber","Voltar")) {
+
+        switch (menu($f, 10, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Vendas",
+                     "Movimentação de caixa", "Contas a pagar", "Contas a receber", "Voltar")) {
             case 0:
                 relatorio_hospedes(path);
                 break;

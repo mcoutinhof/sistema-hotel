@@ -20,7 +20,7 @@ int check_in_out(int operation) {
 
     clrscr();
 
-    while(!achouHospede) {
+    while (!achouHospede) {
         char nome[64] = {0};
         int count = 0;
 
@@ -34,47 +34,49 @@ int check_in_out(int operation) {
             clrscr();
             form(1, Hospedes, &hosp);
             gotoxy(3, wherey() + 2);
-            if(menu($f, 2, "Selecionar", "Próximo") == 0) {
+            if (menu($f, 2, "Selecionar", "Próximo") == 0) {
                 achouHospede = true;
                 hospede_id = hosp.id;
                 break;
             };
         }
-        if(!count) {
+        if (!count) {
             printf($a "Não foram encontrados hóspedes de nome: %s. Por favor, tente novamente! \n", nome);
-        } else if(!achouHospede) {
+        } else if (!achouHospede) {
             printf($a "Para prosseguir é necessário selecionar um hóspede. Por favor, tente novamente! \n");
         }
     }
 
     DATABASE_forEach(struct Reserva, res, Reservas) {
-        if(res.hospede_id != hospede_id || (operation == 0 && res.check_in) || (operation == 1 && res.check_out)) continue;
+        if (res.hospede_id != hospede_id || (operation == 0 && res.check_in) ||
+            (operation == 1 && res.check_out))
+            continue;
 
         clrscr();
         form(1, Reservas, &res);
         gotoxy(3, wherey() + 2);
         int option = menu($f, 3, "Selecionar", "Próximo", "Sair");
-        if(option == 0) {
+        if (option == 0) {
             float total = 0;
             clrscr();
 
-            if(operation == 0) {
+            if (operation == 0) {
                 res.check_in = 1;
                 printf($a "Deseja realizar o pagamento das diárias? \n");
                 pagarDiarias = !menu($f, 2, "Sim", "Não");
             } else {
                 res.check_out = 1;
                 DATABASE_forEach(struct Comanda, com, Comandas) {
-                    if(res.hospede_id != com.hospede_id) continue;
+                    if (res.hospede_id != com.hospede_id) continue;
                     total += com.preco * com.quantidade;
                 }
             }
-            if(operation == 0 && pagarDiarias || operation == 1 && !res.pago) {
+            if (operation == 0 && pagarDiarias || operation == 1 && !res.pago) {
                 struct Acomodacao acom = {};
-                if(!DATABASE_findBy("id", &res.acomodacao_id, Acomodacoes, &acom)) return 0;
+                if (!DATABASE_findBy("id", &res.acomodacao_id, Acomodacoes, &acom)) return 0;
 
                 struct Categoria cat = {};
-                if(!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) return 0;
+                if (!DATABASE_findBy("id", &acom.categoria_id, Categorias, &cat)) return 0;
 
                 total += res.periodo * cat.valor_diaria;
                 res.pago = 1;
@@ -83,14 +85,14 @@ int check_in_out(int operation) {
             alert("Pressione qualquer tecla para continuar...");
             clrscr();
 
-            if(total > 0) {
+            if (total > 0) {
                 time_t mytime;
                 mytime = time(NULL);
                 struct tm tm = *localtime(&mytime);
                 int day = tm.tm_mday, month = (tm.tm_mon + 1), year = (tm.tm_year + 1900);
 
                 printf($a "Método de pagamento: \n");
-                if(menu($f, 2, "Dinheiro", "Cartão") == 1) {
+                if (menu($f, 2, "Dinheiro", "Cartão") == 1) {
                     unsigned int numParcelas = 0, diaVencimento = 0;
 
                     printf($a "\n Número de parcelas: " $f);
@@ -99,9 +101,9 @@ int check_in_out(int operation) {
                     printf($a "Dia de vencimento do cartão: " $f);
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_UINT}, &diaVencimento);
 
-                    for(int i = 0; i < numParcelas; i++) {
+                    for (int i = 0; i < numParcelas; i++) {
                         month++;
-                        if(month > 12) {
+                        if (month > 12) {
                             year++;
                             month = 1;
                         }
@@ -114,7 +116,7 @@ int check_in_out(int operation) {
                         conta.data_vencimento = year * 10000 + month * 100 + diaVencimento;
                         DATABASE->insert(ContasReceber, &conta);
                     }
-                } else  {
+                } else {
                     struct Caixa caixa = {};
                     caixa.hotel_id = 1;
                     strcpy(caixa.natureza, "Crédito");
@@ -127,12 +129,12 @@ int check_in_out(int operation) {
 
             DATABASE->update(Reservas, &res);
             break;
-        } else if(option == 2) break;
+        } else if (option == 2) break;
     }
     clrscr();
-    if(operation == 0) 
+    if (operation == 0)
         feedback("Check-in realizado com sucesso");
-    else 
+    else
         feedback("Check-out realizado com sucesso");
 
     DATABASE->close(Reservas);

@@ -9,7 +9,7 @@ int cadastrar_hotel() {
     struct Hotel hotel = {}; // Sempre coloque as chaves pra zerar os valores da struct
     DATABASE->open(Hoteis);
     if (DATABASE->next(Hoteis, &hotel)) {
-        feedback("\nJá tem um hotel cadastrado!\n");
+        feedback("Já há um hotel cadastrado!");
     } else {
         form(0, Hoteis, &hotel); // Modo 0 = Inserir
         DATABASE->insert(Hoteis, &hotel);

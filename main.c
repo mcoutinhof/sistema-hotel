@@ -7,12 +7,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+#include "model/tables.h"
+#include "view/utils.h"
+
 int main() {
     if (!initDatabase()) {
         fprintf(stderr, "Não foi possível iniciar o banco de dados!\n");
         return EXIT_FAILURE;
     }
-    fputs("\033[?1049h", stdout); // Entra na tela alternativa
+    fputs("\033[?1049h", stdout); // Entra na tela alternativaW
     if (logar_operador()) {
         menu_principal();
     }

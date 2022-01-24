@@ -58,4 +58,4 @@ unsigned int current_date();
  * @param fieldsToFilter Quais campos comparar.
  * @return 1 se os campos selecionados de um registro são iguais aos de outro, 0 caso contrário.
  */
-int compareFields(const Table table, void *oneReg, void *otherReg,  bool *fieldsToFilter);
+int compareFields(const Table table, void *oneReg, void *otherReg, bool *fieldsToFilter);

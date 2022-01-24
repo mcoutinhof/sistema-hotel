@@ -48,7 +48,7 @@ int relatorio_hospedes(char *path) {
     char sexo[16];
 
     FILE *fp;
-    if(strlen(path) != 0) fp = fopen(path, "w");
+    if (strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
@@ -76,13 +76,14 @@ int relatorio_hospedes(char *path) {
     DATABASE_forEach(struct Hospede, hosp, Hospedes) {
         bool obedeceFiltros = true;
         //Verifica se o id do hóspede esta entre o intervalo informado
-        if(porCodigo) obedeceFiltros = hosp.id >= codInicio && hosp.id < codFim;
+        if (porCodigo) obedeceFiltros = hosp.id >= codInicio && hosp.id < codFim;
         //Verifica se o sexo do hóspede corresponde ao informado
-        if(obedeceFiltros && porSexo) obedeceFiltros = strcasecmp(hosp.sexo, sexo) == 0;
+        if (obedeceFiltros && porSexo) obedeceFiltros = strcasecmp(hosp.sexo, sexo) == 0;
         //Exibe os dados do hóspede 
-        if(obedeceFiltros) {
-            if(strlen(path) != 0) {
-                fprintf(fp, "%u;%s;%s;%s;%s;%s;%s;%s;%s;%u \n", hosp.id, hosp.nome, hosp.endereco, hosp.cpf, hosp.telefone, hosp.email, hosp.sexo, hosp.estado_civil, hosp.nascimento, hosp.hotel_id);
+        if (obedeceFiltros) {
+            if (strlen(path) != 0) {
+                fprintf(fp, "%u;%s;%s;%s;%s;%s;%s;%s;%s;%u \n", hosp.id, hosp.nome, hosp.endereco, hosp.cpf,
+                        hosp.telefone, hosp.email, hosp.sexo, hosp.estado_civil, hosp.nascimento, hosp.hotel_id);
             } else {
                 clrscr();
                 form(1, Hospedes, &hosp);
@@ -91,10 +92,10 @@ int relatorio_hospedes(char *path) {
             }
         }
     }
-    if(strlen(path) != 0) {
+    if (strlen(path) != 0) {
         clrscr();
         fclose(fp);
-    } 
+    }
     alert("\nAperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Hospedes);

@@ -39,6 +39,7 @@ int ver_produto() {
     }
     DATABASE->close(Produtos);
 }
+
 int relatorio_produtos(char *path) {
     DATABASE->open(Produtos);
 
@@ -46,11 +47,12 @@ int relatorio_produtos(char *path) {
     unsigned int codInicio = 0, codFim = 0;
 
     FILE *fp;
-    if(strlen(path) != 0) fp = fopen(path, "w");
+    if (strlen(path) != 0) fp = fopen(path, "w");
 
     while (1) {
         clrscr();
-        int option = menu($f, 3, "Filtrar por faixa de código", "Filtrar por produtos em estoque mínimo", "Gerar relatório >>");
+        int option = menu($f, 3, "Filtrar por faixa de código", "Filtrar por produtos em estoque mínimo",
+                          "Gerar relatório >>");
 
         switch (option) {
             case 0:
@@ -71,15 +73,16 @@ int relatorio_produtos(char *path) {
     DATABASE_forEach(struct Produto, prod, Produtos) {
         bool obedeceFiltros = true;
         //Verifica se o código do produto está entre o intervalo informado
-        if(porCodigo) obedeceFiltros = prod.id >= codInicio && prod.id < codFim;
+        if (porCodigo) obedeceFiltros = prod.id >= codInicio && prod.id < codFim;
 
         //Verifica se a quantidade do produto em estoque atingiu a reserva
-        if(obedeceFiltros && porEstoqueMinimo) obedeceFiltros = prod.estoque <= prod.estoque_minimo;
+        if (obedeceFiltros && porEstoqueMinimo) obedeceFiltros = prod.estoque <= prod.estoque_minimo;
 
         //Exibe os dados do produto
-        if(obedeceFiltros) {
-            if(strlen(path) != 0) {
-                fprintf(fp, "%u;%s;%s;%u;%u;%f;%u;%u \n", prod.id, prod.nome, prod.descricao, prod.estoque, prod.estoque_minimo, prod.preco_venda, prod.fornecedor_id, prod.hotel_id);
+        if (obedeceFiltros) {
+            if (strlen(path) != 0) {
+                fprintf(fp, "%u;%s;%s;%u;%u;%f;%u;%u \n", prod.id, prod.nome, prod.descricao, prod.estoque,
+                        prod.estoque_minimo, prod.preco_venda, prod.fornecedor_id, prod.hotel_id);
             } else {
                 clrscr();
                 form(1, Produtos, &prod);
@@ -88,10 +91,10 @@ int relatorio_produtos(char *path) {
             }
         }
     }
-    if(strlen(path) != 0) {
+    if (strlen(path) != 0) {
         clrscr();
         fclose(fp);
-    } 
+    }
     alert("\nAperte qualquer tecla para continuar...\n");
 
     DATABASE->close(Produtos);
