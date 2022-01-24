@@ -7,9 +7,13 @@
 int cadastrar_hotel() {
     clrscr();
     struct Hotel hotel = {}; // Sempre coloque as chaves pra zerar os valores da struct
-    form(0, Hoteis, &hotel); // Modo 0 = Inserir
     DATABASE->open(Hoteis);
-    DATABASE->insert(Hoteis, &hotel);
+    if (DATABASE->next(Hoteis, &hotel)) {
+        feedback("\nJá tem um hotel cadastrado!\n");
+    } else {
+        form(0, Hoteis, &hotel); // Modo 0 = Inserir
+        DATABASE->insert(Hoteis, &hotel);
+    }
     DATABASE->close(Hoteis);
     return EXIT_SUCCESS;
 }

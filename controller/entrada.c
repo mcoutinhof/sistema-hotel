@@ -11,6 +11,7 @@ int realizar_entrada() {
     DATABASE->open(Fornecedores);
     DATABASE->open(Produtos);
     DATABASE->open(ItensEntrada);
+    DATABASE->open(Hoteis);
 
     unsigned int fornecedor_id = 0;
     float precoTotal, quantidadeTotal;
@@ -118,7 +119,14 @@ int realizar_entrada() {
 
         prod2.estoque += item2.quantidade;
 
-        prod2.preco_venda = (fretePorProduto + impostoPorProduto + item2.preco) * 1.05f;
+        float margemDeLucro = 0.0f;
+        unsigned int _idDoHotel = 0;
+        struct Hotel hotel = {};
+        if (DATABASE_findBy("id", &_idDoHotel, Hoteis, &hotel)) {
+            margemDeLucro = hotel.margem_lucro;
+        }
+
+        prod2.preco_venda = (fretePorProduto + impostoPorProduto + item2.preco) * (1 + margemDeLucro / 100.f);
         DATABASE->update(Produtos, &prod2);
     }
     realizar_pagamento_entrada(precoTotal, fornecedor_id);
@@ -127,6 +135,7 @@ int realizar_entrada() {
     DATABASE->close(Produtos);
     DATABASE->close(Fornecedores);
     DATABASE->close(ItensEntrada);
+    DATABASE->close(Hoteis);
 }
 int ver_entrada() {
     DATABASE->open(Entradas);
@@ -229,7 +238,7 @@ int baixar_nota_entrada() {
 
             //Gera uma movimentação de débito no caixa do hotel
             struct Caixa caixa = {};
-            caixa.hotel_id = 1;
+            caixa.hotel_id = 0;
             caixa.valor = conta.valor_parcela;
             strcpy(caixa.descricao, "Baixa de nota");
             strcpy(caixa.natureza, "Débito");
