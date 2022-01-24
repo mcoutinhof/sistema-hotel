@@ -114,6 +114,9 @@ int menu_entradas();
 // principal -> entrada -> realizar_entrada
 int realizar_entrada();
 
+// principal -> vendas -> ver_entrada
+int ver_entrada();
+
 // entradas.c
 int realizar_pagamento_entrada(float total, unsigned int fornecedor_id);
 
@@ -146,6 +149,9 @@ int relatorio_caixas();
 
 // principal -> relatorios -> contas_pagar
 int relatorio_contas_pagar();
+
+// principal -> relatorios -> contas_receber
+int relatorio_contas_receber();
 
 // principal -> relatorios -> relatorio_vendas
 int relatorio_vendas();

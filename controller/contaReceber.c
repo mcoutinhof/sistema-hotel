@@ -4,16 +4,16 @@
 #include <stdlib.h>
 #include "../view/rotas.h"
 
-int relatorio_contas_pagar() {
-    DATABASE->open(ContasPagar);
-    DATABASE->open(Fornecedores);
+int relatorio_contas_receber() {
+    DATABASE->open(ContasReceber);
+    DATABASE->open(Hospedes);
 
     bool porData = false, porCodigo = false;
     unsigned int codInicio = 0, codFim, dataInicio = 0, dataFim = 0;
 
     while (1) {
         clrscr();
-        int option = menu($f, 3, "Filtrar por data de vencimento", "Filtrar por código do fornecedor", "Gerar relatório >>");
+        int option = menu($f, 3, "Filtrar por data de recebimento", "Filtrar por código do cliente", "Gerar relatório >>");
         switch(option) {
             case 0: 
                 porData = true;
@@ -34,24 +34,23 @@ int relatorio_contas_pagar() {
         }
         if(option == 2) break;
     }
-    DATABASE_forEach(struct ContaPagar, conta, ContasPagar) {
+    DATABASE_forEach(struct ContaReceber, conta, ContasReceber) {
         bool obedeceFiltros = true;
 
-        if(porData) obedeceFiltros = conta.data_vencimento >= dataInicio && conta.data_vencimento < dataFim;
+        if(porData) obedeceFiltros = conta.data_recebimento >= dataInicio && conta.data_recebimento < dataFim;
 
         if(obedeceFiltros && porCodigo) {
-            struct Fornecedor forn = {};
-            if(!DATABASE_findBy("id", &conta.fornecedor_id, Fornecedores, &forn)) continue;
-            obedeceFiltros = forn.id >= codInicio && forn.id < codFim;
+            struct Hospede hosp = {};
+            if(!DATABASE_findBy("id", &conta.hospede_id, Hospedes, &hosp)) continue;
+            obedeceFiltros = hosp.id >= codInicio && hosp.id < codFim;
         }
         if(obedeceFiltros) {
-            form(1, ContasPagar, &conta);
+            form(1, ContasReceber, &conta);
             printf(" \n\n");
         }
     }
-
     alert("Aperte qualquer tecla para continuar... \n");
 
-    DATABASE->close(ContasPagar);
-    DATABASE->close(Fornecedores);
+    DATABASE->close(ContasReceber);
+    DATABASE->close(Hospedes);
 }

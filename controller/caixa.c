@@ -17,9 +17,9 @@ int relatorio_caixas() {
         if(option == 0) {
             porData = true;
             clrscr();
-            printf($a "Data inicial: ");
+            printf($a "Data inicial: " $f);
             readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataInicio);
-            printf($a "Data final: ");
+            printf($a "Data final: " $f);
             readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_DATE}, &dataFim);
         } else break;
     }

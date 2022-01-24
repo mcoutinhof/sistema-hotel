@@ -174,7 +174,7 @@ int menu_entradas() {
 int menu_relatorios() {
     while (1) {
         clrscr();
-        switch (menu($f, 8, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Caixas", "Contas a pagar", "Voltar")) {
+        switch (menu($f, 9, "Hóspedes", "Acomodações", "Movimentação de acomodações", "Reservas", "Produtos", "Movimentação de caixa", "Contas a pagar", "Contas a receber","Voltar")) {
             case 0:
                 relatorio_hospedes();
                 break;
@@ -195,6 +195,9 @@ int menu_relatorios() {
                 break;
             case 6:
                 relatorio_contas_pagar();
+                break;
+            case 7:
+                relatorio_contas_receber();
                 break;
             default: // Voltar
                 return EXIT_SUCCESS;
