@@ -127,6 +127,17 @@ int realizar_entrada() {
     DATABASE->close(Fornecedores);
     DATABASE->close(ItensEntrada);
 }
+int ver_entrada() {
+    DATABASE->open(Entradas);
+
+    DATABASE_forEach(struct Entrada, entrada, Entradas) {
+        clrscr();
+        form(1, Entradas, &entrada);
+        gotoxy(3, wherey() + 2);
+        if (menu($f, 2, "Próximo", "Sair") == 1) break;
+    }
+    DATABASE->close(Entradas);
+}
 int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
     DATABASE->open(Caixas);
     DATABASE->open(ContasPagar);
