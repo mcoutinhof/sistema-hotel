@@ -18,6 +18,8 @@ int check_in_out(int operation) {
     unsigned int hospede_id = 0;
     bool achouHospede = false, pagarDiarias = false;
 
+    clrscr();
+
     while(!achouHospede) {
         char nome[64] = {0};
         int count = 0;
@@ -33,10 +35,10 @@ int check_in_out(int operation) {
             form(1, Hospedes, &hosp);
             gotoxy(3, wherey() + 2);
             if(menu($f, 2, "Selecionar", "Próximo") == 0) {
+                achouHospede = true;
                 hospede_id = hosp.id;
                 break;
             };
-            achouHospede = true;
         }
         if(!count) {
             printf($a "Não foram encontrados hóspedes de nome: %s. Por favor, tente novamente! \n", nome);
