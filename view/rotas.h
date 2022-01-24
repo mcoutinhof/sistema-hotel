@@ -135,3 +135,5 @@ int relatorio_caixas();
 int relatorio_contas_pagar();
 
 
+// entradas.c
+int realizar_pagamento_entrada(float total, unsigned int fornecedor_id);

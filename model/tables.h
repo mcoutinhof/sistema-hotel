@@ -60,7 +60,7 @@ struct Produto {
     char descricao[512];
     unsigned int estoque; // 0 a 4294967295
     unsigned int estoque_minimo; // 0 a 4294967295
-    float preco_custo;
+    //float preco_custo;
     float preco_venda;
     unsigned int fornecedor_id; // 0 a 4294967295
     unsigned int hotel_id; // 0 a 4294967295

@@ -37,7 +37,7 @@ int relatorio_contas_pagar() {
     DATABASE_forEach(struct ContaPagar, conta, ContasPagar) {
         bool obedeceFiltros = true;
 
-        if(porData) obedeceFiltros = conta.data >= dataInicio && conta.data < dataFim;
+        if(porData) obedeceFiltros = conta.data_vencimento >= dataInicio && conta.data_vencimento < dataFim;
 
         if(obedeceFiltros && porCodigo) {
             struct Fornecedor forn = {};

@@ -71,8 +71,8 @@ Table Produtos = {
         &(ColumnMeta) {.displayName = "Descrição", .tagName = "descricao", .type = COL_TYPE_STRING, .size = 512},
         &(ColumnMeta) {.displayName = "Estoque", .tagName = "estoque", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "Estoque mínimo", .tagName = "estoque_minimo", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
-        &(ColumnMeta) {.displayName = "Preço de custo", .tagName = "preco_custo", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
-        &(ColumnMeta) {.displayName = "Preço de venda", .tagName = "preco_venda", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        //&(ColumnMeta) {.displayName = "Preço de custo", .tagName = "preco_custo", .type = COL_TYPE_FLOAT, .size = sizeof(float)},
+        &(ColumnMeta) {.displayName = "Preço de venda", .tagName = "preco_venda", .type = COL_TYPE_FLOAT, .size = sizeof(float), .flags = COL_FLAG_SYS_GENERATED},
         &(ColumnMeta) {.displayName = "ID do fornecedor", .tagName = "fornecedor_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int)},
         &(ColumnMeta) {.displayName = "ID do hotel", .tagName = "hotel_id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_SYS_GENERATED},
         NULL
@@ -185,7 +185,7 @@ Table ContasPagar = {
         NULL
 };
 
-Table ContasPagar = {
+Table ContasReceber = {
         &(TableState) {},
         &(TableInfo)  {.displayName = "Contas a receber", .tagName = "contaReceber", .fileName = "contaReceber.dat"},
         &(ColumnMeta) {.displayName = "ID", .tagName = "id", .type = COL_TYPE_UINT, .size = sizeof(unsigned int), .flags = COL_FLAG_PRIMARY_KEY | COL_FLAG_AUTO_INCREMENT},

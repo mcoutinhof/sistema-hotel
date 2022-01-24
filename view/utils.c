@@ -142,6 +142,7 @@ int menu(const char *prefix, int nitems, ...) {
     va_start(items, nitems);
     for (int i = 0; i < nitems; ++i) {
         gotoxy(x, y + i);
+        clrtoeol();
         if (i == opt % nitems) {
             printf($r "%s" $i "%s", prefix, va_arg(items, char *)); // Destaca a opção selecionada
         } else {
@@ -169,6 +170,7 @@ void alert(const char *message) {
     getch();
     //clrbuf(); // É necessário limpar o buffer, pois algumas teclas podem inserir mais de 1 caractere nele.
 }
+
 void feedback(const char *message) {
     printf($a "%s", message);
     alert("Pressione qualquer tecla para continuar...");

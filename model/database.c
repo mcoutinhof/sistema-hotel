@@ -20,12 +20,13 @@ int initDatabase() {
 int DATABASE_findBy(const char *colName, const void *colValue, Table table, void *saveHere) {
     size_t offset = 0;
     DATABASE->rewind((table));
+    void **table2 = table;
     TableState *tableState = *table++;
     TableInfo *tableInfo = *table++;
     for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; offset += colMeta->size) {
         if (strcasecmp(colMeta->tagName, colName) == 0) {
-            while (DATABASE->next(table, saveHere)) {
-                if (memcmp(saveHere + offset, colValue + offset, colMeta->size) == 0) {
+            while (DATABASE->next(table2, saveHere)) {
+                if (memcmp(saveHere + offset, colValue, colMeta->size) == 0) {
                     return 1;
                 }
             }

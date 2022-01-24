@@ -92,7 +92,7 @@ static int bin_insert(Table table, void *ptr) {
                 // Auto-increment
                 for (ColumnMeta *colMeta; (colMeta = *table++) != NULL; offset += colMeta->size) {
                     if ((colMeta->flags & COL_FLAG_AUTO_INCREMENT)) {
-                        *((unsigned int *) ptr + offset) = 1 + (ftell(tableState->stream) - 1) / (tableState->regSize + 1);
+                        *((unsigned int *) ptr + offset) = (ftell(tableState->stream) - 1) / (tableState->regSize + 1);
                     }
                 }
 

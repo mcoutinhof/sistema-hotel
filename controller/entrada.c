@@ -17,12 +17,14 @@ int realizar_entrada() {
     struct Entrada entrada = {};
     bool itemSelecionado = false;
 
+    clrscr();
+
     //Seleciona o fornecedor da entrada
     while(!fornecedor_id) {
         char nome[64] = {0};
         int count = 0;
 
-        printf($a "Nome fantasia do fornecedor: ");
+        printf($a "\nNome fantasia do fornecedor: ");
         readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_STRING, .size = 64}, &nome);
 
         DATABASE_forEach(struct Fornecedor, forn, Fornecedores) {
@@ -47,14 +49,14 @@ int realizar_entrada() {
     printf($a "Frete: ");
     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &entrada.frete);
 
-    clrscr();
     printf($a "Imposto: ");
     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &entrada.imposto);
 
     entrada.fornecedor_id = fornecedor_id;
     DATABASE->insert(Entradas, &entrada);
 
-    feedback("Na próxima etapa, será necessário selecionar os produtos referentes a esta entrada");
+    clrscr();
+    feedback("Na próxima etapa, será necessário selecionar os produtos referentes a esta entrada\n");
 
     while(!itemSelecionado) {
         unsigned int count = 0;
@@ -77,7 +79,7 @@ int realizar_entrada() {
                     if(!quantidade) printf($a "A quantidade deve ser maior que 0. Por favor, tente novamente! \n");
                 }
                 while(preco <= 0) {
-                    printf($a "Preço de custo: ");
+                    printf($a "Preço de custo unitário: ");
                     readVal(stdin, '\n', &(ColumnMeta) {.type = COL_TYPE_FLOAT}, &preco);
 
                     if(preco <= 0) printf($a "O preço deve ser maior que 0. Por favor, tente novamente! \n");
@@ -107,15 +109,16 @@ int realizar_entrada() {
           impostoPorProduto = entrada.imposto / quantidadeTotal;
 
     //Percorre os produtos selecionados atualizando o preço de venda
-    DATABASE_forEach(struct ItemEntrada, item, ItensEntrada) {
-        if(item.entrada_id != entrada.id) continue;
+    DATABASE_forEach(struct ItemEntrada, item2, ItensEntrada) {
+        if(item2.entrada_id != entrada.id) continue;
 
-        struct Produto prod = {};
-        if(!DATABASE_findBy("id", &item.produto_id, Produtos, &prod)) continue;
+        struct Produto prod2 = {};
+        if(!DATABASE_findBy("id", &item2.produto_id, Produtos, &prod2)) continue;
 
-        prod.estoque += item.quantidade;
-        prod.preco_venda = (fretePorProduto + impostoPorProduto + item.preco) * 1.05; 
-        DATABASE->update(Produtos, &prod);
+        prod2.estoque += item2.quantidade;
+
+        prod2.preco_venda = (fretePorProduto + impostoPorProduto + item2.preco) * 1.05f;
+        DATABASE->update(Produtos, &prod2);
     }
     realizar_pagamento_entrada(precoTotal, fornecedor_id);
 
@@ -165,7 +168,7 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
             strcpy(caixa.descricao, "Valor de entrada de pagamento parcelado no reestoque de produtos de consumo");
             DATABASE->insert(Caixas, &caixa);
         }
-        float valorParcela = (total - entradaPagamento) / numParcelas;
+        valorParcela = (total - entradaPagamento) / numParcelas;
 
         for(int i = 0; i < numParcelas; i++) {
             month++;
@@ -178,7 +181,7 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
             conta.hotel_id = 1;
             conta.valor_parcela = valorParcela;
             conta.num_parcela = i + 1;
-            conta.paga = 0;
+            conta.pago = 0;
             conta.data_vencimento = year * 10000 + month * 100 + day;
             DATABASE->insert(ContasPagar, &conta);
         }
@@ -187,6 +190,8 @@ int realizar_pagamento_entrada(float total, unsigned int fornecedor_id) {
         strcpy(caixa.descricao, "Entrada de produtos de consumo com pagamento a vista");
         DATABASE->insert(Caixas, &caixa);
     }
+
+    feedback("Entrada de produtos de consumo realizada com sucesso \n");
 
     DATABASE->close(Caixas);
     DATABASE->close(ContasPagar);

@@ -47,6 +47,8 @@ int menu(const char *prefix, int nitems, ...);
 /** Mostra uma mensagem e retorna quando o usuário pressionar uma tecla. */
 void alert(const char *message);
 
+void feedback(const char *message);
+
 /**
  * @param table A tabela que contém as colunas.
  * @param oneReg Um registro a ser comparado.
