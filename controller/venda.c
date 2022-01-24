@@ -133,6 +133,19 @@ int realizar_venda() {
     DATABASE->close(Hospedes);
     DATABASE->close(Comandas);
 }
+int ver_venda() {
+    DATABASE->open(Vendas);
+
+    DATABASE_forEach(struct Venda, venda, Vendas) {
+        clrscr();
+        form(1, Vendas, &venda);
+        gotoxy(3, wherey() + 2);
+        int option = menu($f, 2, "Próximo", "Sair");
+       
+        if (option == 3) break;
+    }
+    DATABASE->close(Vendas);
+}
 int realizar_pagamento_venda(float total, unsigned int hospede_id, int payment) {
     DATABASE->open(Caixas);
     DATABASE->open(ContasReceber);

@@ -141,7 +141,7 @@ int menu_vendas() {
                 realizar_venda();
                 break;
             case 1:
-                //ver_venda();
+                ver_venda();
                 break;
             default: // Voltar
                 return EXIT_SUCCESS;
