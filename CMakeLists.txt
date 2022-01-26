@@ -28,6 +28,3 @@ add_executable(
         controller/contaReceber.c
         controller/check_in_out.c
 )
-
-# Se precisar usar funções da math.h
-# target_link_libraries(sistema-hotel m)

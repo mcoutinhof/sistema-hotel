@@ -1,9 +1,8 @@
 # Trabalho prático de Algoritmos II
 
 **Membros do grupo:**
-[Mateus Coutinho](mailto:maateus.coutinho@gmail.com),
-[Ryan W. Fonseca](mailto:ryanfonseca183@gmail.com) e
-[Arthur Gomes](mailto:umarthurqualquer74@gmail.com).
+[Mateus Coutinho](mailto:maateus.coutinho@gmail.com) e
+[Ryan W. Fonseca](mailto:ryanfonseca183@gmail.com).
 
 <!--  Adicionar coisas aqui -->
 

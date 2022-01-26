@@ -1,5 +1,5 @@
 /**
- * @authors Ryan W. Fonseca & Arthur Gomes.
+ * @authors Ryan W. Fonseca.
  */
 
 #pragma once

@@ -1,3 +1,7 @@
+/**
+ * @authors Ryan W. Fonseca
+ */
+
 #include "../lcurses.h"
 #include "../model/tables.h"
 #include "../view/utils.h"

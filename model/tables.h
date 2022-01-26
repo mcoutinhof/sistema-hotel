@@ -1,5 +1,5 @@
 /**
- * @authors Mateus Coutinho, Ryan W. Fonseca & Arthur Gomes.
+ * @authors Mateus Coutinho & Ryan W. Fonseca.
  */
 
 #pragma once
