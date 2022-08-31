@@ -8,12 +8,10 @@
 
 ### Links úteis
 
-* [Enunciado do Trabalho Prático](https://drive.google.com/file/d/1ZBiuMbhB2HZsXQaZr_W-xiDfEGL1aGtI/view)
+* [Enunciado do Trabalho Prático](https://github.com/mcoutinhof/sistema-hotel/blob/main/Enunciado_TP_2021_2.pdf)
 * [Esquema Inicial do Banco de Dados](https://prnt.sc/20xe9xu)
 * [Repositório no GitHub](https://github.com/mcoutinhof/sistema-hotel)
 
-### Testado em
+### Compatibilidade
 
-* GCC 11.2.0-7 no GNOME Terminal do Pop!_OS 21.10
-* **Não funciona** no MinGW, nem no "console" da IDE
-* **Pode não funcionar** em versões antigas do Windows 10
+Funciona no Linux e talvez outros sistemas POSIX.
